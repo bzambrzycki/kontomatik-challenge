@@ -31,7 +31,8 @@ public class PkoScrapper implements BankScrapper {
             .requestBody(requestJson.toString())
             .execute())
         .onFailure(throwable -> System.out.println("[LOG/ERR] " + throwable.getMessage()))
-        .toOption();
+        .toOption()
+        .peek(ignored -> System.out.println("Wysłano login użytkownika"));
   }
 
   private Option<Response> postUserPassword(final Response response) {
@@ -54,7 +55,9 @@ public class PkoScrapper implements BankScrapper {
             .execute())
         .onFailure(throwable -> System.out.println("[LOG/ERR] " + throwable.getMessage()))
         .toOption()
-        .peek(ignored -> System.out.println("Wysłano login użytkownika"));
+        .peek(ignored -> System.out.println("Wysłano hasło"));
+
+
   }
 
   private Option<Response> postAccountInfo(final Response response) {
@@ -71,8 +74,7 @@ public class PkoScrapper implements BankScrapper {
             .requestBody(requestJson.toString())
             .execute())
         .onFailure(throwable -> System.out.println("[LOG/ERR] " + throwable.getMessage()))
-        .toOption()
-        .peek(ignored -> System.out.println("Wysłano hasło"));
+        .toOption();
   }
 
   public Option<HashMap<String, String>> parseAccountsInfoJson(final JSONObject responseJson) {
