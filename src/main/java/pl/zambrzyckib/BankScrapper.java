@@ -1,8 +1,8 @@
 package pl.zambrzyckib;
 
-import io.vavr.collection.HashMap;
+import io.vavr.collection.List;
 import io.vavr.control.Option;
 
 public interface BankScrapper {
-  Option<HashMap<String, String>> getAccountsInfo();
+  Option<List<AccountInfoDTO>> getAccountsInfo();
 }

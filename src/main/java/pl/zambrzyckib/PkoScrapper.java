@@ -77,23 +77,22 @@ public class PkoScrapper implements BankScrapper {
         .toOption();
   }
 
-  public Option<HashMap<String, String>> parseAccountsInfoJson(final JSONObject responseJson) {
+  public Option<List<AccountInfoDTO>> parseAccountsInfoJson(final JSONObject responseJson) {
     return Try.of(() -> responseJson
         .getJSONObject("response")
         .getJSONObject("data"))
-        .map(responseDataJson -> HashMap
-            .ofEntries(List.ofAll(responseDataJson.getJSONArray("account_ids").toList())
-                .map(accountId -> Map.entry(
-                    responseDataJson.getJSONObject("accounts").getJSONObject(accountId.toString())
-                        .get("name").toString(),
-                    responseDataJson.getJSONObject("accounts").getJSONObject(accountId.toString())
-                        .get("balance").toString()))))
+        .map(responseDataJson -> List.ofAll(responseDataJson.getJSONArray("account_ids"))
+            .map(accountId -> AccountInfoDTO.of(
+                responseDataJson.getJSONObject("accounts").getJSONObject(accountId.toString())
+                    .get("name").toString(),
+                responseDataJson.getJSONObject("accounts").getJSONObject(accountId.toString())
+                    .get("balance").toString())))
         .onFailure(throwable -> System.out.println("[LOG/ERR] " + throwable.getMessage()))
         .toOption();
   }
 
   @Override
-  public Option<HashMap<String, String>> getAccountsInfo() {
+  public Option<List<AccountInfoDTO>> getAccountsInfo() {
     return
         postUserLogin()
             .flatMap(this::postUserPassword)
