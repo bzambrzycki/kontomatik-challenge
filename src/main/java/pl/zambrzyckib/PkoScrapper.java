@@ -18,60 +18,17 @@ public class PkoScrapper implements BankScrapper {
   private final Connection connection = Jsoup.connect(homeUrl);
   private final JSONObject requestJson = new JSONObject();
 
-  private Option<Response> postUserLogin() {
-    System.out.println("Podaj login");
-    final var userLogin = KontomatikChallengeApp.scanner.nextLine();
-    requestJson
-        .put("action", "submit")
-        .put("data", new JSONObject()
-            .put("login", userLogin))
-        .put("state_id", "login");
-    return Try.of(() ->
-        connection.url(homeUrl + loginUrl)
-            .method(Method.POST)
-            .ignoreContentType(true)
-            .requestBody(requestJson.toString())
-            .execute())
-        .onFailure(throwable -> System.out.println("[LOG/ERR] " + throwable.getMessage()))
-        .toOption()
-        .peek(ignored -> System.out.println("Wysłano login użytkownika"));
+  @Override
+  public Option<List<AccountInfoDTO>> getAccountsInfo() {
+    return
+        postUserLogin()
+            .flatMap(this::postUserPassword)
+            .flatMap(response -> postAccountInfo())
+            .flatMap(response -> parseAccountsInfoJson(response.body()));
   }
 
-  private Option<Response> postUserPassword(final Response response) {
-    System.out.println("Podaj hasło");
-    final var password = KontomatikChallengeApp.scanner.nextLine();
-    final var responseJson = new JSONObject(response.body());
-    requestJson
-        .put("data", new JSONObject()
-            .put("password", password))
-        .put("flow_id", responseJson.get("flow_id"))
-        .put("state_id", "password")
-        .put("token", responseJson.get("token"));
-    return Try.of(() ->
-        connection
-            .header("x-session-id", response.header("X-Session-Id"))
-            .requestBody(requestJson.toString())
-            .execute())
-        .onFailure(throwable -> System.out.println("[LOG/ERR] " + throwable.getMessage()))
-        .toOption()
-        .peek(ignored -> System.out.println("Wysłano hasło"));
-  }
-
-  private Option<Response> postAccountInfo(final Response response) {
-    requestJson
-        .put("data", new JSONObject()
-            .put("account_ids", new JSONObject())
-            .put("accounts", new JSONObject()));
-    return Try.of(() ->
-        connection.url(homeUrl + accountInfoUrl)
-            .requestBody(requestJson.toString())
-            .execute())
-        .onFailure(throwable -> System.out.println("[LOG/ERR] " + throwable.getMessage()))
-        .toOption();
-  }
-
-  public Option<List<AccountInfoDTO>> parseAccountsInfoJson(final JSONObject responseJson) {
-    return Try.of(() -> responseJson
+  public Option<List<AccountInfoDTO>> parseAccountsInfoJson(final String responseBody) {
+    return Try.of(() -> new JSONObject(responseBody)
         .getJSONObject("response")
         .getJSONObject("data"))
         .map(responseDataJson -> List.ofAll(responseDataJson.getJSONArray("account_ids"))
@@ -84,13 +41,58 @@ public class PkoScrapper implements BankScrapper {
         .toOption();
   }
 
-  @Override
-  public Option<List<AccountInfoDTO>> getAccountsInfo() {
-    return
-        postUserLogin()
-            .flatMap(this::postUserPassword)
-            .flatMap(this::postAccountInfo)
-            .flatMap(response -> parseAccountsInfoJson(new JSONObject(response.body())));
+  private Option<Response> postUserLogin() {
+    System.out.println("Podaj login");
+    final var userLogin = KontomatikChallengeApp.scanner.nextLine();
+    return Try.of(() ->
+        requestJson
+            .put("action", "submit")
+            .put("data", new JSONObject()
+                .put("login", userLogin))
+            .put("state_id", "login"))
+        .flatMap(updatedJson ->
+            Try.of(() ->
+                connection.url(homeUrl + loginUrl)
+                    .method(Method.POST)
+                    .ignoreContentType(true)
+                    .requestBody(updatedJson.toString())
+                    .execute())
+                .onFailure(throwable -> System.out.println("[LOG/ERR] " + throwable.getMessage()))
+                .peek(ignored -> System.out.println("Wysłano login użytkownika")))
+        .toOption();
+
+  }
+
+  private Option<Response> postUserPassword(final Response response) {
+    System.out.println("Podaj hasło");
+    final var password = KontomatikChallengeApp.scanner.nextLine();
+    final var responseJson = new JSONObject(response.body());
+    return Try.of(() ->
+        requestJson
+            .put("data", new JSONObject()
+                .put("password", password))
+            .put("flow_id", responseJson.get("flow_id"))
+            .put("state_id", "password")
+            .put("token", responseJson.get("token")))
+        .flatMap(updatedJson ->
+            Try.of(() -> connection
+                .header("x-session-id", response.header("X-Session-Id"))
+                .requestBody(requestJson.toString())
+                .execute()))
+        .onFailure(throwable -> System.out.println("[LOG/ERR] " + throwable.getMessage()))
+        .peek(ignored -> System.out.println("Wysłano hasło")).toOption();
+  }
+
+  private Option<Response> postAccountInfo() {
+    return Try.of(() -> requestJson
+        .put("data", new JSONObject()
+            .put("account_ids", new JSONObject())
+            .put("accounts", new JSONObject())))
+        .flatMap(updatedJson -> Try.of(() -> connection.url(homeUrl + accountInfoUrl)
+            .requestBody(requestJson.toString())
+            .execute()
+        ).onFailure(throwable -> System.out.println("[LOG/ERR] " + throwable.getMessage())))
+        .toOption();
   }
 }
 

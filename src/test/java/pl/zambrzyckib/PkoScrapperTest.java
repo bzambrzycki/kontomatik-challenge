@@ -1,12 +1,8 @@
 package pl.zambrzyckib;
 
 import io.vavr.collection.List;
-import java.io.IOException;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.jsoup.Connection;
-import org.jsoup.Connection.Method;
-import org.jsoup.Jsoup;
 import org.junit.Test;
 
 public class PkoScrapperTest {
@@ -14,23 +10,23 @@ public class PkoScrapperTest {
   @Test
   public void shouldReturnNameBalanceMapFromJson() {
     final var pkoScrapper = new PkoScrapper();
-    final var testResponseDataJson =
+    final var testResponseBody =
         new JSONObject()
             .put("response", new JSONObject().put("data", new JSONObject()
                 .put("account_ids", new JSONArray().put("abc").put("def"))
                 .put("accounts", new JSONObject()
                     .put("abc", new JSONObject()
-                        .put("name", "Konto1")
+                        .put("name", "accountOne")
                         .put("balance", "100")
                     ).put("def", new JSONObject()
-                        .put("name", "Konto2")
+                        .put("name", "accountTwo")
                         .put("balance", "200")
                     ))
-            ));
+            )).toString();
     final var expectedList = List.of(
-        AccountInfoDTO.of("Konto1", "100"),
-        AccountInfoDTO.of("Konto2", "200"));
-    assert pkoScrapper.parseAccountsInfoJson(testResponseDataJson)
+        AccountInfoDTO.of("accountOne", "100"),
+        AccountInfoDTO.of("accountTwo", "200"));
+    assert pkoScrapper.parseAccountsInfoJson(testResponseBody)
         .get()
         .equals(expectedList);
   }
