@@ -5,11 +5,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
 
-public class PkoScrapperTest {
+public class PkoResponseMapperTest {
 
   @Test
   public void shouldReturnNameBalanceMapFromJson() {
-    final var pkoScrapper = new PkoScrapper();
     final var testResponseBody =
         new JSONObject()
             .put("response", new JSONObject().put("data", new JSONObject()
@@ -26,8 +25,7 @@ public class PkoScrapperTest {
     final var expectedList = List.of(
         AccountInfoDTO.of("accountOne", "100"),
         AccountInfoDTO.of("accountTwo", "200"));
-    assert pkoScrapper.parseAccountsInfoJson(testResponseBody)
-        .get()
+    assert PkoResponseMapper.mapAccountsInfoResponse(testResponseBody)
         .equals(expectedList);
   }
 

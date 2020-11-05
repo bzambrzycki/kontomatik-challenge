@@ -14,7 +14,6 @@ public class PkoScrapper implements BankScrapper {
   private final String homeUrl = "https://www.ipko.pl/";
   private final String loginUrl = "ipko3/login";
   private final String accountInfoUrl = "ipko3/init";
-
   private final Connection connection = Jsoup.connect(homeUrl);
   private final JSONObject requestJson = new JSONObject();
 
@@ -24,21 +23,7 @@ public class PkoScrapper implements BankScrapper {
         postUserLogin()
             .flatMap(this::postUserPassword)
             .flatMap(response -> postAccountInfo())
-            .flatMap(response -> parseAccountsInfoJson(response.body()));
-  }
-
-  public Option<List<AccountInfoDTO>> parseAccountsInfoJson(final String responseBody) {
-    return Try.of(() -> new JSONObject(responseBody)
-        .getJSONObject("response")
-        .getJSONObject("data"))
-        .map(responseDataJson -> List.ofAll(responseDataJson.getJSONArray("account_ids"))
-            .map(accountId -> AccountInfoDTO.of(
-                responseDataJson.getJSONObject("accounts").getJSONObject(accountId.toString())
-                    .get("name").toString(),
-                responseDataJson.getJSONObject("accounts").getJSONObject(accountId.toString())
-                    .get("balance").toString())))
-        .onFailure(throwable -> System.out.println("[LOG/ERR] " + throwable.getMessage()))
-        .toOption();
+            .map(response -> PkoResponseMapper.mapAccountsInfoResponse(response.body()));
   }
 
   private Option<Response> postUserLogin() {
@@ -60,7 +45,6 @@ public class PkoScrapper implements BankScrapper {
                 .onFailure(throwable -> System.out.println("[LOG/ERR] " + throwable.getMessage()))
                 .peek(ignored -> System.out.println("Wysłano login użytkownika")))
         .toOption();
-
   }
 
   private Option<Response> postUserPassword(final Response response) {
@@ -95,10 +79,3 @@ public class PkoScrapper implements BankScrapper {
         .toOption();
   }
 }
-
-
-
-
-
-
-
