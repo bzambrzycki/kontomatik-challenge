@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="pl.zambrzyckib.JsoupClientTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-11-04T14:02:59" hostname="DESKTOP-LSCNJHH" time="0.034">
+  <properties/>
+  <testcase name="providingWrongUrlShouldReturnEmptyOption" classname="pl.zambrzyckib.JsoupClientTest" time="0.034"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
