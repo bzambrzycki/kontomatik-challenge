@@ -1,9 +1,12 @@
 package pl.zambrzyckib;
 
-import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
+import java.io.IOException;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.jsoup.Connection;
+import org.jsoup.Connection.Method;
+import org.jsoup.Jsoup;
 import org.junit.Test;
 
 public class PkoScrapperTest {

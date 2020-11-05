@@ -1,11 +1,10 @@
 package pl.zambrzyckib;
 
-import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
-import io.vavr.collection.Map;
 import io.vavr.control.Option;
 import io.vavr.control.Try;
 import org.json.JSONObject;
+import org.jsoup.Connection;
 import org.jsoup.Connection.Method;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
@@ -16,16 +15,19 @@ public class PkoScrapper implements BankScrapper {
   private final String loginUrl = "ipko3/login";
   private final String accountInfoUrl = "ipko3/init";
 
+  private final Connection connection = Jsoup.connect(homeUrl);
+  private final JSONObject requestJson = new JSONObject();
+
   private Option<Response> postUserLogin() {
     System.out.println("Podaj login");
     final var userLogin = KontomatikChallengeApp.scanner.nextLine();
-    final var requestJson = new JSONObject()
+    requestJson
         .put("action", "submit")
         .put("data", new JSONObject()
             .put("login", userLogin))
         .put("state_id", "login");
     return Try.of(() ->
-        Jsoup.connect(homeUrl + loginUrl)
+        connection.url(homeUrl + loginUrl)
             .method(Method.POST)
             .ignoreContentType(true)
             .requestBody(requestJson.toString())
@@ -39,38 +41,29 @@ public class PkoScrapper implements BankScrapper {
     System.out.println("Podaj hasło");
     final var password = KontomatikChallengeApp.scanner.nextLine();
     final var responseJson = new JSONObject(response.body());
-    final var requestJson = new JSONObject()
-        .put("action", "submit")
+    requestJson
         .put("data", new JSONObject()
             .put("password", password))
         .put("flow_id", responseJson.get("flow_id"))
         .put("state_id", "password")
         .put("token", responseJson.get("token"));
     return Try.of(() ->
-        Jsoup.connect(homeUrl + loginUrl)
-            .method(Method.POST)
-            .ignoreContentType(true)
+        connection
             .header("x-session-id", response.header("X-Session-Id"))
             .requestBody(requestJson.toString())
             .execute())
         .onFailure(throwable -> System.out.println("[LOG/ERR] " + throwable.getMessage()))
         .toOption()
         .peek(ignored -> System.out.println("Wysłano hasło"));
-
-
   }
 
   private Option<Response> postAccountInfo(final Response response) {
-    final var requestJson = new JSONObject()
+    requestJson
         .put("data", new JSONObject()
             .put("account_ids", new JSONObject())
             .put("accounts", new JSONObject()));
     return Try.of(() ->
-        Jsoup.connect(homeUrl + accountInfoUrl)
-            .method(Method.POST)
-            .ignoreContentType(true)
-            .header("x-session-id", response.header("X-Session-Id"))
-            .header("content-type", "charset=UTF-16LE")
+        connection.url(homeUrl + accountInfoUrl)
             .requestBody(requestJson.toString())
             .execute())
         .onFailure(throwable -> System.out.println("[LOG/ERR] " + throwable.getMessage()))
