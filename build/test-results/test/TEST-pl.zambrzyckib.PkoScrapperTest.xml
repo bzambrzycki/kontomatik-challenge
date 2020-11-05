@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="pl.zambrzyckib.PkoScrapperTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-11-05T17:19:02" hostname="DESKTOP-LSCNJHH" time="0.061">
-  <properties/>
-  <testcase name="shouldReturnNameBalanceMapFromJson" classname="pl.zambrzyckib.PkoScrapperTest" time="0.061"/>
-  <system-out><![CDATA[List(AccountInfoDTO(name=Konto1, balance=100), AccountInfoDTO(name=Konto2, balance=200))
-]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
