@@ -11,7 +11,7 @@ public class KontomatikChallengeApp {
     final var pkoResult = pkoScrapper.getAccountsInfo();
     if (pkoResult.isDefined()) {
       System.out.println("Udało się pobrać informacje o kontach");
-      //TODO implement better displaying
+      //TODO better presentation
       System.out.println(pkoResult.get());
     } else if (pkoResult.isEmpty()) {
       System.out.println("Nie udało się pobrać informacji o kontach");

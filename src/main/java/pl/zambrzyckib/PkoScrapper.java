@@ -21,29 +21,30 @@ public class PkoScrapper implements BankScrapper {
   public Option<List<AccountInfoDTO>> getAccountsInfo() {
     return
         postUserLogin()
+            .peek(response ->
+                PkoResponseHandler.verifyCredentialsResponse(response.body(), "login"))
             .flatMap(this::postUserPassword)
-            .flatMap(response -> postAccountInfo())
-            .map(response -> PkoResponseMapper.mapAccountsInfoResponse(response.body()));
+            .peek(response ->
+                PkoResponseHandler.verifyCredentialsResponse(response.body(), "password"))
+            .flatMap(this::postAccountInfo)
+            .map(response -> PkoResponseHandler.mapAccountsInfoResponse(response.body()));
   }
 
   private Option<Response> postUserLogin() {
     System.out.println("Podaj login");
     final var userLogin = KontomatikChallengeApp.scanner.nextLine();
     return Try.of(() ->
-        requestJson
-            .put("action", "submit")
-            .put("data", new JSONObject()
-                .put("login", userLogin))
-            .put("state_id", "login"))
-        .flatMap(updatedJson ->
-            Try.of(() ->
-                connection.url(homeUrl + loginUrl)
-                    .method(Method.POST)
-                    .ignoreContentType(true)
-                    .requestBody(updatedJson.toString())
-                    .execute())
-                .onFailure(throwable -> System.out.println("[LOG/ERR] " + throwable.getMessage()))
-                .peek(ignored -> System.out.println("Wysłano login użytkownika")))
+        connection
+            .url(homeUrl + loginUrl)
+            .method(Method.POST)
+            .ignoreContentType(true)
+            .requestBody(requestJson
+                .put("action", "submit")
+                .put("data", new JSONObject()
+                    .put("login", userLogin))
+                .put("state_id", "login").toString())
+            .execute())
+        .peek(ignored -> System.out.println("Wysłano login użytkownika"))
         .toOption();
   }
 
@@ -52,30 +53,33 @@ public class PkoScrapper implements BankScrapper {
     final var password = KontomatikChallengeApp.scanner.nextLine();
     final var responseJson = new JSONObject(response.body());
     return Try.of(() ->
-        requestJson
-            .put("data", new JSONObject()
-                .put("password", password))
-            .put("flow_id", responseJson.get("flow_id"))
-            .put("state_id", "password")
-            .put("token", responseJson.get("token")))
-        .flatMap(updatedJson ->
-            Try.of(() -> connection
-                .header("x-session-id", response.header("X-Session-Id"))
-                .requestBody(requestJson.toString())
-                .execute()))
-        .onFailure(throwable -> System.out.println("[LOG/ERR] " + throwable.getMessage()))
-        .peek(ignored -> System.out.println("Wysłano hasło")).toOption();
+        connection
+            .header("x-session-id", response.header("X-Session-Id"))
+            .requestBody(
+                requestJson
+                    .put("data", new JSONObject()
+                        .put("password", password))
+                    .put("flow_id", responseJson.get("flow_id"))
+                    .put("state_id", "password")
+                    .put("token", responseJson.get("token"))
+                    .toString())
+            .execute())
+        .toOption()
+        .peek(ignored -> System.out.println("Wysłano hasło"));
   }
 
-  private Option<Response> postAccountInfo() {
-    return Try.of(() -> requestJson
-        .put("data", new JSONObject()
-            .put("account_ids", new JSONObject())
-            .put("accounts", new JSONObject())))
-        .flatMap(updatedJson -> Try.of(() -> connection.url(homeUrl + accountInfoUrl)
-            .requestBody(requestJson.toString())
-            .execute()
-        ).onFailure(throwable -> System.out.println("[LOG/ERR] " + throwable.getMessage())))
-        .toOption();
+  private Option<Response> postAccountInfo(final Response response) {
+    return Try.of(() ->
+        connection
+            .url(homeUrl + accountInfoUrl)
+            .requestBody(
+                requestJson
+                    .put("data", new JSONObject()
+                        .put("account_ids", new JSONObject())
+                        .put("accounts", new JSONObject()))
+                    .toString())
+            .execute())
+        .toOption()
+        .peek(ignored -> System.out.println("Pobrano dane o kontach"));
   }
 }
