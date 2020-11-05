@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="pl.zambrzyckib.JsoupTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2020-11-05T09:23:51" hostname="DESKTOP-LSCNJHH" time="0.856">
-  <properties/>
-  <testcase name="shouldReturnSelectedFieldAttribute" classname="pl.zambrzyckib.JsoupTest" time="0.688"/>
-  <testcase name="shouldReturnEmptyOptionOnError" classname="pl.zambrzyckib.JsoupTest" time="0.168"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

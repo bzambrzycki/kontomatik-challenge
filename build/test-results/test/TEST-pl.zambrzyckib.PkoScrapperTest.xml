@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="pl.zambrzyckib.PkoScrapperTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-11-05T14:35:05" hostname="DESKTOP-LSCNJHH" time="0.016">
+  <properties/>
+  <testcase name="sandbox" classname="pl.zambrzyckib.PkoScrapperTest" time="0.016"/>
+  <system-out><![CDATA[MŁODYCH
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
