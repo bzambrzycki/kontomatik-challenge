@@ -5,7 +5,6 @@ import io.vavr.control.Option;
 import io.vavr.control.Try;
 import java.util.Map;
 import org.json.JSONObject;
-import org.jsoup.Connection.Response;
 import pl.zambrzyckib.RequestDTO.Method;
 
 public class PkoScrapper implements BankScrapper {
@@ -19,14 +18,16 @@ public class PkoScrapper implements BankScrapper {
   @Override
   public Option<List<AccountInfoDTO>> getAccountsInfo() {
     return postUserLogin()
-        .peek(response -> PkoResponseHandler.verifyCredentialsResponse(response.body(), "login"))
+        .peek(response -> PkoResponseHandler.verifyCredentialsResponse(response.getBody(), "login"))
         .flatMap(this::postUserPassword)
-        .peek(response -> PkoResponseHandler.verifyCredentialsResponse(response.body(), "password"))
+        .peek(
+            response ->
+                PkoResponseHandler.verifyCredentialsResponse(response.getBody(), "password"))
         .flatMap(this::postAccountInfo)
-        .map(response -> PkoResponseHandler.mapAccountsInfoResponse(response.body()));
+        .map(response -> PkoResponseHandler.mapAccountsInfoResponse(response.getBody()));
   }
 
-  private Option<Response> postUserLogin() {
+  private Option<ResponseDTO> postUserLogin() {
     System.out.println("Podaj login");
     final var userLogin = KontomatikChallengeApp.scanner.nextLine();
     return Try.of(
@@ -49,17 +50,17 @@ public class PkoScrapper implements BankScrapper {
         .toOption();
   }
 
-  private Option<Response> postUserPassword(final Response response) {
+  private Option<ResponseDTO> postUserPassword(final ResponseDTO response) {
     System.out.println("Podaj hasło");
     final var password = KontomatikChallengeApp.scanner.nextLine();
-    final var responseJson = new JSONObject(response.body());
+    final var responseJson = new JSONObject(response.getBody());
     return Try.of(
             () ->
                 connection.send(
                     RequestDTO.builder()
                         .url(homeUrl + loginUrl)
                         .method(Method.POST)
-                        .headers(Map.of("x-session-id", response.header("X-Session-Id")))
+                        .headers(Map.of("x-session-id", response.getHeader("X-Session-Id")))
                         .cookies(Map.of())
                         .body(
                             requestJson
@@ -74,7 +75,7 @@ public class PkoScrapper implements BankScrapper {
         .peek(ignored -> System.out.println("Wysłano hasło"));
   }
 
-  private Option<Response> postAccountInfo(final Response response) {
+  private Option<ResponseDTO> postAccountInfo(final ResponseDTO response) {
     return Try.of(
             () ->
                 connection.send(
