@@ -14,6 +14,13 @@ public class PkoScrapper implements BankScrapper {
   private final String accountInfoUrl = "ipko3/init";
   private final BankConnection bankConnection = new JsoupConnection(homeUrl, true);
   private final JSONObject requestJson = new JSONObject();
+  private final RequestDTO genericRequest =
+      RequestDTO.builder()
+          .url(homeUrl + loginUrl)
+          .method(Method.POST)
+          .headers(Map.of())
+          .cookies(Map.of())
+          .build();
 
   @Override
   public Option<List<AccountInfoDTO>> getAccountsInfo() {
@@ -33,11 +40,7 @@ public class PkoScrapper implements BankScrapper {
     return Try.of(
             () ->
                 bankConnection.send(
-                    RequestDTO.builder()
-                        .url(homeUrl + loginUrl)
-                        .method(Method.POST)
-                        .headers(Map.of())
-                        .cookies(Map.of())
+                    genericRequest.toBuilder()
                         .body(
                             requestJson
                                 .put("action", "submit")
@@ -57,11 +60,8 @@ public class PkoScrapper implements BankScrapper {
     return Try.of(
             () ->
                 bankConnection.send(
-                    RequestDTO.builder()
-                        .url(homeUrl + loginUrl)
-                        .method(Method.POST)
+                    genericRequest.toBuilder()
                         .headers(Map.of("x-session-id", response.getHeader("X-Session-Id")))
-                        .cookies(Map.of())
                         .body(
                             requestJson
                                 .put("data", new JSONObject().put("password", password))
@@ -79,11 +79,8 @@ public class PkoScrapper implements BankScrapper {
     return Try.of(
             () ->
                 bankConnection.send(
-                    RequestDTO.builder()
+                    genericRequest.toBuilder()
                         .url(homeUrl + accountInfoUrl)
-                        .method(Method.POST)
-                        .headers(Map.of())
-                        .cookies(Map.of())
                         .body(
                             requestJson
                                 .put(
