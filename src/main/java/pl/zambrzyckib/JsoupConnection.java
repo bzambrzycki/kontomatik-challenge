@@ -6,15 +6,16 @@ import org.jsoup.Connection;
 import org.jsoup.Connection.Method;
 import org.jsoup.Jsoup;
 
-public class JsoupConnection {
+public class JsoupConnection implements BankConnection {
 
-  public final Connection connection;
+  private final Connection connection;
 
   public JsoupConnection(final String url, final Boolean ignoreContentType) {
     this.connection = Jsoup.connect(url);
     this.connection.ignoreContentType(ignoreContentType);
   }
 
+  @Override
   public ResponseDTO send(final RequestDTO requestDTO) throws IOException {
     return Stream.of(
             connection

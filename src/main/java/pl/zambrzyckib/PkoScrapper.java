@@ -12,7 +12,7 @@ public class PkoScrapper implements BankScrapper {
   private final String homeUrl = "https://www.ipko.pl/";
   private final String loginUrl = "ipko3/login";
   private final String accountInfoUrl = "ipko3/init";
-  private final JsoupConnection connection = new JsoupConnection(homeUrl, true);
+  private final BankConnection bankConnection = new JsoupConnection(homeUrl, true);
   private final JSONObject requestJson = new JSONObject();
 
   @Override
@@ -32,7 +32,7 @@ public class PkoScrapper implements BankScrapper {
     final var userLogin = KontomatikChallengeApp.scanner.nextLine();
     return Try.of(
             () ->
-                connection.send(
+                bankConnection.send(
                     RequestDTO.builder()
                         .url(homeUrl + loginUrl)
                         .method(Method.POST)
@@ -56,7 +56,7 @@ public class PkoScrapper implements BankScrapper {
     final var responseJson = new JSONObject(response.getBody());
     return Try.of(
             () ->
-                connection.send(
+                bankConnection.send(
                     RequestDTO.builder()
                         .url(homeUrl + loginUrl)
                         .method(Method.POST)
@@ -78,7 +78,7 @@ public class PkoScrapper implements BankScrapper {
   private Option<ResponseDTO> postAccountInfo(final ResponseDTO response) {
     return Try.of(
             () ->
-                connection.send(
+                bankConnection.send(
                     RequestDTO.builder()
                         .url(homeUrl + accountInfoUrl)
                         .method(Method.POST)
