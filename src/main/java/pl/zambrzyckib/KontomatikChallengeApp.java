@@ -8,7 +8,7 @@ public class KontomatikChallengeApp {
   public static final Scanner scanner = new Scanner(System.in);
 
   public static void main(String[] args) {
-    BankScrapper pkoScrapper = new PkoScrapper();
+    PkoScrapper pkoScrapper = new PkoScrapper();
     final var pkoResult = pkoScrapper.getAccountsInfo();
     if (pkoResult.isDefined()) {
       System.out.println("Udało się pobrać informacje o kontach");

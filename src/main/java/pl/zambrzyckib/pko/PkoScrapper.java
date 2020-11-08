@@ -3,15 +3,13 @@ package pl.zambrzyckib.pko;
 import io.vavr.collection.List;
 import io.vavr.control.Option;
 import pl.zambrzyckib.dto.AccountInfoDTO;
-import pl.zambrzyckib.BankScrapper;
 
-public class PkoScrapper implements BankScrapper {
+public class PkoScrapper {
 
-  private final PkoSession pkoSession = new PkoSession();
+  private final PkoSessionHandler pkoSessionHandler = new PkoSessionHandler();
 
-  @Override
   public Option<List<AccountInfoDTO>> getAccountsInfo() {
-    return pkoSession
+    return pkoSessionHandler
         .getAccountsInfo()
         .map(responseDTO -> PkoResponseUtils.mapAccountsInfoResponse(responseDTO.getBody()));
   }
