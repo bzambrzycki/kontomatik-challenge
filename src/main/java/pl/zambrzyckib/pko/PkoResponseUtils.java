@@ -8,7 +8,7 @@ import pl.zambrzyckib.dto.AccountInfoDTO;
 import pl.zambrzyckib.exception.InvalidCredentialsException;
 
 @UtilityClass
-public class PkoResponseHandler {
+public class PkoResponseUtils {
 
   public List<AccountInfoDTO> mapAccountsInfoResponse(final String responseBody) {
     return List.of(new JSONObject(responseBody).getJSONObject("response").getJSONObject("data"))
