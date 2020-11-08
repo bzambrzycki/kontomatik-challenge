@@ -1,4 +1,4 @@
-package pl.zambrzyckib.dto;
+package pl.zambrzyckib.connection;
 
 import io.vavr.control.Option;
 import java.util.Map;
@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor(staticName = "of")
-public class ResponseDTO {
+public class Response {
 
   private String body;
   private Map<String, String> headers;

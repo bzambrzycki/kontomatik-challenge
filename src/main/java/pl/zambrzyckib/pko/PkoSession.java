@@ -9,9 +9,9 @@ import pl.zambrzyckib.connection.JsoupConnection;
 @Getter
 public class PkoSession {
 
-  static final String HOME_URL = "https://www.ipko.pl/";
-  static final String LOGIN_ENDPOINT = "ipko3/login";
-  static final String ACCOUNT_INFO_ENDPOINT = "ipko3/init";
+  public static final String HOME_URL = "https://www.ipko.pl/";
+  public static final String LOGIN_ENDPOINT = "ipko3/login";
+  public static final String ACCOUNT_INFO_ENDPOINT = "ipko3/init";
 
   private final BankConnection bankConnection;
   private final Map<String, String> headers;
@@ -26,5 +26,4 @@ public class PkoSession {
   public void addHeader(String key, String value) {
     headers.put(key, value);
   }
-
 }

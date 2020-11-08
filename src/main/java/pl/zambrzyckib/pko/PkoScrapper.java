@@ -3,18 +3,20 @@ package pl.zambrzyckib.pko;
 import io.vavr.collection.List;
 import io.vavr.collection.Stream;
 import pl.zambrzyckib.dto.AccountInfoDTO;
-import pl.zambrzyckib.dto.ResponseDTO;
+import pl.zambrzyckib.connection.Response;
+import pl.zambrzyckib.pko.request.PkoRequestsHandler;
+import pl.zambrzyckib.pko.response.PkoResponsesHandler;
 
 public class PkoScrapper {
 
   private final PkoSession pkoSession;
-  private final PkoRequestHandler pkoRequestHandler;
-  private final PkoResponseHandler pkoResponseHandler;
+  private final PkoRequestsHandler pkoRequestsHandler;
+  private final PkoResponsesHandler pkoResponsesHandler;
 
   public PkoScrapper() {
     this.pkoSession = new PkoSession();
-    this.pkoRequestHandler = new PkoRequestHandler(pkoSession);
-    this.pkoResponseHandler = new PkoResponseHandler();
+    this.pkoRequestsHandler = new PkoRequestsHandler(pkoSession);
+    this.pkoResponsesHandler = new PkoResponsesHandler();
   }
 
   public List<AccountInfoDTO> getAccountsInfo() {
@@ -23,28 +25,28 @@ public class PkoScrapper {
   }
 
   private void login() {
-    Stream.of(pkoRequestHandler.sendUserLoginRequest())
+    Stream.of(pkoRequestsHandler.sendLoginRequest())
         .peek(ignored -> System.out.println("Wysłano login"))
         .peek(
             responseDTO ->
-                pkoResponseHandler.verifyCredentialsResponse(responseDTO.getBody(), "login"))
+                pkoResponsesHandler.verifyCredentialsResponse(responseDTO.getBody(), "login"))
         .peek(this::saveSessionId)
-        .map(pkoRequestHandler::sendUserPasswordRequest)
+        .map(pkoRequestsHandler::sendPasswordRequest)
         .peek(ignored -> System.out.println("Wysłano hasło"))
         .peek(
             responseDTO ->
-                pkoResponseHandler.verifyCredentialsResponse(responseDTO.getBody(), "password"))
+                pkoResponsesHandler.verifyCredentialsResponse(responseDTO.getBody(), "password"))
         .peek(ignored -> System.out.println("Pomyślnie zalogowano"));
   }
 
   private List<AccountInfoDTO> fetchAccountsInfo() {
-    return Stream.of(pkoRequestHandler.sendAccountsInfoRequest())
-        .map(responseDTO -> pkoResponseHandler.mapAccountsInfoResponse(responseDTO.getBody()))
+    return Stream.of(pkoRequestsHandler.sendAccountsInfoRequest())
+        .map(responseDTO -> pkoResponsesHandler.mapAccountsInfoResponse(responseDTO.getBody()))
         .peek(ignored -> System.out.println("Pobrano dane o kontach"))
         .get();
   }
 
-  private void saveSessionId(final ResponseDTO responseDTO) {
-    pkoSession.addHeader("x-session-id", responseDTO.getHeader("X-Session-Id"));
+  private void saveSessionId(final Response response) {
+    pkoSession.addHeader("x-session-id", response.getHeader("X-Session-Id"));
   }
 }

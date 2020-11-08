@@ -1,4 +1,4 @@
-package pl.zambrzyckib.pko;
+package pl.zambrzyckib.pko.response;
 
 import io.vavr.collection.List;
 
@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import pl.zambrzyckib.dto.AccountInfoDTO;
 import pl.zambrzyckib.exception.InvalidCredentialsException;
 
-public class PkoResponseHandler {
+public class PkoResponsesHandler {
 
   /**
    * @param responseBody - response from POST request with user login, or password

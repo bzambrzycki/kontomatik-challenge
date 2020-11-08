@@ -1,4 +1,4 @@
-package pl.zambrzyckib.dto;
+package pl.zambrzyckib.connection;
 
 import java.util.Map;
 import lombok.Builder;
@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @Builder(toBuilder = true)
-public class RequestDTO {
+public class Request {
 
   private String url;
   private String body;

@@ -4,9 +4,6 @@ import io.vavr.control.Try;
 import org.jsoup.Connection;
 import org.jsoup.Connection.Method;
 import org.jsoup.Jsoup;
-import pl.zambrzyckib.connection.BankConnection;
-import pl.zambrzyckib.dto.RequestDTO;
-import pl.zambrzyckib.dto.ResponseDTO;
 
 public class JsoupConnection implements BankConnection {
 
@@ -18,17 +15,17 @@ public class JsoupConnection implements BankConnection {
   }
 
   @Override
-  public ResponseDTO send(final RequestDTO requestDTO) {
+  public Response send(final Request request) {
     return Try.of(
             () ->
                 connection
-                    .url(requestDTO.getUrl())
-                    .requestBody(requestDTO.getBody())
-                    .method(Method.valueOf(requestDTO.getMethod().toString()))
-                    .headers(requestDTO.getHeaders())
-                    .cookies(requestDTO.getCookies())
+                    .url(request.getUrl())
+                    .requestBody(request.getBody())
+                    .method(Method.valueOf(request.getMethod().toString()))
+                    .headers(request.getHeaders())
+                    .cookies(request.getCookies())
                     .execute())
-        .map(response -> ResponseDTO.of(response.body(), response.headers(), response.cookies()))
+        .map(response -> Response.of(response.body(), response.headers(), response.cookies()))
         .onFailure(throwable -> System.out.println("[LOG/ERR] " + throwable.getMessage()))
         .get();
   }
