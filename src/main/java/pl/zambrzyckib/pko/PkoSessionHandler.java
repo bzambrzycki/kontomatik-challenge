@@ -1,59 +1,44 @@
 package pl.zambrzyckib.pko;
 
-import io.vavr.control.Option;
-import org.json.JSONObject;
-import pl.zambrzyckib.KontomatikChallengeApp;
+import io.vavr.collection.List;
+import io.vavr.collection.Stream;
+import pl.zambrzyckib.dto.AccountInfoDTO;
 import pl.zambrzyckib.dto.ResponseDTO;
 
 public class PkoSessionHandler {
 
   private final PkoSession pkoSession = new PkoSession();
+  private final PkoRequestHandler pkoRequestHandler = new PkoRequestHandler(pkoSession);
+  private final PkoResponseHandler pkoResponseHandler = new PkoResponseHandler();
 
-  public Option<ResponseDTO> getAccountsInfo() {
+  public List<AccountInfoDTO> getAccountsInfo() {
     login();
     return fetchAccountsInfo();
   }
 
   public void login() {
-    sendUserLogin()
+    Stream.of(pkoRequestHandler.sendUserLoginRequest())
+        .peek(ignored -> System.out.println("Wysłano login"))
         .peek(
             responseDTO ->
-                PkoResponseUtils.verifyCredentialsResponse(responseDTO.getBody(), "login"))
+                pkoResponseHandler.verifyCredentialsResponse(responseDTO.getBody(), "login"))
+        .peek(this::saveSessionId)
+        .map(pkoRequestHandler::sendUserPasswordRequest)
+        .peek(ignored -> System.out.println("Wysłano hasło"))
         .peek(
             responseDTO ->
-                pkoSession.addHeader("x-session-id", responseDTO.getHeader("X-Session-Id")))
-        .flatMap(this::sendUserPassword)
-        .peek(
-            responseDTO ->
-                PkoResponseUtils.verifyCredentialsResponse(responseDTO.getBody(), "password"));
+                pkoResponseHandler.verifyCredentialsResponse(responseDTO.getBody(), "password"))
+        .peek(ignored -> System.out.println("Pomyślnie zalogowano"));
   }
 
-  private Option<ResponseDTO> sendUserLogin() {
-    System.out.println("Podaj login");
-    final var userLogin = KontomatikChallengeApp.scanner.nextLine();
-    return Option.of(
-            pkoSession
-                .getBankConnection()
-                .send(PkoRequest.userLoginPostRequest(userLogin, pkoSession)))
-        .peek(ignored -> System.out.println("Wysłano login użytkownika"));
+  private List<AccountInfoDTO> fetchAccountsInfo() {
+    return Stream.of(pkoRequestHandler.sendAccountsInfoRequest())
+        .map(responseDTO -> pkoResponseHandler.mapAccountsInfoResponse(responseDTO.getBody()))
+        .peek(ignored -> System.out.println("Pobrano dane o kontach"))
+        .get();
   }
 
-  private Option<ResponseDTO> sendUserPassword(final ResponseDTO response) {
-    System.out.println("Podaj hasło");
-    final var password = KontomatikChallengeApp.scanner.nextLine();
-    final var responseJson = new JSONObject(response.getBody());
-    final var token = responseJson.get("token").toString();
-    final var flowId = responseJson.get("flow_id").toString();
-    return Option.of(
-            pkoSession
-                .getBankConnection()
-                .send(PkoRequest.userPasswordPostRequest(password, pkoSession, flowId, token)))
-        .peek(ignored -> System.out.println("Wysłano hasło"));
-  }
-
-  private Option<ResponseDTO> fetchAccountsInfo() {
-    return Option.of(
-            pkoSession.getBankConnection().send(PkoRequest.accountInfoPostRequest(pkoSession)))
-        .peek(ignored -> System.out.println("Pobrano dane o kontach"));
+  private void saveSessionId(final ResponseDTO responseDTO) {
+    pkoSession.addHeader("x-session-id", responseDTO.getHeader("X-Session-Id"));
   }
 }

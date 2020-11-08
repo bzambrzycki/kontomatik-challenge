@@ -2,13 +2,26 @@ package pl.zambrzyckib.pko;
 
 import io.vavr.collection.List;
 
-import lombok.experimental.UtilityClass;
 import org.json.JSONObject;
 import pl.zambrzyckib.dto.AccountInfoDTO;
 import pl.zambrzyckib.exception.InvalidCredentialsException;
 
-@UtilityClass
-public class PkoResponseUtils {
+public class PkoResponseHandler {
+
+  public void verifyCredentialsResponse(final String responseBody, final String type) {
+    final var responseJson = new JSONObject(responseBody).getJSONObject("response");
+    if (responseJson.has("fields")) {
+      if (responseJson.getJSONObject("fields").has(type)) {
+        if (!responseJson
+            .getJSONObject("fields")
+            .getJSONObject(type)
+            .getJSONObject("errors")
+            .isEmpty()) {
+          throw new InvalidCredentialsException();
+        }
+      }
+    }
+  }
 
   public List<AccountInfoDTO> mapAccountsInfoResponse(final String responseBody) {
     return List.of(new JSONObject(responseBody).getJSONObject("response").getJSONObject("data"))
@@ -28,20 +41,5 @@ public class PkoResponseUtils {
                                     .getJSONObject(accountId.toString())
                                     .get("balance")
                                     .toString())));
-  }
-
-  public void verifyCredentialsResponse(final String responseBody, final String type) {
-    final var responseJson = new JSONObject(responseBody).getJSONObject("response");
-    if (responseJson.has("fields")) {
-      if (responseJson.getJSONObject("fields").has(type)) {
-        if (!responseJson
-            .getJSONObject("fields")
-            .getJSONObject(type)
-            .getJSONObject("errors")
-            .isEmpty()) {
-          throw new InvalidCredentialsException();
-        }
-      }
-    }
   }
 }

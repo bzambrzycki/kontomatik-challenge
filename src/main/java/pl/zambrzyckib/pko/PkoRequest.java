@@ -39,7 +39,7 @@ public class PkoRequest {
         .build();
   }
 
-  static RequestDTO accountInfoPostRequest(final PkoSession pkoSession) {
+  static RequestDTO accountsInfoPostRequest(final PkoSession pkoSession) {
 
     return RequestDTO.builder()
         .url(PkoSession.HOME_URL + PkoSession.ACCOUNT_INFO_ENDPOINT)

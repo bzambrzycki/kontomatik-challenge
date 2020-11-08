@@ -7,9 +7,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import pl.zambrzyckib.dto.AccountInfoDTO;
 import pl.zambrzyckib.exception.InvalidCredentialsException;
-import pl.zambrzyckib.pko.PkoResponseUtils;
+import pl.zambrzyckib.pko.PkoResponseHandler;
 
-public class PkoResponseUtilsTest {
+public class PkoResponseHandlerTest {
+
+  private final PkoResponseHandler pkoResponseHandler = new PkoResponseHandler();
 
   @Test
   public void shouldReturnNameBalanceMapFromJson() {
@@ -38,7 +40,8 @@ public class PkoResponseUtilsTest {
             .toString();
     final var expectedList =
         List.of(AccountInfoDTO.of("accountOne", "100"), AccountInfoDTO.of("accountTwo", "200"));
-    assert PkoResponseUtils.mapAccountsInfoResponse(accountsInfoResponseBody)
+    assert pkoResponseHandler
+        .mapAccountsInfoResponse(accountsInfoResponseBody)
         .equals(expectedList);
   }
 
@@ -82,9 +85,9 @@ public class PkoResponseUtilsTest {
             .toString();
     Assertions.assertThrows(
         InvalidCredentialsException.class,
-        () -> PkoResponseUtils.verifyCredentialsResponse(wrongLoginResponseBody, "login"));
+        () -> pkoResponseHandler.verifyCredentialsResponse(wrongLoginResponseBody, "login"));
     Assertions.assertThrows(
         InvalidCredentialsException.class,
-        () -> PkoResponseUtils.verifyCredentialsResponse(wrongPasswordResponseBody, "password"));
+        () -> pkoResponseHandler.verifyCredentialsResponse(wrongPasswordResponseBody, "password"));
   }
 }
