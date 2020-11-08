@@ -1,9 +1,11 @@
-package pl.zambrzyckib;
+package pl.zambrzyckib.pko;
 
 import io.vavr.collection.List;
 
 import lombok.experimental.UtilityClass;
 import org.json.JSONObject;
+import pl.zambrzyckib.dto.AccountInfoDTO;
+import pl.zambrzyckib.exception.InvalidCredentialsException;
 
 @UtilityClass
 public class PkoResponseHandler {

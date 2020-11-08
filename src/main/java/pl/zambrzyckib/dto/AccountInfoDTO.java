@@ -1,4 +1,4 @@
-package pl.zambrzyckib;
+package pl.zambrzyckib.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

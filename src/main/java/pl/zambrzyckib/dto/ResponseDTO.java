@@ -1,4 +1,4 @@
-package pl.zambrzyckib;
+package pl.zambrzyckib.dto;
 
 import io.vavr.control.Option;
 import java.util.Map;

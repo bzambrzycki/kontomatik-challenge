@@ -1,10 +1,17 @@
-package pl.zambrzyckib;
+package pl.zambrzyckib.pko;
 
 import io.vavr.collection.List;
 import io.vavr.control.Option;
 import java.util.Map;
 import org.json.JSONObject;
-import pl.zambrzyckib.RequestDTO.Method;
+import pl.zambrzyckib.dto.AccountInfoDTO;
+import pl.zambrzyckib.BankConnection;
+import pl.zambrzyckib.BankScrapper;
+import pl.zambrzyckib.JsoupConnection;
+import pl.zambrzyckib.KontomatikChallengeApp;
+import pl.zambrzyckib.dto.RequestDTO;
+import pl.zambrzyckib.dto.RequestDTO.Method;
+import pl.zambrzyckib.dto.ResponseDTO;
 
 public class PkoScrapper implements BankScrapper {
 

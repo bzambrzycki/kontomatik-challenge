@@ -1,11 +1,11 @@
 package pl.zambrzyckib;
 
-import io.vavr.collection.Stream;
 import io.vavr.control.Try;
-import java.io.IOException;
 import org.jsoup.Connection;
 import org.jsoup.Connection.Method;
 import org.jsoup.Jsoup;
+import pl.zambrzyckib.dto.RequestDTO;
+import pl.zambrzyckib.dto.ResponseDTO;
 
 public class JsoupConnection implements BankConnection {
 

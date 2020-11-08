@@ -1,4 +1,4 @@
-package pl.zambrzyckib;
+package pl.zambrzyckib.dto;
 
 import java.util.Map;
 import lombok.Builder;

@@ -1,3 +1,3 @@
-package pl.zambrzyckib;
+package pl.zambrzyckib.exception;
 
 public class InvalidCredentialsException extends RuntimeException {}

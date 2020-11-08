@@ -1,10 +1,11 @@
 package pl.zambrzyckib;
 
 import java.util.Scanner;
+import pl.zambrzyckib.pko.PkoScrapper;
 
 public class KontomatikChallengeApp {
 
-  static final Scanner scanner = new Scanner(System.in);
+  public static final Scanner scanner = new Scanner(System.in);
 
   public static void main(String[] args) {
     BankScrapper pkoScrapper = new PkoScrapper();
