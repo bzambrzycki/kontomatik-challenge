@@ -7,7 +7,7 @@ import pl.zambrzyckib.dto.ResponseDTO;
 
 public class PkoSessionHandler {
 
-  private PkoSession pkoSession = new PkoSession();
+  private final PkoSession pkoSession = new PkoSession();
 
   public Option<ResponseDTO> getAccountsInfo() {
     login();

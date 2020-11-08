@@ -1,9 +1,10 @@
-package pl.zambrzyckib;
+package pl.zambrzyckib.connection;
 
 import io.vavr.control.Try;
 import org.jsoup.Connection;
 import org.jsoup.Connection.Method;
 import org.jsoup.Jsoup;
+import pl.zambrzyckib.connection.BankConnection;
 import pl.zambrzyckib.dto.RequestDTO;
 import pl.zambrzyckib.dto.ResponseDTO;
 

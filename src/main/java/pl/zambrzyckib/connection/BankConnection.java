@@ -1,4 +1,4 @@
-package pl.zambrzyckib;
+package pl.zambrzyckib.connection;
 
 import pl.zambrzyckib.dto.RequestDTO;
 import pl.zambrzyckib.dto.ResponseDTO;

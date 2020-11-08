@@ -1,11 +1,10 @@
 package pl.zambrzyckib.pko;
 
-import io.vavr.control.Option;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.Getter;
-import pl.zambrzyckib.BankConnection;
-import pl.zambrzyckib.JsoupConnection;
+import pl.zambrzyckib.connection.BankConnection;
+import pl.zambrzyckib.connection.JsoupConnection;
 
 @Getter
 public class PkoSession {
