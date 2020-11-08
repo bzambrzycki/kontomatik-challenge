@@ -4,7 +4,7 @@ import org.json.JSONObject;
 import pl.zambrzyckib.dto.RequestDTO;
 import pl.zambrzyckib.dto.RequestDTO.Method;
 
-public class PkoRequest {
+public class PkoRequests {
 
   static RequestDTO userLoginPostRequest(final String login, final PkoSession pkoSession) {
     return RequestDTO.builder()

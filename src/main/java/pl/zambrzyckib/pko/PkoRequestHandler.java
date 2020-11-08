@@ -17,7 +17,7 @@ public class PkoRequestHandler {
     final var userLogin = KontomatikChallengeApp.scanner.nextLine();
     return pkoSession
         .getBankConnection()
-        .send(PkoRequest.userLoginPostRequest(userLogin, pkoSession));
+        .send(PkoRequests.userLoginPostRequest(userLogin, pkoSession));
   }
 
   public ResponseDTO sendUserPasswordRequest(final ResponseDTO postLoginResponse) {
@@ -28,10 +28,10 @@ public class PkoRequestHandler {
     final var flowId = postLoginResponseJson.get("flow_id").toString();
     return pkoSession
         .getBankConnection()
-        .send(PkoRequest.userPasswordPostRequest(password, pkoSession, flowId, token));
+        .send(PkoRequests.userPasswordPostRequest(password, pkoSession, flowId, token));
   }
 
   public ResponseDTO sendAccountsInfoRequest() {
-    return pkoSession.getBankConnection().send(PkoRequest.accountsInfoPostRequest(pkoSession));
+    return pkoSession.getBankConnection().send(PkoRequests.accountsInfoPostRequest(pkoSession));
   }
 }

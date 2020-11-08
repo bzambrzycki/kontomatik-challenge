@@ -7,16 +7,22 @@ import pl.zambrzyckib.dto.ResponseDTO;
 
 public class PkoSessionHandler {
 
-  private final PkoSession pkoSession = new PkoSession();
-  private final PkoRequestHandler pkoRequestHandler = new PkoRequestHandler(pkoSession);
-  private final PkoResponseHandler pkoResponseHandler = new PkoResponseHandler();
+  private final PkoSession pkoSession;
+  private final PkoRequestHandler pkoRequestHandler;
+  private final PkoResponseHandler pkoResponseHandler;
+
+  public PkoSessionHandler() {
+    this.pkoSession = new PkoSession();
+    this.pkoRequestHandler = new PkoRequestHandler(pkoSession);
+    this.pkoResponseHandler = new PkoResponseHandler();
+  }
 
   public List<AccountInfoDTO> getAccountsInfo() {
     login();
     return fetchAccountsInfo();
   }
 
-  public void login() {
+  private void login() {
     Stream.of(pkoRequestHandler.sendUserLoginRequest())
         .peek(ignored -> System.out.println("Wysłano login"))
         .peek(

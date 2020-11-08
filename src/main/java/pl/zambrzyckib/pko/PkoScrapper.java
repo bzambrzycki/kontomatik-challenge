@@ -5,7 +5,11 @@ import pl.zambrzyckib.dto.AccountInfoDTO;
 
 public class PkoScrapper {
 
-  private final PkoSessionHandler pkoSessionHandler = new PkoSessionHandler();
+  private final PkoSessionHandler pkoSessionHandler;
+
+  public PkoScrapper() {
+    this.pkoSessionHandler = new PkoSessionHandler();
+  }
 
   public List<AccountInfoDTO> getAccountsInfo() {
     return pkoSessionHandler.getAccountsInfo();
