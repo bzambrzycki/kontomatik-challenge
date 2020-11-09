@@ -1,6 +1,5 @@
 package pl.zambrzyckib;
 
-import com.google.gson.Gson;
 import io.vavr.collection.List;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,13 +18,13 @@ public class PkoResponsesHandlerTest {
 
   @Test
   @SneakyThrows
-  public void shouldReturnNameBalanceMapFromJson() {
+  public void shouldReturnAccountSummaryListFromJson() {
     final var accountsInfoResponseBody =
         Files.readString(Path.of("src/test/resources/accountsInfoResponseBody"));
     final var expectedList =
         List.of(AccountSummary.of("accountOne", "100"), AccountSummary.of("accountTwo", "200"));
     assert pkoResponsesHandler
-        .getAccountSummaries(Response.of(accountsInfoResponseBody, Map.of(), Map.of()))
+        .getAccountSummaries(Response.of(accountsInfoResponseBody, 200, Map.of(), Map.of()))
         .equals(expectedList);
   }
 
@@ -38,13 +37,13 @@ public class PkoResponsesHandlerTest {
         InvalidCredentialsException.class,
         () ->
             pkoResponsesHandler.verifyLoginResponse(
-                Response.of(wrongLoginResponseBody, Map.of(), Map.of())));
+                Response.of(wrongLoginResponseBody, 200, Map.of(), Map.of())));
     final var wrongPasswordResponseBody =
         Files.readString(Path.of("src/test/resources/wrongPasswordResponseBody"));
     Assertions.assertThrows(
         InvalidCredentialsException.class,
         () ->
             pkoResponsesHandler.verifyPasswordResponse(
-                Response.of(wrongPasswordResponseBody, Map.of(), Map.of())));
+                Response.of(wrongPasswordResponseBody, 200, Map.of(), Map.of())));
   }
 }

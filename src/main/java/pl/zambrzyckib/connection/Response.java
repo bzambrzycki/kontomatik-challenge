@@ -10,6 +10,7 @@ import lombok.Data;
 public class Response {
 
   private String body;
+  private Integer statusCode;
   private Map<String, String> headers;
   private Map<String, String> cookies;
 
