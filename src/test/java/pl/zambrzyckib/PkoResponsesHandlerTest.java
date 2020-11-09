@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 import lombok.SneakyThrows;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import pl.zambrzyckib.connection.Response;
@@ -17,7 +16,6 @@ import pl.zambrzyckib.pko.response.PkoResponsesHandler;
 public class PkoResponsesHandlerTest {
 
   private final PkoResponsesHandler pkoResponsesHandler = new PkoResponsesHandler();
-  private final Gson gson = new Gson();
 
   @Test
   @SneakyThrows
@@ -27,7 +25,7 @@ public class PkoResponsesHandlerTest {
     final var expectedList =
         List.of(AccountSummary.of("accountOne", "100"), AccountSummary.of("accountTwo", "200"));
     assert pkoResponsesHandler
-        .mapAccountsInfoResponse(Response.of(accountsInfoResponseBody, Map.of(), Map.of()))
+        .getAccountSummaries(Response.of(accountsInfoResponseBody, Map.of(), Map.of()))
         .equals(expectedList);
   }
 

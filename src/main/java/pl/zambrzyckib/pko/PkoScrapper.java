@@ -42,7 +42,7 @@ public class PkoScrapper {
 
   private List<AccountSummary> fetchAccountsInfo() {
     return Stream.of(pkoRequestsHandler.sendAccountsInfoRequest())
-        .map(pkoResponsesHandler::mapAccountsInfoResponse)
+        .map(pkoResponsesHandler::getAccountSummaries)
         .peek(ignored -> System.out.println("Pobrano dane o kontach"))
         .get();
   }

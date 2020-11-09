@@ -7,9 +7,9 @@ import pl.zambrzyckib.connection.Response;
 import pl.zambrzyckib.pko.PkoScrapper;
 import pl.zambrzyckib.pko.PkoSession;
 import pl.zambrzyckib.pko.request.body.AccountsInfoRequestBody;
-import pl.zambrzyckib.pko.request.body.SendLoginRequestBody;
-import pl.zambrzyckib.pko.request.body.SendPasswordRequestBody;
-import pl.zambrzyckib.pko.response.body.SendLoginResponseBody;
+import pl.zambrzyckib.pko.request.body.LoginRequestBody;
+import pl.zambrzyckib.pko.request.body.PasswordRequestBody;
+import pl.zambrzyckib.pko.response.body.LoginResponseBody;
 
 public class PkoRequests {
 
@@ -19,20 +19,20 @@ public class PkoRequests {
         .method(Method.POST)
         .headers(pkoSession.getHeaders())
         .cookies(pkoSession.getCookies())
-        .body(PkoScrapper.GSON.toJson(new SendLoginRequestBody(login)))
+        .body(PkoScrapper.GSON.toJson(new LoginRequestBody(login)))
         .build();
   }
 
   static Request userPasswordPostRequest(
       final String password, final PkoSession pkoSession, final Response sendLoginResponse) {
-    final var sendLoginResponseBody =
-        new Gson().fromJson(sendLoginResponse.getBody(), SendLoginResponseBody.class);
+    final var loginResponseBody =
+        new Gson().fromJson(sendLoginResponse.getBody(), LoginResponseBody.class);
     return Request.builder()
         .url(PkoSession.HOME_URL + PkoSession.LOGIN_ENDPOINT)
         .method(Method.POST)
         .headers(pkoSession.getHeaders())
         .cookies(pkoSession.getCookies())
-        .body(PkoScrapper.GSON.toJson(new SendPasswordRequestBody(password, sendLoginResponseBody)))
+        .body(PkoScrapper.GSON.toJson(new PasswordRequestBody(password, loginResponseBody)))
         .build();
   }
 

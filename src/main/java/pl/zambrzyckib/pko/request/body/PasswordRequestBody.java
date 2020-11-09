@@ -1,9 +1,9 @@
 package pl.zambrzyckib.pko.request.body;
 
 import com.google.gson.annotations.SerializedName;
-import pl.zambrzyckib.pko.response.body.SendLoginResponseBody;
+import pl.zambrzyckib.pko.response.body.LoginResponseBody;
 
-public class SendPasswordRequestBody {
+public class PasswordRequestBody {
 
   String action;
   Data data;
@@ -16,13 +16,13 @@ public class SendPasswordRequestBody {
 
   String token;
 
-  public SendPasswordRequestBody(
-      final String password, final SendLoginResponseBody sendLoginResponseBody) {
+  public PasswordRequestBody(
+      final String password, final LoginResponseBody loginResponseBody) {
     this.action = "submit";
     this.data = new Data(password);
     this.stateId = "password";
-    this.flowId = sendLoginResponseBody.getFlowId();
-    this.token = sendLoginResponseBody.getToken();
+    this.flowId = loginResponseBody.getFlowId();
+    this.token = loginResponseBody.getToken();
   }
 
   private static class Data {

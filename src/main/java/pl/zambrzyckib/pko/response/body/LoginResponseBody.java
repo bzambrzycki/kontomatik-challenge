@@ -1,15 +1,22 @@
 package pl.zambrzyckib.pko.response.body;
 
+import com.google.gson.annotations.SerializedName;
 import io.vavr.control.Try;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
-public class SendPasswordResponseBody {
+@ToString
+public class LoginResponseBody {
+  String token;
+
+  @SerializedName("flow_id")
+  String flowId;
 
   Response response;
 
   public Boolean hasErrors() {
-    return Try.of(() -> !getResponse().getFields().getPassword().getErrors().getHint().isEmpty())
+    return Try.of(() -> !getResponse().getFields().getLogin().getErrors().getHint().isEmpty())
         .getOrElse(false);
   }
 
@@ -19,10 +26,10 @@ public class SendPasswordResponseBody {
 
     @Getter
     private static class Fields {
-      Password password;
+      Login login;
 
       @Getter
-      private static class Password {
+      private static class Login {
         Errors errors;
 
         @Getter

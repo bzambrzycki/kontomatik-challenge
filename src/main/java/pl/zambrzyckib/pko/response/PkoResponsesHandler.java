@@ -7,28 +7,28 @@ import pl.zambrzyckib.exception.InvalidCredentialsException;
 import pl.zambrzyckib.model.AccountSummary;
 import pl.zambrzyckib.pko.PkoScrapper;
 import pl.zambrzyckib.pko.response.body.AccountsInfoResponseBody;
-import pl.zambrzyckib.pko.response.body.SendLoginResponseBody;
-import pl.zambrzyckib.pko.response.body.SendPasswordResponseBody;
+import pl.zambrzyckib.pko.response.body.LoginResponseBody;
+import pl.zambrzyckib.pko.response.body.PasswordResponseBody;
 
 public class PkoResponsesHandler {
 
   public void verifyLoginResponse(final Response response) {
-    final var sendLoginResponseBody =
-        PkoScrapper.GSON.fromJson(response.getBody(), SendLoginResponseBody.class);
-    if (sendLoginResponseBody.hasErrors()) {
+    final var loginResponseBody =
+        PkoScrapper.GSON.fromJson(response.getBody(), LoginResponseBody.class);
+    if (loginResponseBody.hasErrors()) {
       throw new InvalidCredentialsException();
     }
   }
 
   public void verifyPasswordResponse(final Response response) {
-    final var sendPasswordResponseBody =
-        PkoScrapper.GSON.fromJson(response.getBody(), SendPasswordResponseBody.class);
-    if (sendPasswordResponseBody.hasErrors()) {
+    final var passwordResponseBody =
+        PkoScrapper.GSON.fromJson(response.getBody(), PasswordResponseBody.class);
+    if (passwordResponseBody.hasErrors()) {
       throw new InvalidCredentialsException();
     }
   }
 
-  public List<AccountSummary> mapAccountsInfoResponse(final Response response) {
+  public List<AccountSummary> getAccountSummaries(final Response response) {
     return PkoScrapper.GSON
         .fromJson(response.getBody(), AccountsInfoResponseBody.class)
         .getAccountSummaries();
