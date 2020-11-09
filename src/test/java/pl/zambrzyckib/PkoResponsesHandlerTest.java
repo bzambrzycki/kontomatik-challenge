@@ -1,93 +1,52 @@
 package pl.zambrzyckib;
 
+import com.google.gson.Gson;
 import io.vavr.collection.List;
-import org.json.JSONArray;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Map;
+import lombok.SneakyThrows;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import pl.zambrzyckib.dto.AccountInfoDTO;
+import pl.zambrzyckib.connection.Response;
 import pl.zambrzyckib.exception.InvalidCredentialsException;
-import pl.zambrzyckib.pko.PkoResponsesHandler;
+import pl.zambrzyckib.model.AccountSummary;
+import pl.zambrzyckib.pko.response.PkoResponsesHandler;
 
 public class PkoResponsesHandlerTest {
 
   private final PkoResponsesHandler pkoResponsesHandler = new PkoResponsesHandler();
+  private final Gson gson = new Gson();
 
   @Test
+  @SneakyThrows
   public void shouldReturnNameBalanceMapFromJson() {
     final var accountsInfoResponseBody =
-        new JSONObject()
-            .put(
-                "response",
-                new JSONObject()
-                    .put(
-                        "data",
-                        new JSONObject()
-                            .put("account_ids", new JSONArray().put("abc").put("def"))
-                            .put(
-                                "accounts",
-                                new JSONObject()
-                                    .put(
-                                        "abc",
-                                        new JSONObject()
-                                            .put("name", "accountOne")
-                                            .put("balance", "100"))
-                                    .put(
-                                        "def",
-                                        new JSONObject()
-                                            .put("name", "accountTwo")
-                                            .put("balance", "200")))))
-            .toString();
+        Files.readString(Path.of("src/test/resources/accountsInfoResponseBody"));
     final var expectedList =
-        List.of(AccountInfoDTO.of("accountOne", "100"), AccountInfoDTO.of("accountTwo", "200"));
+        List.of(AccountSummary.of("accountOne", "100"), AccountSummary.of("accountTwo", "200"));
     assert pkoResponsesHandler
-        .mapAccountsInfoResponse(accountsInfoResponseBody)
+        .mapAccountsInfoResponse(Response.of(accountsInfoResponseBody, Map.of(), Map.of()))
         .equals(expectedList);
   }
 
   @Test
+  @SneakyThrows
   public void shouldThrowExceptionWhenCredentialsAreIncorrect() {
     final var wrongLoginResponseBody =
-        new JSONObject()
-            .put(
-                "response",
-                new JSONObject()
-                    .put(
-                        "fields",
-                        new JSONObject()
-                            .put(
-                                "login",
-                                new JSONObject()
-                                    .put("value", "null")
-                                    .put(
-                                        "errors",
-                                        new JSONObject()
-                                            .put(
-                                                "hint",
-                                                "Wpisz poprawny numer klienta lub login")))))
-            .toString();
+        Files.readString(Path.of("src/test/resources/wrongLoginResponseBody"));
+    Assertions.assertThrows(
+        InvalidCredentialsException.class,
+        () ->
+            pkoResponsesHandler.verifyLoginResponse(
+                Response.of(wrongLoginResponseBody, Map.of(), Map.of())));
     final var wrongPasswordResponseBody =
-        new JSONObject()
-            .put(
-                "response",
-                new JSONObject()
-                    .put(
-                        "fields",
-                        new JSONObject()
-                            .put(
-                                "password",
-                                new JSONObject()
-                                    .put("value", "null")
-                                    .put(
-                                        "errors",
-                                        new JSONObject()
-                                            .put("hint", "\"Wpisz poprawne has\\u0142o\"")))))
-            .toString();
+        Files.readString(Path.of("src/test/resources/wrongPasswordResponseBody"));
     Assertions.assertThrows(
         InvalidCredentialsException.class,
-        () -> pkoResponsesHandler.verifyCredentialsResponse(wrongLoginResponseBody, "login"));
-    Assertions.assertThrows(
-        InvalidCredentialsException.class,
-        () -> pkoResponsesHandler.verifyCredentialsResponse(wrongPasswordResponseBody, "password"));
+        () ->
+            pkoResponsesHandler.verifyPasswordResponse(
+                Response.of(wrongPasswordResponseBody, Map.of(), Map.of())));
   }
 }

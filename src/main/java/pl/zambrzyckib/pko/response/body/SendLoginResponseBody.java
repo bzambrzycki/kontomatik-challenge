@@ -1,9 +1,12 @@
 package pl.zambrzyckib.pko.response.body;
 
 import com.google.gson.annotations.SerializedName;
+import io.vavr.control.Try;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class SendLoginResponseBody {
   String token;
 
@@ -12,16 +15,27 @@ public class SendLoginResponseBody {
 
   Response response;
 
+  public Boolean hasErrors() {
+    return Try.of(() -> !getResponse().getFields().getLogin().getErrors().getHint().isEmpty())
+        .getOrElse(false);
+  }
+
+  @Getter
   private static class Response {
     Fields fields;
 
+    @Getter
     private static class Fields {
-      Password password;
+      Login login;
 
-      private static class Password {
+      @Getter
+      private static class Login {
         Errors errors;
 
-        private static class Errors {}
+        @Getter
+        private static class Errors {
+          String hint;
+        }
       }
     }
   }

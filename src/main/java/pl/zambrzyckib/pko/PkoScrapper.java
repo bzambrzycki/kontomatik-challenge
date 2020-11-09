@@ -1,9 +1,10 @@
 package pl.zambrzyckib.pko;
 
+import com.google.gson.Gson;
 import io.vavr.collection.List;
 import io.vavr.collection.Stream;
-import pl.zambrzyckib.dto.AccountInfoDTO;
 import pl.zambrzyckib.connection.Response;
+import pl.zambrzyckib.model.AccountSummary;
 import pl.zambrzyckib.pko.request.PkoRequestsHandler;
 import pl.zambrzyckib.pko.response.PkoResponsesHandler;
 
@@ -12,6 +13,7 @@ public class PkoScrapper {
   private final PkoSession pkoSession;
   private final PkoRequestsHandler pkoRequestsHandler;
   private final PkoResponsesHandler pkoResponsesHandler;
+  public static final Gson GSON = new Gson();
 
   public PkoScrapper() {
     this.pkoSession = new PkoSession();
@@ -19,29 +21,28 @@ public class PkoScrapper {
     this.pkoResponsesHandler = new PkoResponsesHandler();
   }
 
-  public List<AccountInfoDTO> getAccountsInfo() {
+  public List<String> getAccountsInfo() {
     login();
-    return fetchAccountsInfo();
+    return fetchAccountsInfo()
+        .map(
+            accountSummary ->
+                "Konto: " + accountSummary.getName() + ", stan: " + accountSummary.getBalance());
   }
 
   private void login() {
     Stream.of(pkoRequestsHandler.sendLoginRequest())
         .peek(ignored -> System.out.println("Wysłano login"))
-        .peek(
-            responseDTO ->
-                pkoResponsesHandler.verifyCredentialsResponse(responseDTO.getBody(), "login"))
+        .peek(pkoResponsesHandler::verifyLoginResponse)
         .peek(this::saveSessionId)
         .map(pkoRequestsHandler::sendPasswordRequest)
         .peek(ignored -> System.out.println("Wysłano hasło"))
-        .peek(
-            responseDTO ->
-                pkoResponsesHandler.verifyCredentialsResponse(responseDTO.getBody(), "password"))
+        .peek(pkoResponsesHandler::verifyPasswordResponse)
         .peek(ignored -> System.out.println("Pomyślnie zalogowano"));
   }
 
-  private List<AccountInfoDTO> fetchAccountsInfo() {
+  private List<AccountSummary> fetchAccountsInfo() {
     return Stream.of(pkoRequestsHandler.sendAccountsInfoRequest())
-        .map(responseDTO -> pkoResponsesHandler.mapAccountsInfoResponse(responseDTO.getBody()))
+        .map(pkoResponsesHandler::mapAccountsInfoResponse)
         .peek(ignored -> System.out.println("Pobrano dane o kontach"))
         .get();
   }

@@ -1,0 +1,16 @@
+{
+  "response":{
+    "data":{
+      "accounts":{
+        "abc":{
+          "balance":"100",
+          "name":"accountOne"
+        },
+        "def":{
+          "balance":"200",
+          "name":"accountTwo"
+        }
+      }
+    }
+  }
+}

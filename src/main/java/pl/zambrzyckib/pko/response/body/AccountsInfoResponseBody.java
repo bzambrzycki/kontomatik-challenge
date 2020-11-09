@@ -1,5 +1,6 @@
 package pl.zambrzyckib.pko.response.body;
 
+import io.vavr.collection.List;
 import java.util.Map;
 import lombok.Getter;
 import pl.zambrzyckib.model.AccountSummary;
@@ -18,7 +19,7 @@ public class AccountsInfoResponseBody {
     }
   }
 
-  public Map<String, AccountSummary> getAccounts() {
-    return getResponse().getData().getAccounts();
+  public List<AccountSummary> getAccountSummaries() {
+    return List.ofAll(getResponse().getData().getAccounts().values());
   }
 }

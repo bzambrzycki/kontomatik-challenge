@@ -9,8 +9,7 @@ public class KontomatikChallengeApp {
 
   public static void main(String[] args) {
     PkoScrapper pkoScrapper = new PkoScrapper();
-    final var pkoResult = pkoScrapper.getAccountsInfo();
-    //TODO Better presentation
-    System.out.println(pkoResult.get());
+    final var formattedPkoAccountSummary = pkoScrapper.getAccountsInfo();
+    formattedPkoAccountSummary.forEach(System.out::println);
   }
 }
