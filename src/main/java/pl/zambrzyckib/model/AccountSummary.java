@@ -12,5 +12,5 @@ import lombok.ToString;
 public class AccountSummary {
   String name;
   String balance;
-
+  String currency;
 }

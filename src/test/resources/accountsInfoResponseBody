@@ -4,11 +4,13 @@
       "accounts":{
         "abc":{
           "balance":"100",
-          "name":"accountOne"
+          "name":"accountOne",
+          "currency": "PLN"
         },
         "def":{
           "balance":"200",
-          "name":"accountTwo"
+          "name":"accountTwo",
+          "currency": "PLN"
         }
       }
     }

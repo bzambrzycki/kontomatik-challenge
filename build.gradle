@@ -4,7 +4,6 @@ plugins {
 }
 
 group 'pl.zambrzyckib'
-version '1.0-SNAPSHOT'
 project.sourceCompatibility = '11'
 project.targetCompatibility = '11'
 

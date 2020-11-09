@@ -28,25 +28,30 @@ public class PkoScrapper {
     return fetchAccountsInfo()
         .map(
             accountSummary ->
-                "Konto: " + accountSummary.getName() + ", stan: " + accountSummary.getBalance());
+                "Account: "
+                    + accountSummary.getName()
+                    + ", balance: "
+                    + accountSummary.getBalance()
+                    + " "
+                    + accountSummary.getCurrency());
   }
 
   private void login(final Credentials credentials) {
     Stream.of(pkoRequestsHandler.sendLoginRequest(credentials.getLogin()))
-        .peek(ignored -> System.out.println("Wysłano login"))
+        .peek(ignored -> System.out.println("Login sent"))
         .peek(pkoResponsesHandler::verifyLoginResponse)
         .peek(this::saveSessionId)
         .map(
             response -> pkoRequestsHandler.sendPasswordRequest(response, credentials.getPassword()))
-        .peek(ignored -> System.out.println("Wysłano hasło"))
+        .peek(ignored -> System.out.println("Password sent"))
         .peek(pkoResponsesHandler::verifyPasswordResponse)
-        .peek(ignored -> System.out.println("Pomyślnie zalogowano"));
+        .peek(ignored -> System.out.println("Logged in successfully"));
   }
 
   private List<AccountSummary> fetchAccountsInfo() {
     return Stream.of(pkoRequestsHandler.sendAccountsInfoRequest())
         .map(pkoResponsesHandler::getAccountSummaries)
-        .peek(ignored -> System.out.println("Pobrano dane o kontach"))
+        .peek(ignored -> System.out.println("Fetched accounts data"))
         .get();
   }
 

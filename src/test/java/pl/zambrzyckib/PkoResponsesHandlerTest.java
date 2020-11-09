@@ -22,7 +22,7 @@ public class PkoResponsesHandlerTest {
     final var accountsInfoResponseBody =
         Files.readString(Path.of("src/test/resources/accountsInfoResponseBody"));
     final var expectedList =
-        List.of(AccountSummary.of("accountOne", "100"), AccountSummary.of("accountTwo", "200"));
+        List.of(AccountSummary.of("accountOne", "100", "PLN"), AccountSummary.of("accountTwo", "200", "PLN"));
     assert pkoResponsesHandler
         .getAccountSummaries(Response.of(accountsInfoResponseBody, 200, Map.of(), Map.of()))
         .equals(expectedList);
