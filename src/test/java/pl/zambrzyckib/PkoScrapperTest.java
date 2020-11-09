@@ -1,6 +1,5 @@
 package pl.zambrzyckib;
 
-import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.util.Properties;
 import lombok.SneakyThrows;
@@ -8,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import pl.zambrzyckib.exception.InvalidCredentialsException;
+import pl.zambrzyckib.model.Credentials;
 import pl.zambrzyckib.pko.PkoScrapper;
 
 public class PkoScrapperTest {
@@ -23,25 +23,27 @@ public class PkoScrapperTest {
 
   @Test
   void shouldNotThrowAnyExceptionWhenCredentialsAreCorrect() {
-    final String loginInput = properties.getProperty("login") + "\n";
-    final String passwordInput = properties.getProperty("password");
-    System.setIn(new ByteArrayInputStream((loginInput + passwordInput).getBytes()));
-    Assertions.assertDoesNotThrow(pkoScrapper::getAccountsInfo);
+    final String login = properties.getProperty("login") + "\n";
+    final String password = properties.getProperty("password");
+    Assertions.assertDoesNotThrow(
+        () -> pkoScrapper.getAccountsInfo(Credentials.of(login, password)));
   }
 
   @Test
   void shouldThrowInvalidCredentialsExceptionWhenLoginIsWrong() {
-    final String loginInput = "1" + "\n";
-    final String passwordInput = properties.getProperty("password");
-    System.setIn(new ByteArrayInputStream((loginInput + passwordInput).getBytes()));
-    Assertions.assertThrows(InvalidCredentialsException.class, pkoScrapper::getAccountsInfo);
+    final String wrongLogin = "1" + "\n";
+    final String password = properties.getProperty("password");
+    Assertions.assertThrows(
+        InvalidCredentialsException.class,
+        () -> pkoScrapper.getAccountsInfo(Credentials.of(wrongLogin, password)));
   }
 
   @Test
   void shouldThrowInvalidCredentialsExceptionWhenPasswordIsWrong() {
-    final String loginInput = properties.getProperty("login") + "\n";
-    final String passwordInput = "test";
-    System.setIn(new ByteArrayInputStream((loginInput + passwordInput).getBytes()));
-    Assertions.assertThrows(InvalidCredentialsException.class, pkoScrapper::getAccountsInfo);
+    final String login = properties.getProperty("login") + "\n";
+    final String wrongPassword = "test";
+    Assertions.assertThrows(
+        InvalidCredentialsException.class,
+        () -> pkoScrapper.getAccountsInfo(Credentials.of(login, wrongPassword)));
   }
 }

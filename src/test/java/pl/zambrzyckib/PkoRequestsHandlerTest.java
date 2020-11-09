@@ -1,7 +1,6 @@
 package pl.zambrzyckib;
 
 import com.google.gson.Gson;
-import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.util.Properties;
 import lombok.SneakyThrows;
@@ -28,11 +27,10 @@ public class PkoRequestsHandlerTest {
 
   @Test
   void shouldReachPkoServerAndReceiveResponseBasedOnProvidedLogin() {
-    final String wrongLoginInput = "test" + "\n";
-    final String correctLoginInput = properties.getProperty("login") + "\n";
-    System.setIn(new ByteArrayInputStream((wrongLoginInput + correctLoginInput).getBytes()));
-    final var wrongLoginResponse = pkoRequestsHandler.sendLoginRequest();
-    final var correctLoginResponse = pkoRequestsHandler.sendLoginRequest();
+    final String wrongLogin = "test" + "\n";
+    final String correctLogin = properties.getProperty("login") + "\n";
+    final var wrongLoginResponse = pkoRequestsHandler.sendLoginRequest(wrongLogin);
+    final var correctLoginResponse = pkoRequestsHandler.sendLoginRequest(correctLogin);
     Assertions.assertEquals(
         200,
         wrongLoginResponse
@@ -45,28 +43,26 @@ public class PkoRequestsHandlerTest {
 
   @Test
   void shouldReceiveResponseWithErrorsWhenPasswordIsWrong() {
-    final String correctLoginInput = properties.getProperty("login") + "\n";
-    final String wrongPasswordInput = "test";
-    System.setIn(new ByteArrayInputStream((correctLoginInput + wrongPasswordInput).getBytes()));
-    final var loginResponse = pkoRequestsHandler.sendLoginRequest();
+    final String login = properties.getProperty("login") + "\n";
+    final String wrongPassword = "test";
+    final var loginResponse = pkoRequestsHandler.sendLoginRequest(login);
     pkoSession.addHeader("x-session-id", loginResponse.getHeader("X-Session-Id"));
     Assertions.assertTrue(
         GSON.fromJson(
-                pkoRequestsHandler.sendPasswordRequest(loginResponse).getBody(),
+                pkoRequestsHandler.sendPasswordRequest(loginResponse, wrongPassword).getBody(),
                 PasswordResponseBody.class)
             .hasErrors());
   }
 
   @Test
   void shouldReceiveResponseWithoutErrorsWhenPasswordIsCorrect() {
-    final String correctLoginInput = properties.getProperty("login") + "\n";
-    final String correctPasswordInput = properties.getProperty("password");
-    System.setIn(new ByteArrayInputStream((correctLoginInput + correctPasswordInput).getBytes()));
-    final var loginResponse = pkoRequestsHandler.sendLoginRequest();
+    final String login = properties.getProperty("login") + "\n";
+    final String password = properties.getProperty("password");
+    final var loginResponse = pkoRequestsHandler.sendLoginRequest(login);
     pkoSession.addHeader("x-session-id", loginResponse.getHeader("X-Session-Id"));
     Assertions.assertFalse(
         GSON.fromJson(
-                pkoRequestsHandler.sendPasswordRequest(loginResponse).getBody(),
+                pkoRequestsHandler.sendPasswordRequest(loginResponse, password).getBody(),
                 PasswordResponseBody.class)
             .hasErrors());
   }

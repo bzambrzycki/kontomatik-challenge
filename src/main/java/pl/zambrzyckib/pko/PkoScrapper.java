@@ -5,6 +5,7 @@ import io.vavr.collection.List;
 import io.vavr.collection.Stream;
 import pl.zambrzyckib.connection.Response;
 import pl.zambrzyckib.model.AccountSummary;
+import pl.zambrzyckib.model.Credentials;
 import pl.zambrzyckib.pko.request.PkoRequestsHandler;
 import pl.zambrzyckib.pko.response.PkoResponsesHandler;
 
@@ -21,20 +22,21 @@ public class PkoScrapper {
     this.pkoResponsesHandler = new PkoResponsesHandler();
   }
 
-  public List<String> getAccountsInfo() {
-    login();
+  public List<String> getAccountsInfo(final Credentials credentials) {
+    login(credentials);
     return fetchAccountsInfo()
         .map(
             accountSummary ->
                 "Konto: " + accountSummary.getName() + ", stan: " + accountSummary.getBalance());
   }
 
-  private void login() {
-    Stream.of(pkoRequestsHandler.sendLoginRequest())
+  private void login(final Credentials credentials) {
+    Stream.of(pkoRequestsHandler.sendLoginRequest(credentials.getLogin()))
         .peek(ignored -> System.out.println("Wysłano login"))
         .peek(pkoResponsesHandler::verifyLoginResponse)
         .peek(this::saveSessionId)
-        .map(pkoRequestsHandler::sendPasswordRequest)
+        .map(
+            response -> pkoRequestsHandler.sendPasswordRequest(response, credentials.getPassword()))
         .peek(ignored -> System.out.println("Wysłano hasło"))
         .peek(pkoResponsesHandler::verifyPasswordResponse)
         .peek(ignored -> System.out.println("Pomyślnie zalogowano"));
