@@ -25,7 +25,10 @@ public class JsoupConnection implements BankConnection {
                     .headers(request.getHeaders())
                     .cookies(request.getCookies())
                     .execute())
-        .map(response -> Response.of(response.body(), response.headers(), response.cookies()))
+        .map(
+            response ->
+                Response.of(
+                    response.body(), response.statusCode(), response.headers(), response.cookies()))
         .onFailure(throwable -> System.out.println("[LOG/ERR] " + throwable.getMessage()))
         .get();
   }

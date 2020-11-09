@@ -1,6 +1,5 @@
 package pl.zambrzyckib.pko.request;
 
-import pl.zambrzyckib.KontomatikChallengeApp;
 import pl.zambrzyckib.connection.Response;
 import pl.zambrzyckib.pko.PkoSession;
 
@@ -12,17 +11,13 @@ public class PkoRequestsHandler {
     this.pkoSession = pkoSession;
   }
 
-  public Response sendLoginRequest() {
-    System.out.println("Podaj login");
-    final var userLogin = KontomatikChallengeApp.scanner.nextLine();
+  public Response sendLoginRequest(final String login) {
     return pkoSession
         .getBankConnection()
-        .send(PkoRequests.userLoginPostRequest(userLogin, pkoSession));
+        .send(PkoRequests.userLoginPostRequest(login, pkoSession));
   }
 
-  public Response sendPasswordRequest(final Response sendLoginResponse) {
-    System.out.println("Podaj hasło");
-    final var password = KontomatikChallengeApp.scanner.nextLine();
+  public Response sendPasswordRequest(final Response sendLoginResponse, final String password) {
     return pkoSession
         .getBankConnection()
         .send(PkoRequests.userPasswordPostRequest(password, pkoSession, sendLoginResponse));
