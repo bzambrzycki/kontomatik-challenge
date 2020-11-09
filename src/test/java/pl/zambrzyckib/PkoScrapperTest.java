@@ -30,7 +30,7 @@ public class PkoScrapperTest {
   }
 
   @Test
-  void shouldThrowInvalidCredentialsExceptionWhenProvidingWrongLogin() {
+  void shouldThrowInvalidCredentialsExceptionWhenLoginIsWrong() {
     final String loginInput = "1" + "\n";
     final String passwordInput = properties.getProperty("password");
     System.setIn(new ByteArrayInputStream((loginInput + passwordInput).getBytes()));
@@ -38,7 +38,7 @@ public class PkoScrapperTest {
   }
 
   @Test
-  void shouldThrowInvalidCredentialsExceptionWhenProvidingWrongPassword() {
+  void shouldThrowInvalidCredentialsExceptionWhenPasswordIsWrong() {
     final String loginInput = properties.getProperty("login") + "\n";
     final String passwordInput = "test";
     System.setIn(new ByteArrayInputStream((loginInput + passwordInput).getBytes()));
