@@ -18,26 +18,21 @@ public class PkoScraper {
     }
 
     public void getAndDisplayAccountsInfo(Credentials credentials) {
-        final var accountsInfo = getAccountsInfo(credentials);
-        System.out.println(PkoResponseUtils.formatAccountSummaries(accountsInfo));
+        final var accountsSummaries = getAccountSummaries(credentials);
+        System.out.println(PkoResponseUtils.formatAccountSummaries(accountsSummaries));
     }
 
-    public List<AccountSummary> getAccountsInfo(Credentials credentials) {
-        login(credentials);
-        return fetchAccountsInfo();
-    }
-
-    private void login(Credentials credentials) {
-        Stream.of(pkoSession.sendLoginRequest(credentials.getLogin()))
-                .peek(this::saveSessionId)
-                .map(
-                        response -> pkoSession.sendPasswordRequest(response, credentials.getPassword()));
-    }
-
-    private List<AccountSummary> fetchAccountsInfo() {
-        return Stream.of(pkoSession.sendAccountsInfoRequest())
+    public List<AccountSummary> getAccountSummaries(Credentials credentials) {
+        return Stream.of(fetchAccountsInfo(credentials))
                 .map(PkoResponseUtils::getAccountSummariesFromResponse)
-                .peek(ignored -> System.out.println("Successfully fetched accounts data"))
+                .get();
+    }
+
+    private Response fetchAccountsInfo(Credentials credentials) {
+        return Stream.of(pkoSession.sendLoginRequest(credentials.getLogin()))
+                .peek(this::saveSessionId)
+                .map(response -> pkoSession.sendPasswordRequest(response, credentials.getPassword()))
+                .map(response -> pkoSession.sendAccountsInfoRequest())
                 .get();
     }
 
