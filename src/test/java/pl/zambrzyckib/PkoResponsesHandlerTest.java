@@ -20,7 +20,7 @@ public class PkoResponsesHandlerTest {
   @SneakyThrows
   public void shouldReturnAccountSummaryListFromJson() {
     final var accountsInfoResponseBody =
-        Files.readString(Path.of("src/test/resources/accountsInfoResponseBody"));
+        Files.readString(Path.of("src/test/resources/accountsInfoResponseBody.json"));
     final var expectedList =
         List.of(AccountSummary.of("accountOne", "100", "PLN"), AccountSummary.of("accountTwo", "200", "PLN"));
     assert pkoResponsesHandler
@@ -32,14 +32,14 @@ public class PkoResponsesHandlerTest {
   @SneakyThrows
   public void shouldThrowExceptionWhenCredentialsAreIncorrect() {
     final var wrongLoginResponseBody =
-        Files.readString(Path.of("src/test/resources/wrongLoginResponseBody"));
+        Files.readString(Path.of("src/test/resources/wrongLoginResponseBody.json"));
     Assertions.assertThrows(
         InvalidCredentialsException.class,
         () ->
             pkoResponsesHandler.verifyLoginResponse(
                 Response.of(wrongLoginResponseBody, 200, Map.of(), Map.of())));
     final var wrongPasswordResponseBody =
-        Files.readString(Path.of("src/test/resources/wrongPasswordResponseBody"));
+        Files.readString(Path.of("src/test/resources/wrongPasswordResponseBody.json"));
     Assertions.assertThrows(
         InvalidCredentialsException.class,
         () ->
