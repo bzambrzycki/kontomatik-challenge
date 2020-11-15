@@ -1,6 +1,7 @@
 package pl.zambrzyckib;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import io.vavr.collection.List;
 import java.nio.file.Files;
@@ -24,9 +25,8 @@ public class PkoResponsesHandlerTest {
         Files.readString(Path.of("src/test/resources/accountsInfoResponseBody.json"));
     final var expectedList =
         List.of(AccountSummary.of("accountOne", "100", "PLN"), AccountSummary.of("accountTwo", "200", "PLN"));
-    assert pkoResponsesHandler
-        .getAccountSummaries(Response.of(accountsInfoResponseBody, 200, Map.of(), Map.of()))
-        .equals(expectedList);
+    assertEquals(expectedList, pkoResponsesHandler
+            .getAccountSummaries(Response.of(accountsInfoResponseBody, 200, Map.of(), Map.of())));
   }
 
   @Test
