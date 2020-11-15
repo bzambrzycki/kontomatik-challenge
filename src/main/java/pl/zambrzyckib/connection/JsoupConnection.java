@@ -5,7 +5,7 @@ import org.jsoup.Connection;
 import org.jsoup.Connection.Method;
 import org.jsoup.Jsoup;
 
-public class JsoupConnection implements BankConnection {
+public class JsoupConnection implements HttpAgent {
 
   private final Connection connection;
 

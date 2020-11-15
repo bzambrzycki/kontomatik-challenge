@@ -1,5 +1,5 @@
 package pl.zambrzyckib.connection;
 
-public interface BankConnection {
+public interface HttpAgent {
   Response send(Request request);
 }
