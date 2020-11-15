@@ -9,13 +9,13 @@ public class JsoupConnection implements BankConnection {
 
   private final Connection connection;
 
-  public JsoupConnection(final String url, final Boolean ignoreContentType) {
+  public JsoupConnection(String url, Boolean ignoreContentType) {
     this.connection = Jsoup.connect(url);
     this.connection.ignoreContentType(ignoreContentType);
   }
 
   @Override
-  public Response send(final Request request) {
+  public Response send(Request request) {
     return Try.of(
             () ->
                 connection

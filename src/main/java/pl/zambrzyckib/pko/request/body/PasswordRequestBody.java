@@ -16,8 +16,7 @@ public class PasswordRequestBody {
 
   String token;
 
-  public PasswordRequestBody(
-      final String password, final LoginResponseBody loginResponseBody) {
+  public PasswordRequestBody(String password, LoginResponseBody loginResponseBody) {
     this.action = "submit";
     this.data = new Data(password);
     this.stateId = "password";

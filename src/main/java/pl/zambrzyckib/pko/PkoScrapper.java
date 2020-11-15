@@ -22,7 +22,7 @@ public class PkoScrapper {
     this.pkoResponsesHandler = new PkoResponsesHandler();
   }
 
-  public List<String> getAccountsInfo(final Credentials credentials) {
+  public List<String> getAccountsInfo(Credentials credentials) {
     login(credentials);
 
     return fetchAccountsInfo()
@@ -36,7 +36,7 @@ public class PkoScrapper {
                     + accountSummary.getCurrency());
   }
 
-  private void login(final Credentials credentials) {
+  private void login(Credentials credentials) {
     Stream.of(pkoRequestsHandler.sendLoginRequest(credentials.getLogin()))
         .peek(ignored -> System.out.println("Login sent"))
         .peek(pkoResponsesHandler::verifyLoginResponse)
@@ -55,7 +55,7 @@ public class PkoScrapper {
         .get();
   }
 
-  private void saveSessionId(final Response response) {
+  private void saveSessionId(Response response) {
     pkoSession.addHeader("x-session-id", response.getHeader("X-Session-Id"));
   }
 }

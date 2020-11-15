@@ -13,7 +13,7 @@ import pl.zambrzyckib.pko.response.body.LoginResponseBody;
 
 public class PkoRequests {
 
-  static Request userLoginPostRequest(final String login, final PkoSession pkoSession) {
+  static Request userLoginPostRequest(String login, PkoSession pkoSession) {
     return Request.builder()
         .url(PkoSession.HOME_URL + PkoSession.LOGIN_ENDPOINT)
         .method(Method.POST)
@@ -23,8 +23,7 @@ public class PkoRequests {
         .build();
   }
 
-  static Request userPasswordPostRequest(
-      final String password, final PkoSession pkoSession, final Response sendLoginResponse) {
+  static Request userPasswordPostRequest(String password, PkoSession pkoSession, Response sendLoginResponse) {
     final var loginResponseBody =
         new Gson().fromJson(sendLoginResponse.getBody(), LoginResponseBody.class);
     return Request.builder()
@@ -36,7 +35,7 @@ public class PkoRequests {
         .build();
   }
 
-  static Request accountsInfoPostRequest(final PkoSession pkoSession) {
+  static Request accountsInfoPostRequest(PkoSession pkoSession) {
 
     return Request.builder()
         .url(PkoSession.HOME_URL + PkoSession.ACCOUNT_INFO_ENDPOINT)

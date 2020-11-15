@@ -12,7 +12,7 @@ import pl.zambrzyckib.pko.response.body.PasswordResponseBody;
 
 public class PkoResponsesHandler {
 
-  public void verifyLoginResponse(final Response response) {
+  public void verifyLoginResponse(Response response) {
     final var loginResponseBody =
         PkoScrapper.GSON.fromJson(response.getBody(), LoginResponseBody.class);
     if (loginResponseBody.hasErrors()) {
@@ -20,7 +20,7 @@ public class PkoResponsesHandler {
     }
   }
 
-  public void verifyPasswordResponse(final Response response) {
+  public void verifyPasswordResponse(Response response) {
     final var passwordResponseBody =
         PkoScrapper.GSON.fromJson(response.getBody(), PasswordResponseBody.class);
     if (passwordResponseBody.hasErrors()) {
@@ -28,7 +28,7 @@ public class PkoResponsesHandler {
     }
   }
 
-  public List<AccountSummary> getAccountSummaries(final Response response) {
+  public List<AccountSummary> getAccountSummaries(Response response) {
     return PkoScrapper.GSON
         .fromJson(response.getBody(), AccountsInfoResponseBody.class)
         .getAccountSummaries();

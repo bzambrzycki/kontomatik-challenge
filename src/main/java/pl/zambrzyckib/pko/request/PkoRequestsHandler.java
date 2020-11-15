@@ -11,13 +11,13 @@ public class PkoRequestsHandler {
     this.pkoSession = pkoSession;
   }
 
-  public Response sendLoginRequest(final String login) {
+  public Response sendLoginRequest(String login) {
     return pkoSession
         .getBankConnection()
         .send(PkoRequests.userLoginPostRequest(login, pkoSession));
   }
 
-  public Response sendPasswordRequest(final Response sendLoginResponse, final String password) {
+  public Response sendPasswordRequest(Response sendLoginResponse, String password) {
     return pkoSession
         .getBankConnection()
         .send(PkoRequests.userPasswordPostRequest(password, pkoSession, sendLoginResponse));

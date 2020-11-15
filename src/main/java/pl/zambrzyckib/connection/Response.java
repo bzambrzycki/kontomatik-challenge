@@ -14,11 +14,11 @@ public class Response {
   private Map<String, String> headers;
   private Map<String, String> cookies;
 
-  public String getHeader(final String name) {
+  public String getHeader(String name) {
     return Option.of(headers.get(name)).getOrElse("");
   }
 
-  public String getCookie(final String name) {
+  public String getCookie(String name) {
     return Option.of(cookies.get(name)).getOrElse("");
   }
 }
