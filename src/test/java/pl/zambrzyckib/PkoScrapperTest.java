@@ -1,9 +1,11 @@
 package pl.zambrzyckib;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.io.FileInputStream;
 import java.util.Properties;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import pl.zambrzyckib.exception.InvalidCredentialsException;
@@ -25,7 +27,7 @@ public class PkoScrapperTest {
   void shouldNotThrowAnyExceptionWhenCredentialsAreCorrect() {
     final String login = properties.getProperty("login") + "\n";
     final String password = properties.getProperty("password");
-    Assertions.assertDoesNotThrow(
+    assertDoesNotThrow(
         () -> pkoScrapper.getAccountsInfo(Credentials.of(login, password)));
   }
 
@@ -33,7 +35,7 @@ public class PkoScrapperTest {
   void shouldThrowInvalidCredentialsExceptionWhenLoginIsWrong() {
     final String wrongLogin = "1" + "\n";
     final String password = properties.getProperty("password");
-    Assertions.assertThrows(
+    assertThrows(
         InvalidCredentialsException.class,
         () -> pkoScrapper.getAccountsInfo(Credentials.of(wrongLogin, password)));
   }
@@ -42,7 +44,7 @@ public class PkoScrapperTest {
   void shouldThrowInvalidCredentialsExceptionWhenPasswordIsWrong() {
     final String login = properties.getProperty("login") + "\n";
     final String wrongPassword = "test";
-    Assertions.assertThrows(
+    assertThrows(
         InvalidCredentialsException.class,
         () -> pkoScrapper.getAccountsInfo(Credentials.of(login, wrongPassword)));
   }

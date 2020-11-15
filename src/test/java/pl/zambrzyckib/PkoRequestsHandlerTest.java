@@ -1,10 +1,13 @@
 package pl.zambrzyckib;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import com.google.gson.Gson;
 import java.io.FileInputStream;
 import java.util.Properties;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import pl.zambrzyckib.pko.PkoSession;
@@ -31,13 +34,13 @@ public class PkoRequestsHandlerTest {
     final String correctLogin = properties.getProperty("login") + "\n";
     final var wrongLoginResponse = pkoRequestsHandler.sendLoginRequest(wrongLogin);
     final var correctLoginResponse = pkoRequestsHandler.sendLoginRequest(correctLogin);
-    Assertions.assertEquals(
+    assertEquals(
         200,
         wrongLoginResponse
             .getStatusCode()); // Server returns 200 even when provided credentials are incorrect
-    Assertions.assertTrue(
+    assertTrue(
         GSON.fromJson(wrongLoginResponse.getBody(), LoginResponseBody.class).hasErrors());
-    Assertions.assertFalse(
+    assertFalse(
         GSON.fromJson(correctLoginResponse.getBody(), LoginResponseBody.class).hasErrors());
   }
 
@@ -47,7 +50,7 @@ public class PkoRequestsHandlerTest {
     final String wrongPassword = "test";
     final var loginResponse = pkoRequestsHandler.sendLoginRequest(login);
     pkoSession.addHeader("x-session-id", loginResponse.getHeader("X-Session-Id"));
-    Assertions.assertTrue(
+    assertTrue(
         GSON.fromJson(
                 pkoRequestsHandler.sendPasswordRequest(loginResponse, wrongPassword).getBody(),
                 PasswordResponseBody.class)
@@ -60,7 +63,7 @@ public class PkoRequestsHandlerTest {
     final String password = properties.getProperty("password");
     final var loginResponse = pkoRequestsHandler.sendLoginRequest(login);
     pkoSession.addHeader("x-session-id", loginResponse.getHeader("X-Session-Id"));
-    Assertions.assertFalse(
+    assertFalse(
         GSON.fromJson(
                 pkoRequestsHandler.sendPasswordRequest(loginResponse, password).getBody(),
                 PasswordResponseBody.class)

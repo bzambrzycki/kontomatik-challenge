@@ -1,11 +1,12 @@
 package pl.zambrzyckib;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import io.vavr.collection.List;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import pl.zambrzyckib.connection.Response;
 import pl.zambrzyckib.exception.InvalidCredentialsException;
@@ -33,14 +34,14 @@ public class PkoResponsesHandlerTest {
   public void shouldThrowExceptionWhenCredentialsAreIncorrect() {
     final var wrongLoginResponseBody =
         Files.readString(Path.of("src/test/resources/wrongLoginResponseBody.json"));
-    Assertions.assertThrows(
+    assertThrows(
         InvalidCredentialsException.class,
         () ->
             pkoResponsesHandler.verifyLoginResponse(
                 Response.of(wrongLoginResponseBody, 200, Map.of(), Map.of())));
     final var wrongPasswordResponseBody =
         Files.readString(Path.of("src/test/resources/wrongPasswordResponseBody.json"));
-    Assertions.assertThrows(
+    assertThrows(
         InvalidCredentialsException.class,
         () ->
             pkoResponsesHandler.verifyPasswordResponse(
