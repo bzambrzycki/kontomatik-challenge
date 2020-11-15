@@ -10,14 +10,12 @@ import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import pl.zambrzyckib.pko.PkoSession;
-import pl.zambrzyckib.pko.request.PkoRequestsHandler;
 import pl.zambrzyckib.pko.response.body.LoginResponseBody;
 import pl.zambrzyckib.pko.response.body.PasswordResponseBody;
 
-public class PkoRequestsHandlerTest {
+public class PkoSessionTest {
 
   private final PkoSession pkoSession = new PkoSession();
-  private final PkoRequestsHandler pkoRequestsHandler = new PkoRequestsHandler(pkoSession);
   private static final Gson GSON = new Gson();
 
   @BeforeAll
@@ -29,7 +27,7 @@ public class PkoRequestsHandlerTest {
   @Test
   void shoudlReturnCodeOkAndBodyWithErrorsWhenLoginIsWrong(){
     final var wrongLogin = "test";
-    final var wrongLoginResponse = pkoRequestsHandler.sendLoginRequest(wrongLogin);
+    final var wrongLoginResponse = pkoSession.sendLoginRequest(wrongLogin);
     assertEquals(
             200,
             wrongLoginResponse
@@ -41,7 +39,7 @@ public class PkoRequestsHandlerTest {
   @Test
   void shoudlReturnBodyWithoutErrorsWhenLoginIsCorrect(){
     final var correctLogin = properties.getProperty("login");
-    final var correctLoginResponse = pkoRequestsHandler.sendLoginRequest(correctLogin);
+    final var correctLoginResponse = pkoSession.sendLoginRequest(correctLogin);
     assertFalse(
             GSON.fromJson(correctLoginResponse.getBody(), LoginResponseBody.class).hasErrors());
   }
@@ -50,11 +48,11 @@ public class PkoRequestsHandlerTest {
   void shouldReceiveResponseWithErrorsWhenPasswordIsWrong() {
     final var login = properties.getProperty("login");
     final var wrongPassword = "test";
-    final var loginResponse = pkoRequestsHandler.sendLoginRequest(login);
+    final var loginResponse = pkoSession.sendLoginRequest(login);
     pkoSession.addHeader("x-session-id", loginResponse.getHeader("X-Session-Id"));
     assertTrue(
         GSON.fromJson(
-                pkoRequestsHandler.sendPasswordRequest(loginResponse, wrongPassword).getBody(),
+                pkoSession.sendPasswordRequest(loginResponse, wrongPassword).getBody(),
                 PasswordResponseBody.class)
             .hasErrors());
   }
@@ -63,11 +61,11 @@ public class PkoRequestsHandlerTest {
   void shouldReceiveResponseWithoutErrorsWhenPasswordIsCorrect() {
     final var login = properties.getProperty("login");
     final var password = properties.getProperty("password");
-    final var loginResponse = pkoRequestsHandler.sendLoginRequest(login);
+    final var loginResponse = pkoSession.sendLoginRequest(login);
     pkoSession.addHeader("x-session-id", loginResponse.getHeader("X-Session-Id"));
     assertFalse(
         GSON.fromJson(
-                pkoRequestsHandler.sendPasswordRequest(loginResponse, password).getBody(),
+                pkoSession.sendPasswordRequest(loginResponse, password).getBody(),
                 PasswordResponseBody.class)
             .hasErrors());
   }

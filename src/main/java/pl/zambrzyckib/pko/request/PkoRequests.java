@@ -11,37 +11,39 @@ import pl.zambrzyckib.pko.request.body.LoginRequestBody;
 import pl.zambrzyckib.pko.request.body.PasswordRequestBody;
 import pl.zambrzyckib.pko.response.body.LoginResponseBody;
 
+import java.util.Map;
+
 public class PkoRequests {
 
-  static Request userLoginPostRequest(String login, PkoSession pkoSession) {
+  public static Request userLoginPostRequest(String login, Map<String, String> headers) {
     return Request.builder()
         .url(PkoSession.HOME_URL + PkoSession.LOGIN_ENDPOINT)
         .method(Method.POST)
-        .headers(pkoSession.getHeaders())
-        .cookies(pkoSession.getCookies())
+        .headers(headers)
+        .cookies(Map.of())
         .body(PkoScraper.GSON.toJson(new LoginRequestBody(login)))
         .build();
   }
 
-  static Request userPasswordPostRequest(String password, PkoSession pkoSession, Response sendLoginResponse) {
+  public static Request userPasswordPostRequest(String password, Map<String, String> headers, Response sendLoginResponse) {
     final var loginResponseBody =
         new Gson().fromJson(sendLoginResponse.getBody(), LoginResponseBody.class);
     return Request.builder()
         .url(PkoSession.HOME_URL + PkoSession.LOGIN_ENDPOINT)
         .method(Method.POST)
-        .headers(pkoSession.getHeaders())
-        .cookies(pkoSession.getCookies())
+        .headers(headers)
+        .cookies(Map.of())
         .body(PkoScraper.GSON.toJson(new PasswordRequestBody(password, loginResponseBody)))
         .build();
   }
 
-  static Request accountsInfoPostRequest(PkoSession pkoSession) {
+  public static Request accountsInfoPostRequest(Map<String, String> headers) {
 
     return Request.builder()
         .url(PkoSession.HOME_URL + PkoSession.ACCOUNT_INFO_ENDPOINT)
         .method(Method.POST)
-        .headers(pkoSession.getHeaders())
-        .cookies(pkoSession.getCookies())
+        .headers(headers)
+        .cookies(Map.of())
         .body(PkoScraper.GSON.toJson(new AccountsInfoRequestBody()))
         .build();
   }
