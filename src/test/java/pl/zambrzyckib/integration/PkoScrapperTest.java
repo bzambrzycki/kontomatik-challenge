@@ -23,16 +23,16 @@ public class PkoScrapperTest {
 
   @Test
   void shouldNotThrowAnyExceptionWhenCredentialsAreCorrect() {
-    final String login = properties.getProperty("login") + "\n";
-    final String password = properties.getProperty("password");
+    final var login = properties.getProperty("login");
+    final var password = properties.getProperty("password");
     assertDoesNotThrow(
         () -> pkoScrapper.getAccountsInfo(Credentials.of(login, password)));
   }
 
   @Test
   void shouldThrowInvalidCredentialsExceptionWhenLoginIsWrong() {
-    final String wrongLogin = "1" + "\n";
-    final String password = properties.getProperty("password");
+    final var wrongLogin = "1" + "\n";
+    final var password = properties.getProperty("password");
     assertThrows(
         InvalidCredentialsException.class,
         () -> pkoScrapper.getAccountsInfo(Credentials.of(wrongLogin, password)));
@@ -40,8 +40,8 @@ public class PkoScrapperTest {
 
   @Test
   void shouldThrowInvalidCredentialsExceptionWhenPasswordIsWrong() {
-    final String login = properties.getProperty("login") + "\n";
-    final String wrongPassword = "test";
+    final var login = properties.getProperty("login");
+    final var wrongPassword = "test";
     assertThrows(
         InvalidCredentialsException.class,
         () -> pkoScrapper.getAccountsInfo(Credentials.of(login, wrongPassword)));

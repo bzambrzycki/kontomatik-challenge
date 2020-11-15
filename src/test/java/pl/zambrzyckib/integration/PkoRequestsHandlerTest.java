@@ -48,8 +48,8 @@ public class PkoRequestsHandlerTest {
 
   @Test
   void shouldReceiveResponseWithErrorsWhenPasswordIsWrong() {
-    final String login = properties.getProperty("login") + "\n";
-    final String wrongPassword = "test";
+    final var login = properties.getProperty("login");
+    final var wrongPassword = "test";
     final var loginResponse = pkoRequestsHandler.sendLoginRequest(login);
     pkoSession.addHeader("x-session-id", loginResponse.getHeader("X-Session-Id"));
     assertTrue(
@@ -61,8 +61,8 @@ public class PkoRequestsHandlerTest {
 
   @Test
   void shouldReceiveResponseWithoutErrorsWhenPasswordIsCorrect() {
-    final String login = properties.getProperty("login") + "\n";
-    final String password = properties.getProperty("password");
+    final var login = properties.getProperty("login");
+    final var password = properties.getProperty("password");
     final var loginResponse = pkoRequestsHandler.sendLoginRequest(login);
     pkoSession.addHeader("x-session-id", loginResponse.getHeader("X-Session-Id"));
     assertFalse(
