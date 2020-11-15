@@ -17,10 +17,14 @@ public class PkoScraper {
         this.pkoSession = new PkoSession();
     }
 
-    public List<String> getAccountsInfo(Credentials credentials) {
+    public void getAndDisplayAccountsInfo(Credentials credentials) {
+        final var accountsInfo = getAccountsInfo(credentials);
+        System.out.println(PkoResponseUtils.formatAccountSummaries(accountsInfo));
+    }
+
+    public List<AccountSummary> getAccountsInfo(Credentials credentials) {
         login(credentials);
-        return PkoResponseUtils
-                .formatAccountSummaries(fetchAccountsInfo());
+        return fetchAccountsInfo();
     }
 
     private void login(Credentials credentials) {
