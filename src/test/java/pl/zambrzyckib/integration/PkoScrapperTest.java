@@ -1,10 +1,9 @@
-package pl.zambrzyckib;
+package pl.zambrzyckib.integration;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static pl.zambrzyckib.integration.PkoIntegrationTestSpec.properties;
 
-import java.io.FileInputStream;
-import java.util.Properties;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -15,12 +14,11 @@ import pl.zambrzyckib.pko.PkoScrapper;
 public class PkoScrapperTest {
 
   private final PkoScrapper pkoScrapper = new PkoScrapper();
-  private static final Properties properties = new Properties();
 
   @BeforeAll
   @SneakyThrows
   static void loadProperties() {
-    properties.load(new FileInputStream("src/test/resources/credentials.properties"));
+   PkoIntegrationTestSpec.loadCredentialPropertiesIfNotLoaded();
   }
 
   @Test

@@ -1,12 +1,11 @@
-package pl.zambrzyckib;
+package pl.zambrzyckib.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static pl.zambrzyckib.integration.PkoIntegrationTestSpec.properties;
 
 import com.google.gson.Gson;
-import java.io.FileInputStream;
-import java.util.Properties;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -19,13 +18,12 @@ public class PkoRequestsHandlerTest {
 
   private final PkoSession pkoSession = new PkoSession();
   private final PkoRequestsHandler pkoRequestsHandler = new PkoRequestsHandler(pkoSession);
-  private static final Properties properties = new Properties();
   private static final Gson GSON = new Gson();
 
   @BeforeAll
   @SneakyThrows
   static void loadProperties() {
-    properties.load(new FileInputStream("src/test/resources/credentials.properties"));
+    PkoIntegrationTestSpec.loadCredentialPropertiesIfNotLoaded();
   }
 
   @Test
