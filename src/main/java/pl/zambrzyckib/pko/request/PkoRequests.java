@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import pl.zambrzyckib.connection.Request;
 import pl.zambrzyckib.connection.Request.Method;
 import pl.zambrzyckib.connection.Response;
-import pl.zambrzyckib.pko.PkoScrapper;
+import pl.zambrzyckib.pko.PkoScraper;
 import pl.zambrzyckib.pko.PkoSession;
 import pl.zambrzyckib.pko.request.body.AccountsInfoRequestBody;
 import pl.zambrzyckib.pko.request.body.LoginRequestBody;
@@ -19,7 +19,7 @@ public class PkoRequests {
         .method(Method.POST)
         .headers(pkoSession.getHeaders())
         .cookies(pkoSession.getCookies())
-        .body(PkoScrapper.GSON.toJson(new LoginRequestBody(login)))
+        .body(PkoScraper.GSON.toJson(new LoginRequestBody(login)))
         .build();
   }
 
@@ -31,7 +31,7 @@ public class PkoRequests {
         .method(Method.POST)
         .headers(pkoSession.getHeaders())
         .cookies(pkoSession.getCookies())
-        .body(PkoScrapper.GSON.toJson(new PasswordRequestBody(password, loginResponseBody)))
+        .body(PkoScraper.GSON.toJson(new PasswordRequestBody(password, loginResponseBody)))
         .build();
   }
 
@@ -42,7 +42,7 @@ public class PkoRequests {
         .method(Method.POST)
         .headers(pkoSession.getHeaders())
         .cookies(pkoSession.getCookies())
-        .body(PkoScrapper.GSON.toJson(new AccountsInfoRequestBody()))
+        .body(PkoScraper.GSON.toJson(new AccountsInfoRequestBody()))
         .build();
   }
 }

@@ -9,14 +9,14 @@ import pl.zambrzyckib.model.Credentials;
 import pl.zambrzyckib.pko.request.PkoRequestsHandler;
 import pl.zambrzyckib.pko.response.PkoResponsesHandler;
 
-public class PkoScrapper {
+public class PkoScraper {
 
   private final PkoSession pkoSession;
   private final PkoRequestsHandler pkoRequestsHandler;
   private final PkoResponsesHandler pkoResponsesHandler;
   public static final Gson GSON = new Gson();
 
-  public PkoScrapper() {
+  public PkoScraper() {
     this.pkoSession = new PkoSession();
     this.pkoRequestsHandler = new PkoRequestsHandler(pkoSession);
     this.pkoResponsesHandler = new PkoResponsesHandler();

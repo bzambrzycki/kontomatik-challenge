@@ -9,11 +9,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import pl.zambrzyckib.exception.InvalidCredentialsException;
 import pl.zambrzyckib.model.Credentials;
-import pl.zambrzyckib.pko.PkoScrapper;
+import pl.zambrzyckib.pko.PkoScraper;
 
-public class PkoScrapperTest {
+public class PkoScraperTest {
 
-  private final PkoScrapper pkoScrapper = new PkoScrapper();
+  private final PkoScraper pkoScraper = new PkoScraper();
 
   @BeforeAll
   @SneakyThrows
@@ -26,16 +26,16 @@ public class PkoScrapperTest {
     final var login = properties.getProperty("login");
     final var password = properties.getProperty("password");
     assertDoesNotThrow(
-        () -> pkoScrapper.getAccountsInfo(Credentials.of(login, password)));
+        () -> pkoScraper.getAccountsInfo(Credentials.of(login, password)));
   }
 
   @Test
   void shouldThrowInvalidCredentialsExceptionWhenLoginIsWrong() {
-    final var wrongLogin = "1" + "\n";
+    final var wrongLogin = "1";
     final var password = properties.getProperty("password");
     assertThrows(
         InvalidCredentialsException.class,
-        () -> pkoScrapper.getAccountsInfo(Credentials.of(wrongLogin, password)));
+        () -> pkoScraper.getAccountsInfo(Credentials.of(wrongLogin, password)));
   }
 
   @Test
@@ -44,6 +44,6 @@ public class PkoScrapperTest {
     final var wrongPassword = "test";
     assertThrows(
         InvalidCredentialsException.class,
-        () -> pkoScrapper.getAccountsInfo(Credentials.of(login, wrongPassword)));
+        () -> pkoScraper.getAccountsInfo(Credentials.of(login, wrongPassword)));
   }
 }
