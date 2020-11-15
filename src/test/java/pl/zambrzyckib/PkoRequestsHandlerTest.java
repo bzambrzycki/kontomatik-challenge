@@ -29,19 +29,23 @@ public class PkoRequestsHandlerTest {
   }
 
   @Test
-  void shouldReachPkoServerAndReceiveResponseBasedOnProvidedLogin() {
-    final String wrongLogin = "test" + "\n";
-    final String correctLogin = properties.getProperty("login") + "\n";
+  void shoudlReturnCodeOkAndBodyWithErrorsWhenLoginIsWrong(){
+    final var wrongLogin = "test";
     final var wrongLoginResponse = pkoRequestsHandler.sendLoginRequest(wrongLogin);
-    final var correctLoginResponse = pkoRequestsHandler.sendLoginRequest(correctLogin);
     assertEquals(
-        200,
-        wrongLoginResponse
-            .getStatusCode()); // Server returns 200 even when provided credentials are incorrect
+            200,
+            wrongLoginResponse
+                    .getStatusCode()); // Server returns 200 even when provided credentials are incorrect
     assertTrue(
-        GSON.fromJson(wrongLoginResponse.getBody(), LoginResponseBody.class).hasErrors());
+            GSON.fromJson(wrongLoginResponse.getBody(), LoginResponseBody.class).hasErrors());
+  }
+
+  @Test
+  void shoudlReturnBodyWithoutErrorsWhenLoginIsCorrect(){
+    final var correctLogin = properties.getProperty("login");
+    final var correctLoginResponse = pkoRequestsHandler.sendLoginRequest(correctLogin);
     assertFalse(
-        GSON.fromJson(correctLoginResponse.getBody(), LoginResponseBody.class).hasErrors());
+            GSON.fromJson(correctLoginResponse.getBody(), LoginResponseBody.class).hasErrors());
   }
 
   @Test
