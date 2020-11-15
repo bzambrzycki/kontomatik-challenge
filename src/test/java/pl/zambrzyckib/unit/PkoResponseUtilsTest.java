@@ -12,11 +12,9 @@ import org.junit.jupiter.api.Test;
 import pl.zambrzyckib.connection.Response;
 import pl.zambrzyckib.exception.InvalidCredentialsException;
 import pl.zambrzyckib.model.AccountSummary;
-import pl.zambrzyckib.pko.response.PkoResponsesHandler;
+import pl.zambrzyckib.pko.response.PkoResponseUtils;
 
-public class PkoResponsesHandlerTest {
-
-  private final PkoResponsesHandler pkoResponsesHandler = new PkoResponsesHandler();
+public class PkoResponseUtilsTest {
 
   @Test
   @SneakyThrows
@@ -25,8 +23,8 @@ public class PkoResponsesHandlerTest {
         Files.readString(Path.of("src/test/resources/accountsInfoResponseBody.json"));
     final var expectedList =
         List.of(AccountSummary.of("accountOne", "100", "PLN"), AccountSummary.of("accountTwo", "200", "PLN"));
-    assertEquals(expectedList, pkoResponsesHandler
-            .getAccountSummaries(Response.of(accountsInfoResponseBody, 200, Map.of(), Map.of())));
+    assertEquals(expectedList, PkoResponseUtils
+            .getAccountSummariesFromResponse(Response.of(accountsInfoResponseBody, 200, Map.of(), Map.of())));
   }
 
   @Test
@@ -37,14 +35,14 @@ public class PkoResponsesHandlerTest {
     assertThrows(
         InvalidCredentialsException.class,
         () ->
-            pkoResponsesHandler.verifyLoginResponse(
+                PkoResponseUtils.verifyLoginResponse(
                 Response.of(wrongLoginResponseBody, 200, Map.of(), Map.of())));
     final var wrongPasswordResponseBody =
         Files.readString(Path.of("src/test/resources/wrongPasswordResponseBody.json"));
     assertThrows(
         InvalidCredentialsException.class,
         () ->
-            pkoResponsesHandler.verifyPasswordResponse(
+                PkoResponseUtils.verifyPasswordResponse(
                 Response.of(wrongPasswordResponseBody, 200, Map.of(), Map.of())));
   }
 }

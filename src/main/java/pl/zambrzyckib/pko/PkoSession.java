@@ -6,7 +6,7 @@ import pl.zambrzyckib.connection.HttpAgent;
 import pl.zambrzyckib.connection.JsoupConnection;
 import pl.zambrzyckib.connection.Response;
 import pl.zambrzyckib.pko.request.PkoRequests;
-import pl.zambrzyckib.pko.response.PkoResponsesHandler;
+import pl.zambrzyckib.pko.response.PkoResponseUtils;
 
 public class PkoSession {
 
@@ -14,7 +14,6 @@ public class PkoSession {
     public static final String LOGIN_ENDPOINT = "ipko3/login";
     public static final String ACCOUNT_INFO_ENDPOINT = "ipko3/init";
 
-    private final PkoResponsesHandler pkoResponsesHandler = new PkoResponsesHandler();
     private final HttpAgent httpAgent;
 
     @Setter
@@ -27,14 +26,14 @@ public class PkoSession {
     public Response sendLoginRequest(String login) {
         return Stream.of(httpAgent
                 .send(PkoRequests.userLoginPostRequest(login)))
-                .peek(pkoResponsesHandler::verifyLoginResponse)
+                .peek(PkoResponseUtils::verifyLoginResponse)
                 .get();
     }
 
     public Response sendPasswordRequest(Response sendLoginResponse, String password) {
         return Stream.of(httpAgent
                 .send(PkoRequests.userPasswordPostRequest(password, sessionId, sendLoginResponse)))
-                .peek(pkoResponsesHandler::verifyPasswordResponse)
+                .peek(PkoResponseUtils::verifyPasswordResponse)
                 .get();
     }
 
