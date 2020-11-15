@@ -15,34 +15,34 @@ import java.util.Map;
 
 public class PkoRequests {
 
-  public static Request userLoginPostRequest(String login, Map<String, String> headers) {
+  public static Request userLoginPostRequest(String login) {
     return Request.builder()
         .url(PkoSession.HOME_URL + PkoSession.LOGIN_ENDPOINT)
         .method(Method.POST)
-        .headers(headers)
+        .headers(Map.of())
         .cookies(Map.of())
         .body(PkoScraper.GSON.toJson(new LoginRequestBody(login)))
         .build();
   }
 
-  public static Request userPasswordPostRequest(String password, Map<String, String> headers, Response sendLoginResponse) {
+  public static Request userPasswordPostRequest(String password, String sessionId, Response sendLoginResponse) {
     final var loginResponseBody =
         new Gson().fromJson(sendLoginResponse.getBody(), LoginResponseBody.class);
     return Request.builder()
         .url(PkoSession.HOME_URL + PkoSession.LOGIN_ENDPOINT)
         .method(Method.POST)
-        .headers(headers)
+        .headers(Map.of("x-session-id", sessionId))
         .cookies(Map.of())
         .body(PkoScraper.GSON.toJson(new PasswordRequestBody(password, loginResponseBody)))
         .build();
   }
 
-  public static Request accountsInfoPostRequest(Map<String, String> headers) {
+  public static Request accountsInfoPostRequest(String sessionId) {
 
     return Request.builder()
         .url(PkoSession.HOME_URL + PkoSession.ACCOUNT_INFO_ENDPOINT)
         .method(Method.POST)
-        .headers(headers)
+        .headers(Map.of("x-session-id", sessionId))
         .cookies(Map.of())
         .body(PkoScraper.GSON.toJson(new AccountsInfoRequestBody()))
         .build();

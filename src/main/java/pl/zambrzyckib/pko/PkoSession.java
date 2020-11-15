@@ -3,12 +3,12 @@ package pl.zambrzyckib.pko;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.Getter;
+import lombok.Setter;
 import pl.zambrzyckib.connection.BankConnection;
 import pl.zambrzyckib.connection.JsoupConnection;
 import pl.zambrzyckib.connection.Response;
 import pl.zambrzyckib.pko.request.PkoRequests;
 
-@Getter
 public class PkoSession {
 
   public static final String HOME_URL = "https://www.ipko.pl/";
@@ -16,28 +16,25 @@ public class PkoSession {
   public static final String ACCOUNT_INFO_ENDPOINT = "ipko3/init";
 
   private final BankConnection bankConnection;
-  private final Map<String, String> headers;
+
+  @Setter
+  private String sessionId;
 
   public PkoSession() {
     this.bankConnection = new JsoupConnection(HOME_URL, true);
-    this.headers = new HashMap<>();
-  }
-
-  public void addHeader(String key, String value) {
-    headers.put(key, value);
   }
 
   public Response sendLoginRequest(String login) {
     return bankConnection
-            .send(PkoRequests.userLoginPostRequest(login, headers));
+            .send(PkoRequests.userLoginPostRequest(login));
   }
 
   public Response sendPasswordRequest(Response sendLoginResponse, String password) {
     return bankConnection
-            .send(PkoRequests.userPasswordPostRequest(password, headers, sendLoginResponse));
+            .send(PkoRequests.userPasswordPostRequest(password, sessionId, sendLoginResponse));
   }
 
   public Response sendAccountsInfoRequest() {
-    return bankConnection.send(PkoRequests.accountsInfoPostRequest(headers));
+    return bankConnection.send(PkoRequests.accountsInfoPostRequest(sessionId));
   }
 }

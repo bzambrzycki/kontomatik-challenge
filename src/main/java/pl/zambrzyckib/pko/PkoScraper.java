@@ -53,6 +53,6 @@ public class PkoScraper {
   }
 
   private void saveSessionId(Response response) {
-    pkoSession.addHeader("x-session-id", response.getHeader("X-Session-Id"));
+    pkoSession.setSessionId(response.getHeader("X-Session-Id"));
   }
 }

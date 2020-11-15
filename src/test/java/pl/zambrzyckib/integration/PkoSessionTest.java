@@ -49,7 +49,7 @@ public class PkoSessionTest {
     final var login = properties.getProperty("login");
     final var wrongPassword = "test";
     final var loginResponse = pkoSession.sendLoginRequest(login);
-    pkoSession.addHeader("x-session-id", loginResponse.getHeader("X-Session-Id"));
+    pkoSession.setSessionId(loginResponse.getHeader("X-Session-Id"));
     assertTrue(
         GSON.fromJson(
                 pkoSession.sendPasswordRequest(loginResponse, wrongPassword).getBody(),
@@ -62,7 +62,7 @@ public class PkoSessionTest {
     final var login = properties.getProperty("login");
     final var password = properties.getProperty("password");
     final var loginResponse = pkoSession.sendLoginRequest(login);
-    pkoSession.addHeader("x-session-id", loginResponse.getHeader("X-Session-Id"));
+    pkoSession.setSessionId(loginResponse.getHeader("X-Session-Id"));
     assertFalse(
         GSON.fromJson(
                 pkoSession.sendPasswordRequest(loginResponse, password).getBody(),
