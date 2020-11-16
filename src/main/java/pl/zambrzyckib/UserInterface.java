@@ -7,9 +7,9 @@ import pl.zambrzyckib.model.AccountSummary;
 @UtilityClass
 public class UserInterface {
 
-  public void displayNotEnoughArgsMessage() {
+  public void displayWrongArgsMessage() {
     System.out.println(
-        "Not enough arguments provided. Run the app using command like the one below\n"
+        "Wrong arguments provided. Run the app using command like the one below\n"
             + "java -jar BUILT_JAR_NAME.jar \"YOUR_LOGIN\" \"YOUR_PASSWORD\"");
   }
 

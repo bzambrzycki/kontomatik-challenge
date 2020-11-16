@@ -1,8 +1,6 @@
 package pl.zambrzyckib.integration;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static pl.zambrzyckib.pko.PkoScraper.GSON;
 import static pl.zambrzyckib.integration.PkoIntegrationTestSpec.properties;
@@ -38,11 +36,8 @@ public class PkoSessionTest {
     final String correctPassword = properties.getProperty("password");
     final var loginResponse = pkoSession.sendLoginRequest(login);
     pkoSession.setSessionId(loginResponse.headers.get("X-Session-Id"));
-    assertFalse(
-        GSON.fromJson(
-                pkoSession.sendPasswordRequest(loginResponse, correctPassword).body,
-                PasswordResponseBody.class)
-            .hasErrors());
+    final var passwordResponse = pkoSession.sendPasswordRequest(loginResponse, correctPassword);
+    assertFalse(GSON.fromJson(passwordResponse.body, PasswordResponseBody.class).hasErrors());
   }
 
   @Test

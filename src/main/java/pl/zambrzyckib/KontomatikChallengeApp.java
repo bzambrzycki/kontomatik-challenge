@@ -11,7 +11,7 @@ public class KontomatikChallengeApp {
       pkoScraper.getAndDisplayAccountsInfo(Credentials.of(args[0], args[1]));
     }
     else {
-      UserInterface.displayNotEnoughArgsMessage();
+      UserInterface.displayWrongArgsMessage();
     }
   }
 }

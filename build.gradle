@@ -22,12 +22,13 @@ dependencies {
     testRuntime('org.junit.jupiter:junit-jupiter-engine:5.7.0')
 }
 
+test{
+    useJUnitPlatform()
+}
+
 task integrationTest(type: Test) {
     description = "Runs integration tests"
-    useJUnitPlatform {
-        includeEngines "junit-jupiter"
-        excludeTags "failing-test-case"
-    }
+    useJUnitPlatform ()
     filter {
         includeTestsMatching "pl.zambrzyckib.integration.*"
     }
@@ -35,10 +36,7 @@ task integrationTest(type: Test) {
 
 task unitTest(type: Test) {
     description = "Runs unit tests"
-    useJUnitPlatform {
-        includeEngines "junit-jupiter"
-        excludeTags "failing-test-case"
-    }
+    useJUnitPlatform ()
     filter {
         includeTestsMatching "pl.zambrzyckib.unit.*"
     }

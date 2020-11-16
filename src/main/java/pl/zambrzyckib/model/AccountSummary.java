@@ -2,9 +2,7 @@ package pl.zambrzyckib.model;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
-@ToString
 @EqualsAndHashCode
 @AllArgsConstructor(staticName = "of")
 public class AccountSummary {

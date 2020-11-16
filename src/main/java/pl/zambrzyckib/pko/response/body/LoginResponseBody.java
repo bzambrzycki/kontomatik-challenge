@@ -3,9 +3,7 @@ package pl.zambrzyckib.pko.response.body;
 import com.google.gson.annotations.SerializedName;
 import io.vavr.control.Try;
 import lombok.AllArgsConstructor;
-import lombok.ToString;
 
-@ToString
 @AllArgsConstructor
 public class LoginResponseBody {
   public final String token;

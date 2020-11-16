@@ -3,7 +3,7 @@ package pl.zambrzyckib.connection;
 import java.util.Map;
 import lombok.Builder;
 
-@Builder(toBuilder = true)
+@Builder
 public class Request {
 
   public final String url;
