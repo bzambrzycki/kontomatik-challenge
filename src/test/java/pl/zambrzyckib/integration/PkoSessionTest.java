@@ -25,18 +25,18 @@ public class PkoSessionTest {
 
   @Test
   void whenLoginIsCorrectResponseBodyShouldNotContainErrorInfo() {
-    final String correctLogin = properties.getProperty("login");
-    final var correctLoginResponse = pkoSession.sendLoginRequest(correctLogin);
-    assertFalse(GSON.fromJson(correctLoginResponse.body, LoginResponseBody.class).hasErrors());
+    final String login = properties.getProperty("login");
+    final var loginResponse = pkoSession.sendLoginRequest(login);
+    assertFalse(GSON.fromJson(loginResponse.body, LoginResponseBody.class).hasErrors());
   }
 
   @Test
   void whenPasswordIsCorrectResponseBodyShouldNotContainErrorInfo() {
     final String login = properties.getProperty("login");
-    final String correctPassword = properties.getProperty("password");
+    final String password = properties.getProperty("password");
     final var loginResponse = pkoSession.sendLoginRequest(login);
     pkoSession.setSessionId(loginResponse.headers.get("X-Session-Id"));
-    final var passwordResponse = pkoSession.sendPasswordRequest(loginResponse, correctPassword);
+    final var passwordResponse = pkoSession.sendPasswordRequest(loginResponse, password);
     assertFalse(GSON.fromJson(passwordResponse.body, PasswordResponseBody.class).hasErrors());
   }
 

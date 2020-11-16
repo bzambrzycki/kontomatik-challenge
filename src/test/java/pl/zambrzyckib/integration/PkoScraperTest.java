@@ -33,7 +33,7 @@ public class PkoScraperTest {
 
   @Test
   void shouldThrowInvalidCredentialsExceptionWhenLoginIsWrong() {
-    final var wrongLogin = "1";
+    final var wrongLogin = "test";
     final var password = properties.getProperty("password");
     assertThrows(
         InvalidCredentialsException.class,
