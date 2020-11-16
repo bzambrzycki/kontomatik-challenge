@@ -10,33 +10,38 @@ import pl.zambrzyckib.pko.response.PkoResponseUtils;
 
 public class PkoScraper {
 
-    private final PkoSession pkoSession;
-    public static final Gson GSON = new Gson();
+  private final PkoSession pkoSession;
+  public static final Gson GSON = new Gson();
 
-    public PkoScraper() {
-        this.pkoSession = new PkoSession();
-    }
+  public PkoScraper() {
+    this.pkoSession = new PkoSession();
+  }
 
-    public void getAndDisplayAccountsInfo(Credentials credentials) {
-        final var accountsSummaries = getAccountSummaries(credentials);
-        System.out.println(PkoResponseUtils.formatAccountSummaries(accountsSummaries));
-    }
+  public void getAndDisplayAccountsInfo(Credentials credentials) {
+    final var accountsSummaries = getAccountSummaries(credentials);
+    displayAccountSummaries(accountsSummaries);
+  }
 
-    public List<AccountSummary> getAccountSummaries(Credentials credentials) {
-        return Stream.of(fetchAccountsInfo(credentials))
-                .map(PkoResponseUtils::getAccountSummariesFromResponse)
-                .get();
-    }
+  public List<AccountSummary> getAccountSummaries(Credentials credentials) {
+    return Stream.of(fetchAccountsInfo(credentials))
+        .peek(ignored -> System.out.println("Successfully fetched accounts info"))
+        .map(PkoResponseUtils::getAccountSummariesFromResponse)
+        .get();
+  }
 
-    private Response fetchAccountsInfo(Credentials credentials) {
-        return Stream.of(pkoSession.sendLoginRequest(credentials.getLogin()))
-                .peek(this::saveSessionId)
-                .map(response -> pkoSession.sendPasswordRequest(response, credentials.getPassword()))
-                .map(response -> pkoSession.sendAccountsInfoRequest())
-                .get();
-    }
+  private Response fetchAccountsInfo(Credentials credentials) {
+    return Stream.of(pkoSession.sendLoginRequest(credentials.getLogin()))
+        .peek(this::saveSessionId)
+        .map(response -> pkoSession.sendPasswordRequest(response, credentials.getPassword()))
+        .map(response -> pkoSession.sendAccountsInfoRequest())
+        .get();
+  }
 
-    private void saveSessionId(Response response) {
-        pkoSession.setSessionId(response.getHeader("X-Session-Id"));
-    }
+  private void displayAccountSummaries(List<AccountSummary> accountSummaries) {
+    PkoResponseUtils.formatAccountSummaries(accountSummaries).forEach(System.out::println);
+  }
+
+  private void saveSessionId(Response response) {
+    pkoSession.setSessionId(response.getHeader("X-Session-Id"));
+  }
 }
