@@ -4,6 +4,7 @@ import io.vavr.control.Try;
 import org.jsoup.Connection;
 import org.jsoup.Connection.Method;
 import org.jsoup.Jsoup;
+import pl.zambrzyckib.UserInterface;
 
 public class JsoupConnection implements HttpAgent {
 
@@ -29,7 +30,7 @@ public class JsoupConnection implements HttpAgent {
             response ->
                 Response.of(
                     response.body(), response.statusCode(), response.headers(), response.cookies()))
-        .onFailure(throwable -> System.out.println("[LOG/ERR] " + throwable.getMessage()))
+        .onFailure(UserInterface::logThrowable)
         .get();
   }
 }

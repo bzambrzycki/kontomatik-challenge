@@ -3,6 +3,7 @@ package pl.zambrzyckib.pko;
 import com.google.gson.Gson;
 import io.vavr.collection.List;
 import io.vavr.collection.Stream;
+import pl.zambrzyckib.UserInterface;
 import pl.zambrzyckib.connection.Response;
 import pl.zambrzyckib.model.AccountSummary;
 import pl.zambrzyckib.model.Credentials;
@@ -19,12 +20,14 @@ public class PkoScraper {
 
   public void getAndDisplayAccountsInfo(Credentials credentials) {
     final var accountsSummaries = getAccountSummaries(credentials);
-    displayAccountSummaries(accountsSummaries);
+    final var formattedAccountSummaries =
+        PkoResponseUtils.formatAccountSummaries(accountsSummaries);
+    UserInterface.displayAccountSummaries(formattedAccountSummaries);
   }
 
   public List<AccountSummary> getAccountSummaries(Credentials credentials) {
     return Stream.of(fetchAccountsInfo(credentials))
-        .peek(ignored -> System.out.println("Successfully fetched accounts info"))
+        .peek(ignored -> UserInterface.displaySuccessMessage())
         .map(PkoResponseUtils::getAccountSummariesFromResponse)
         .get();
   }
