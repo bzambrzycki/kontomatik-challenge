@@ -25,7 +25,8 @@ public class PkoRequests {
         .build();
   }
 
-  public static Request userPasswordPostRequest(String password, String sessionId, Response sendLoginResponse) {
+  public static Request userPasswordPostRequest(
+      String password, String sessionId, Response sendLoginResponse) {
     final var loginResponseBody =
         new Gson().fromJson(sendLoginResponse.body, LoginResponseBody.class);
     return Request.builder()

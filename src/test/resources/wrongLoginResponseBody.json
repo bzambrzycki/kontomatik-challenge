@@ -1,10 +1,10 @@
 {
-  "response":{
-    "fields":{
-      "login":{
-        "value":"null",
-        "errors":{
-          "hint":"Wpisz poprawny numer klienta lub login"
+  "response": {
+    "fields": {
+      "login": {
+        "value": "null",
+        "errors": {
+          "hint": "Wpisz poprawny numer klienta lub login"
         }
       }
     }

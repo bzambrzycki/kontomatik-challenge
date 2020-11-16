@@ -22,9 +22,13 @@ public class PkoResponseUtilsTest {
     final var accountsInfoResponseBody =
         Files.readString(Path.of("src/test/resources/accountsInfoResponseBody.json"));
     final var expectedList =
-        List.of(AccountSummary.of("accountOne", "100", "PLN"), AccountSummary.of("accountTwo", "200", "PLN"));
-    assertEquals(expectedList, PkoResponseUtils
-            .getAccountSummariesFromResponse(Response.of(accountsInfoResponseBody, 200, Map.of(), Map.of())));
+        List.of(
+            AccountSummary.of("accountOne", "100", "PLN"),
+            AccountSummary.of("accountTwo", "200", "PLN"));
+    assertEquals(
+        expectedList,
+        PkoResponseUtils.getAccountSummariesFromResponse(
+            Response.of(accountsInfoResponseBody, 200, Map.of(), Map.of())));
   }
 
   @Test
@@ -35,14 +39,14 @@ public class PkoResponseUtilsTest {
     assertThrows(
         InvalidCredentialsException.class,
         () ->
-                PkoResponseUtils.verifyLoginResponse(
+            PkoResponseUtils.verifyLoginResponse(
                 Response.of(wrongLoginResponseBody, 200, Map.of(), Map.of())));
     final var wrongPasswordResponseBody =
         Files.readString(Path.of("src/test/resources/wrongPasswordResponseBody.json"));
     assertThrows(
         InvalidCredentialsException.class,
         () ->
-                PkoResponseUtils.verifyPasswordResponse(
+            PkoResponseUtils.verifyPasswordResponse(
                 Response.of(wrongPasswordResponseBody, 200, Map.of(), Map.of())));
   }
 }

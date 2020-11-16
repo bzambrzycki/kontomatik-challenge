@@ -16,8 +16,7 @@ public class LoginResponseBody {
   Response response;
 
   public Boolean hasErrors() {
-    return Try.of(() -> !response.fields.login.errors.hint.isEmpty())
-        .getOrElse(false);
+    return Try.of(() -> !response.fields.login.errors.hint.isEmpty()).getOrElse(false);
   }
 
   private static class Response {

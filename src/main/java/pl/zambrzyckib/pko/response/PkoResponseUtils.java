@@ -14,35 +14,36 @@ import pl.zambrzyckib.pko.response.body.PasswordResponseBody;
 @UtilityClass
 public class PkoResponseUtils {
 
-    public void verifyLoginResponse(Response response) {
-        final var loginResponseBody =
-                PkoScraper.GSON.fromJson(response.body, LoginResponseBody.class);
-        if (loginResponseBody.hasErrors()) {
-            throw new InvalidCredentialsException();
-        }
+  public void verifyLoginResponse(Response response) {
+    final var loginResponseBody = PkoScraper.GSON.fromJson(response.body, LoginResponseBody.class);
+    if (loginResponseBody.hasErrors()) {
+      throw new InvalidCredentialsException();
     }
+  }
 
-    public void verifyPasswordResponse(Response response) {
-        final var passwordResponseBody =
-                PkoScraper.GSON.fromJson(response.body, PasswordResponseBody.class);
-        if (passwordResponseBody.hasErrors()) {
-            throw new InvalidCredentialsException();
-        }
+  public void verifyPasswordResponse(Response response) {
+    final var passwordResponseBody =
+        PkoScraper.GSON.fromJson(response.body, PasswordResponseBody.class);
+    if (passwordResponseBody.hasErrors()) {
+      throw new InvalidCredentialsException();
     }
+  }
 
-    public List<AccountSummary> getAccountSummariesFromResponse(Response response) {
-        return PkoScraper.GSON
-                .fromJson(response.body, AccountsInfoResponseBody.class)
-                .getAccountSummaries();
-    }
+  public List<AccountSummary> getAccountSummariesFromResponse(Response response) {
+    return PkoScraper.GSON
+        .fromJson(response.body, AccountsInfoResponseBody.class)
+        .getAccountSummaries();
+  }
 
-    public List<String> formatAccountSummaries(List<AccountSummary> accountSummaries) {
-        return List.ofAll(accountSummaries).map(accountSummary ->
+  public List<String> formatAccountSummaries(List<AccountSummary> accountSummaries) {
+    return List.ofAll(accountSummaries)
+        .map(
+            accountSummary ->
                 "Account: "
-                        + accountSummary.name
-                        + ", balance: "
-                        + accountSummary.balance
-                        + " "
-                        + accountSummary.currency);
-    }
+                    + accountSummary.name
+                    + ", balance: "
+                    + accountSummary.balance
+                    + " "
+                    + accountSummary.currency);
+  }
 }

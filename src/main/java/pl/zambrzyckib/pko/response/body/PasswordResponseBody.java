@@ -7,8 +7,7 @@ public class PasswordResponseBody {
   Response response;
 
   public Boolean hasErrors() {
-    return Try.of(() -> !response.fields.password.errors.hint.isEmpty())
-        .getOrElse(false);
+    return Try.of(() -> !response.fields.password.errors.hint.isEmpty()).getOrElse(false);
   }
 
   private static class Response {

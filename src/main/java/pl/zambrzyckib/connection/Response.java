@@ -10,5 +10,4 @@ public class Response {
   public final Integer statusCode;
   public final Map<String, String> headers;
   public final Map<String, String> cookies;
-
 }

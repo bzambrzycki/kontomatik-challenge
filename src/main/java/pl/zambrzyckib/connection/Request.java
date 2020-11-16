@@ -12,8 +12,7 @@ public class Request {
   public final Map<String, String> headers;
   public final Map<String, String> cookies;
 
-  public enum Method{
+  public enum Method {
     POST
   }
-
 }
