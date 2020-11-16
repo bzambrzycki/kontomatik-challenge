@@ -10,8 +10,8 @@ Bank account information scraper made for the sake of recruitment into Kontomati
 * Java 11
 * Lombok
 
-### Configuration
-####Java 11
+## Configuration
+### Java 11
 Java JDK configuration using Git Bash:\
 Run
 ```bash
@@ -20,7 +20,7 @@ $ java -version
 If it tells you that the version is at least 11 you are good to go, otherwise you need to:
 * Download JDK11 and unpack it
 * Edit PATH environment variable, by adding a new variable with name JAVA_HOME, and value being the path to the previously downloaded JDK's bin folder
-####Lombok
+### Lombok
 Lombok IntelliJ configuration:\
 Download the plugin
 ``` 
