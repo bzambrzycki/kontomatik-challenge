@@ -16,7 +16,7 @@ public class PkoResponseUtils {
 
     public void verifyLoginResponse(Response response) {
         final var loginResponseBody =
-                PkoScraper.GSON.fromJson(response.getBody(), LoginResponseBody.class);
+                PkoScraper.GSON.fromJson(response.body, LoginResponseBody.class);
         if (loginResponseBody.hasErrors()) {
             throw new InvalidCredentialsException();
         }
@@ -24,7 +24,7 @@ public class PkoResponseUtils {
 
     public void verifyPasswordResponse(Response response) {
         final var passwordResponseBody =
-                PkoScraper.GSON.fromJson(response.getBody(), PasswordResponseBody.class);
+                PkoScraper.GSON.fromJson(response.body, PasswordResponseBody.class);
         if (passwordResponseBody.hasErrors()) {
             throw new InvalidCredentialsException();
         }
@@ -32,17 +32,17 @@ public class PkoResponseUtils {
 
     public List<AccountSummary> getAccountSummariesFromResponse(Response response) {
         return PkoScraper.GSON
-                .fromJson(response.getBody(), AccountsInfoResponseBody.class)
+                .fromJson(response.body, AccountsInfoResponseBody.class)
                 .getAccountSummaries();
     }
 
     public List<String> formatAccountSummaries(List<AccountSummary> accountSummaries) {
         return List.ofAll(accountSummaries).map(accountSummary ->
                 "Account: "
-                        + accountSummary.getName()
+                        + accountSummary.name
                         + ", balance: "
-                        + accountSummary.getBalance()
+                        + accountSummary.balance
                         + " "
-                        + accountSummary.getCurrency());
+                        + accountSummary.currency);
     }
 }

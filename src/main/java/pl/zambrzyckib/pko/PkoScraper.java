@@ -30,9 +30,9 @@ public class PkoScraper {
   }
 
   private Response fetchAccountsInfo(Credentials credentials) {
-    return Stream.of(pkoSession.sendLoginRequest(credentials.getLogin()))
+    return Stream.of(pkoSession.sendLoginRequest(credentials.login))
         .peek(this::saveSessionId)
-        .map(response -> pkoSession.sendPasswordRequest(response, credentials.getPassword()))
+        .map(response -> pkoSession.sendPasswordRequest(response, credentials.password))
         .map(response -> pkoSession.sendAccountsInfoRequest())
         .get();
   }
@@ -42,6 +42,6 @@ public class PkoScraper {
   }
 
   private void saveSessionId(Response response) {
-    pkoSession.setSessionId(response.getHeader("X-Session-Id"));
+    pkoSession.setSessionId(response.headers.get("X-Session-Id"));
   }
 }

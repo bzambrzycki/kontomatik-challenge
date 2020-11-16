@@ -19,11 +19,11 @@ public class JsoupConnection implements HttpAgent {
     return Try.of(
             () ->
                 connection
-                    .url(request.getUrl())
-                    .requestBody(request.getBody())
-                    .method(Method.valueOf(request.getMethod().toString()))
-                    .headers(request.getHeaders())
-                    .cookies(request.getCookies())
+                    .url(request.url)
+                    .requestBody(request.body)
+                    .method(Method.valueOf(request.method.toString()))
+                    .headers(request.headers)
+                    .cookies(request.cookies)
                     .execute())
         .map(
             response ->

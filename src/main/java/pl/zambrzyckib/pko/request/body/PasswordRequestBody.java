@@ -20,8 +20,8 @@ public class PasswordRequestBody {
     this.action = "submit";
     this.data = new Data(password);
     this.stateId = "password";
-    this.flowId = loginResponseBody.getFlowId();
-    this.token = loginResponseBody.getToken();
+    this.flowId = loginResponseBody.flowId;
+    this.token = loginResponseBody.token;
   }
 
   private static class Data {

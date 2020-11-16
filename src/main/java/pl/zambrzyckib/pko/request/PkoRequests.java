@@ -27,7 +27,7 @@ public class PkoRequests {
 
   public static Request userPasswordPostRequest(String password, String sessionId, Response sendLoginResponse) {
     final var loginResponseBody =
-        new Gson().fromJson(sendLoginResponse.getBody(), LoginResponseBody.class);
+        new Gson().fromJson(sendLoginResponse.body, LoginResponseBody.class);
     return Request.builder()
         .url(PkoSession.HOME_URL + PkoSession.LOGIN_ENDPOINT)
         .method(Method.POST)
