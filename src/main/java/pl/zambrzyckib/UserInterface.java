@@ -2,6 +2,7 @@ package pl.zambrzyckib;
 
 import io.vavr.collection.List;
 import lombok.experimental.UtilityClass;
+import pl.zambrzyckib.model.AccountSummary;
 
 @UtilityClass
 public class UserInterface {
@@ -16,11 +17,23 @@ public class UserInterface {
     System.out.println("Successfully fetched accounts info");
   }
 
-  public void displayAccountSummaries(List<String> accountSummaries) {
-    accountSummaries.forEach(System.out::println);
+  public void displayAccountSummaries(List<AccountSummary> accountSummaries) {
+    formatAccountSummaries(accountSummaries).forEach(System.out::println);
   }
 
   public void logThrowable(Throwable t) {
     System.out.println("[LOG/ERR] " + t.getMessage());
+  }
+
+  private List<String> formatAccountSummaries(List<AccountSummary> accountSummaries) {
+    return List.ofAll(accountSummaries)
+        .map(
+            accountSummary ->
+                "Account: "
+                    + accountSummary.name
+                    + ", balance: "
+                    + accountSummary.balance
+                    + " "
+                    + accountSummary.currency);
   }
 }

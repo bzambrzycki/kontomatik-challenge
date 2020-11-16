@@ -34,16 +34,4 @@ public class PkoResponseUtils {
         .fromJson(response.body, AccountsInfoResponseBody.class)
         .getAccountSummaries();
   }
-
-  public List<String> formatAccountSummaries(List<AccountSummary> accountSummaries) {
-    return List.ofAll(accountSummaries)
-        .map(
-            accountSummary ->
-                "Account: "
-                    + accountSummary.name
-                    + ", balance: "
-                    + accountSummary.balance
-                    + " "
-                    + accountSummary.currency);
-  }
 }

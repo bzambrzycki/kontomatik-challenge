@@ -20,9 +20,7 @@ public class PkoScraper {
 
   public void getAndDisplayAccountsInfo(Credentials credentials) {
     final var accountsSummaries = getAccountSummaries(credentials);
-    final var formattedAccountSummaries =
-        PkoResponseUtils.formatAccountSummaries(accountsSummaries);
-    UserInterface.displayAccountSummaries(formattedAccountSummaries);
+    UserInterface.displayAccountSummaries(accountsSummaries);
   }
 
   public List<AccountSummary> getAccountSummaries(Credentials credentials) {
@@ -38,10 +36,6 @@ public class PkoScraper {
         .map(response -> pkoSession.sendPasswordRequest(response, credentials.password))
         .map(response -> pkoSession.sendAccountsInfoRequest())
         .get();
-  }
-
-  private void displayAccountSummaries(List<AccountSummary> accountSummaries) {
-    PkoResponseUtils.formatAccountSummaries(accountSummaries).forEach(System.out::println);
   }
 
   private void saveSessionId(Response response) {
