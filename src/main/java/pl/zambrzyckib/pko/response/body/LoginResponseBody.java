@@ -2,37 +2,30 @@ package pl.zambrzyckib.pko.response.body;
 
 import com.google.gson.annotations.SerializedName;
 import io.vavr.control.Try;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.AllArgsConstructor;
 
-@Getter
-@ToString
+@AllArgsConstructor
 public class LoginResponseBody {
-  String token;
+  public final String token;
 
   @SerializedName("flow_id")
-  String flowId;
+  public final String flowId;
 
   Response response;
 
   public Boolean hasErrors() {
-    return Try.of(() -> !getResponse().getFields().getLogin().getErrors().getHint().isEmpty())
-        .getOrElse(false);
+    return Try.of(() -> !response.fields.login.errors.hint.isEmpty()).getOrElse(false);
   }
 
-  @Getter
   private static class Response {
     Fields fields;
 
-    @Getter
     private static class Fields {
       Login login;
 
-      @Getter
       private static class Login {
         Errors errors;
 
-        @Getter
         private static class Errors {
           String hint;
         }

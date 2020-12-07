@@ -4,32 +4,33 @@ import io.vavr.control.Try;
 import org.jsoup.Connection;
 import org.jsoup.Connection.Method;
 import org.jsoup.Jsoup;
+import pl.zambrzyckib.UserInterface;
 
-public class JsoupConnection implements BankConnection {
+public class JsoupConnection implements HttpAgent {
 
   private final Connection connection;
 
-  public JsoupConnection(final String url, final Boolean ignoreContentType) {
+  public JsoupConnection(String url, Boolean ignoreContentType) {
     this.connection = Jsoup.connect(url);
     this.connection.ignoreContentType(ignoreContentType);
   }
 
   @Override
-  public Response send(final Request request) {
+  public Response send(Request request) {
     return Try.of(
             () ->
                 connection
-                    .url(request.getUrl())
-                    .requestBody(request.getBody())
-                    .method(Method.valueOf(request.getMethod().toString()))
-                    .headers(request.getHeaders())
-                    .cookies(request.getCookies())
+                    .url(request.url)
+                    .requestBody(request.body)
+                    .method(Method.valueOf(request.method.toString()))
+                    .headers(request.headers)
+                    .cookies(request.cookies)
                     .execute())
         .map(
             response ->
                 Response.of(
                     response.body(), response.statusCode(), response.headers(), response.cookies()))
-        .onFailure(throwable -> System.out.println("[LOG/ERR] " + throwable.getMessage()))
+        .onFailure(UserInterface::logThrowable)
         .get();
   }
 }

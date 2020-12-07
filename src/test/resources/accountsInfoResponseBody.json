@@ -1,0 +1,18 @@
+{
+  "response": {
+    "data": {
+      "accounts": {
+        "abc": {
+          "balance": "100",
+          "name": "accountOne",
+          "currency": "PLN"
+        },
+        "def": {
+          "balance": "200",
+          "name": "accountTwo",
+          "currency": "PLN"
+        }
+      }
+    }
+  }
+}

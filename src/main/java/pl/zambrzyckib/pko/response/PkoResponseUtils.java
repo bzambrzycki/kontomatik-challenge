@@ -2,35 +2,36 @@ package pl.zambrzyckib.pko.response;
 
 import io.vavr.collection.List;
 
+import lombok.experimental.UtilityClass;
 import pl.zambrzyckib.connection.Response;
 import pl.zambrzyckib.exception.InvalidCredentialsException;
 import pl.zambrzyckib.model.AccountSummary;
-import pl.zambrzyckib.pko.PkoScrapper;
+import pl.zambrzyckib.pko.PkoScraper;
 import pl.zambrzyckib.pko.response.body.AccountsInfoResponseBody;
 import pl.zambrzyckib.pko.response.body.LoginResponseBody;
 import pl.zambrzyckib.pko.response.body.PasswordResponseBody;
 
-public class PkoResponsesHandler {
+@UtilityClass
+public class PkoResponseUtils {
 
-  public void verifyLoginResponse(final Response response) {
-    final var loginResponseBody =
-        PkoScrapper.GSON.fromJson(response.getBody(), LoginResponseBody.class);
+  public void verifyLoginResponse(Response response) {
+    final var loginResponseBody = PkoScraper.GSON.fromJson(response.body, LoginResponseBody.class);
     if (loginResponseBody.hasErrors()) {
       throw new InvalidCredentialsException();
     }
   }
 
-  public void verifyPasswordResponse(final Response response) {
+  public void verifyPasswordResponse(Response response) {
     final var passwordResponseBody =
-        PkoScrapper.GSON.fromJson(response.getBody(), PasswordResponseBody.class);
+        PkoScraper.GSON.fromJson(response.body, PasswordResponseBody.class);
     if (passwordResponseBody.hasErrors()) {
       throw new InvalidCredentialsException();
     }
   }
 
-  public List<AccountSummary> getAccountSummaries(final Response response) {
-    return PkoScrapper.GSON
-        .fromJson(response.getBody(), AccountsInfoResponseBody.class)
+  public List<AccountSummary> getAccountSummariesFromResponse(Response response) {
+    return PkoScraper.GSON
+        .fromJson(response.body, AccountsInfoResponseBody.class)
         .getAccountSummaries();
   }
 }

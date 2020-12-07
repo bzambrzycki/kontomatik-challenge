@@ -6,10 +6,11 @@ public class LoginRequestBody {
 
   String action;
   Data data;
+
   @SerializedName("state_id")
   String stateId;
 
-  public LoginRequestBody(final String login) {
+  public LoginRequestBody(String login) {
     this.action = "submit";
     this.data = new Data(login);
     this.stateId = "login";

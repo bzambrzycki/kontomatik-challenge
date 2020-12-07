@@ -1,31 +1,24 @@
 package pl.zambrzyckib.pko.response.body;
 
 import io.vavr.control.Try;
-import lombok.Getter;
 
-@Getter
 public class PasswordResponseBody {
 
   Response response;
 
   public Boolean hasErrors() {
-    return Try.of(() -> !getResponse().getFields().getPassword().getErrors().getHint().isEmpty())
-        .getOrElse(false);
+    return Try.of(() -> !response.fields.password.errors.hint.isEmpty()).getOrElse(false);
   }
 
-  @Getter
   private static class Response {
     Fields fields;
 
-    @Getter
     private static class Fields {
       Password password;
 
-      @Getter
       private static class Password {
         Errors errors;
 
-        @Getter
         private static class Errors {
           String hint;
         }

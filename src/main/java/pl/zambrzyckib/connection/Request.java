@@ -2,20 +2,17 @@ package pl.zambrzyckib.connection;
 
 import java.util.Map;
 import lombok.Builder;
-import lombok.Getter;
 
-@Getter
-@Builder(toBuilder = true)
+@Builder
 public class Request {
 
-  private String url;
-  private String body;
-  private Method method;
-  private Map<String, String> headers;
-  private Map<String, String> cookies;
+  public final String url;
+  public final String body;
+  public final Method method;
+  public final Map<String, String> headers;
+  public final Map<String, String> cookies;
 
-  public enum Method{
+  public enum Method {
     POST
   }
-
 }
