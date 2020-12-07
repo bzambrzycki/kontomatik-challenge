@@ -3,10 +3,11 @@ package pl.zambrzyckib.integration;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static pl.zambrzyckib.integration.PkoIntegrationTestSpec.properties;
+import static pl.zambrzyckib.integration.PkoIntegrationTestSpec.pkoTestCredentials;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -26,27 +27,27 @@ public class PkoScraperTest {
 
   @Test
   void shouldNotThrowAnyExceptionWhenCredentialsAreCorrect() {
-    var login = properties.getProperty("login");
-    var password = properties.getProperty("password");
-    assertDoesNotThrow(() -> pkoScraper.getAccountSummaries(Credentials.of(login, password)));
+    assertDoesNotThrow(() -> pkoScraper.getAccountSummaries(pkoTestCredentials));
   }
 
   @Test
   void shouldThrowInvalidCredentialsExceptionWhenLoginIsWrong() {
     var wrongLogin = "test";
-    var password = properties.getProperty("password");
     assertThrows(
         InvalidCredentialsException.class,
-        () -> pkoScraper.getAccountSummaries(Credentials.of(wrongLogin, password)));
+        () ->
+            pkoScraper.getAccountSummaries(
+                Credentials.of(wrongLogin, pkoTestCredentials.password)));
   }
 
   @Test
   void shouldThrowInvalidCredentialsExceptionWhenPasswordIsWrong() {
-    var login = properties.getProperty("login");
     var wrongPassword = "test";
     assertThrows(
         InvalidCredentialsException.class,
-        () -> pkoScraper.getAccountSummaries(Credentials.of(login, wrongPassword)));
+        () ->
+            pkoScraper.getAccountSummaries(
+                Credentials.of(pkoTestCredentials.login, wrongPassword)));
   }
 
   @Test
@@ -54,9 +55,7 @@ public class PkoScraperTest {
     var standardOut = System.out;
     var byteArrayOutputStream = new ByteArrayOutputStream();
     System.setOut(new PrintStream(byteArrayOutputStream));
-    var login = properties.getProperty("login");
-    var password = properties.getProperty("password");
-    pkoScraper.getAndDisplayAccountsInfo(Credentials.of(login, password));
+    pkoScraper.getAndDisplayAccountsInfo(pkoTestCredentials);
     assertTrue(byteArrayOutputStream.toString().contains("Successfully fetched accounts info"));
     System.setOut(standardOut);
   }

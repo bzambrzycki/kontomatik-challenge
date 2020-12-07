@@ -2,8 +2,8 @@ package pl.zambrzyckib.integration;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static pl.zambrzyckib.integration.PkoIntegrationTestSpec.pkoTestCredentials;
 import static pl.zambrzyckib.pko.PkoScraper.GSON;
-import static pl.zambrzyckib.integration.PkoIntegrationTestSpec.properties;
 
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
@@ -25,26 +25,23 @@ public class PkoSessionTest {
 
   @Test
   void whenLoginIsCorrectResponseBodyShouldNotContainErrorInfo() {
-    String login = properties.getProperty("login");
-    var loginResponse = pkoSession.sendLoginRequest(login);
+    var loginResponse = pkoSession.sendLoginRequest(pkoTestCredentials.login);
     assertFalse(GSON.fromJson(loginResponse.body, LoginResponseBody.class).hasErrors());
   }
 
   @Test
   void whenPasswordIsCorrectResponseBodyShouldNotContainErrorInfo() {
-    String login = properties.getProperty("login");
-    String password = properties.getProperty("password");
-    var loginResponse = pkoSession.sendLoginRequest(login);
+    var loginResponse = pkoSession.sendLoginRequest(pkoTestCredentials.login);
     pkoSession.setSessionId(loginResponse.headers.get("X-Session-Id"));
-    var passwordResponse = pkoSession.sendPasswordRequest(loginResponse, password);
+    var passwordResponse =
+        pkoSession.sendPasswordRequest(loginResponse, pkoTestCredentials.password);
     assertFalse(GSON.fromJson(passwordResponse.body, PasswordResponseBody.class).hasErrors());
   }
 
   @Test
   void whenPasswordIsWrongExceptionShouldBeThrown() {
-    String login = properties.getProperty("login");
     String wrongPassword = "test";
-    var loginResponse = pkoSession.sendLoginRequest(login);
+    var loginResponse = pkoSession.sendLoginRequest(pkoTestCredentials.login);
     pkoSession.setSessionId(loginResponse.headers.get("X-Session-Id"));
     assertThrows(
         InvalidCredentialsException.class,
