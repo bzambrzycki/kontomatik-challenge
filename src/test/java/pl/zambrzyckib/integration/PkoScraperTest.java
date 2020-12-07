@@ -26,15 +26,15 @@ public class PkoScraperTest {
 
   @Test
   void shouldNotThrowAnyExceptionWhenCredentialsAreCorrect() {
-    final var login = properties.getProperty("login");
-    final var password = properties.getProperty("password");
+    var login = properties.getProperty("login");
+    var password = properties.getProperty("password");
     assertDoesNotThrow(() -> pkoScraper.getAccountSummaries(Credentials.of(login, password)));
   }
 
   @Test
   void shouldThrowInvalidCredentialsExceptionWhenLoginIsWrong() {
-    final var wrongLogin = "test";
-    final var password = properties.getProperty("password");
+    var wrongLogin = "test";
+    var password = properties.getProperty("password");
     assertThrows(
         InvalidCredentialsException.class,
         () -> pkoScraper.getAccountSummaries(Credentials.of(wrongLogin, password)));
@@ -42,8 +42,8 @@ public class PkoScraperTest {
 
   @Test
   void shouldThrowInvalidCredentialsExceptionWhenPasswordIsWrong() {
-    final var login = properties.getProperty("login");
-    final var wrongPassword = "test";
+    var login = properties.getProperty("login");
+    var wrongPassword = "test";
     assertThrows(
         InvalidCredentialsException.class,
         () -> pkoScraper.getAccountSummaries(Credentials.of(login, wrongPassword)));
@@ -51,11 +51,11 @@ public class PkoScraperTest {
 
   @Test
   void shouldLoginToBankAndDisplayAccountsSummary() {
-    final var standardOut = System.out;
-    final var byteArrayOutputStream = new ByteArrayOutputStream();
+    var standardOut = System.out;
+    var byteArrayOutputStream = new ByteArrayOutputStream();
     System.setOut(new PrintStream(byteArrayOutputStream));
-    final var login = properties.getProperty("login");
-    final var password = properties.getProperty("password");
+    var login = properties.getProperty("login");
+    var password = properties.getProperty("password");
     pkoScraper.getAndDisplayAccountsInfo(Credentials.of(login, password));
     assertTrue(byteArrayOutputStream.toString().contains("Successfully fetched accounts info"));
     System.setOut(standardOut);

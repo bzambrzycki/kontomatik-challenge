@@ -25,26 +25,26 @@ public class PkoSessionTest {
 
   @Test
   void whenLoginIsCorrectResponseBodyShouldNotContainErrorInfo() {
-    final String login = properties.getProperty("login");
-    final var loginResponse = pkoSession.sendLoginRequest(login);
+    String login = properties.getProperty("login");
+    var loginResponse = pkoSession.sendLoginRequest(login);
     assertFalse(GSON.fromJson(loginResponse.body, LoginResponseBody.class).hasErrors());
   }
 
   @Test
   void whenPasswordIsCorrectResponseBodyShouldNotContainErrorInfo() {
-    final String login = properties.getProperty("login");
-    final String password = properties.getProperty("password");
-    final var loginResponse = pkoSession.sendLoginRequest(login);
+    String login = properties.getProperty("login");
+    String password = properties.getProperty("password");
+    var loginResponse = pkoSession.sendLoginRequest(login);
     pkoSession.setSessionId(loginResponse.headers.get("X-Session-Id"));
-    final var passwordResponse = pkoSession.sendPasswordRequest(loginResponse, password);
+    var passwordResponse = pkoSession.sendPasswordRequest(loginResponse, password);
     assertFalse(GSON.fromJson(passwordResponse.body, PasswordResponseBody.class).hasErrors());
   }
 
   @Test
   void whenPasswordIsWrongExceptionShouldBeThrown() {
-    final String login = properties.getProperty("login");
-    final String wrongPassword = "test";
-    final var loginResponse = pkoSession.sendLoginRequest(login);
+    String login = properties.getProperty("login");
+    String wrongPassword = "test";
+    var loginResponse = pkoSession.sendLoginRequest(login);
     pkoSession.setSessionId(loginResponse.headers.get("X-Session-Id"));
     assertThrows(
         InvalidCredentialsException.class,
@@ -53,7 +53,7 @@ public class PkoSessionTest {
 
   @Test
   void whenLoginIsWrongExceptionShouldBeThrown() {
-    final String wrongLogin = "test";
+    String wrongLogin = "test";
     assertThrows(InvalidCredentialsException.class, () -> pkoSession.sendLoginRequest(wrongLogin));
   }
 }
