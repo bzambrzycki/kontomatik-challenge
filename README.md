@@ -11,50 +11,40 @@ Bank account information scraper made for the sake of recruitment into Kontomati
 * Lombok plugin
 
 ## Configuration
-### Java 11
-Java JDK configuration using Git Bash:\
-Run
-```bash
-$ java -version
-```
-If it tells you that the version is at least 11 you are good to go, otherwise you need to:
-* Download JDK11 and unpack it
-* Edit PATH environment variable, by adding a new variable with name JAVA_HOME, and value being the path to the previously downloaded JDK's bin folder
 ### Lombok plugin
-Lombok IntelliJ configuration:\
-Download the plugin
-``` 
-File > Settings > Plugins > download Lombok > Restart IDE
-```
-Once restarted, enable annotation processing so that the IDE recognizes Lombok-generated methods
-``` 
-File > Settings > Build, Execution, Deployments > Compiler > Annotation Processors > check Enable Annotation Processing > Apply
-```
+To setup Lombok plugin in IntelliJ, follow this guide:  
+https://projectlombok.org/setup/intellij
 ## Usage
-
-### Running tests
-To run all the tests, first make sure you meet the Integration tests requirements(details below), and then use
+### Tests
+If you plan to run all the tests, or Integration tests only, you need to provide bank credentials first. To do it, rename the **credentials.properties.sample** file by deleting the **.sample** extension, and fill it with PKO bank credentials you want to test the scraper with. Git will not track this file if you make any commits later, but you should not keep your plaintext password in the source code too long anyway.  
+#### Running all tests
+To run all the tests, use
 ```bash
 ./gradlew test
 ```
-#### Unit tests
-To run unit tests, use
+#### Running unit tests
+To run only the unit tests, use
 ```bash
 ./gradlew unitTest
 ```
-#### Integration tests
-Integration tests connect to the bank, and test whether the app reacts correctly to the received responses, so in order to run them, you need to provide a credentials.properties file in the test/resources directory. You can take the EDITME.properties template, fill it with correct credentials and rename it. Git will not track this file if you make any commits later, but you shouldn't keep your plaintext password in the source code too long anyway. Once the credentials file is there, run integration tests using
+#### Running integration tests
+To run only the integration tests, use
 ```bash
 ./gradlew integrationTest
 ```
 
-### Building
-Build the project to jar using the command below
+### Build & Run
+To run the project using one command, use the below command from the project root directory(.../kontomatik-challenge given you didn't change the directory name), don't forget the quotes
+```bash
+./gradlew jar && java -jar build/libs/kontomatik-challenge.jar "$yourPkoLogin" "$yourPkoPassword"
+```
+#### Building
+To only build the project to jar file use the command below
 ```bash
 ./gradlew jar
 ```
-### Running
-Run using command below, make sure to specify correct path to the built jar (by default, it should be preceded by ./build/libs/jar/), and don't forget the quotes when providing credentials
+#### Running
+To only run the built jar, use the command below. Make sure to specify correct path to the built jar (by default, it should be preceded by ./build/libs/)
 ```bash
 $ java -jar kontomatik-challenge.jar "$yourPkoLogin" "$yourPkoPassword"
 ```
