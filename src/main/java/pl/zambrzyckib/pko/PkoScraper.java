@@ -1,5 +1,7 @@
 package pl.zambrzyckib.pko;
 
+import static pl.zambrzyckib.KontomatikChallengeApp.USER_INTERFACE;
+
 import com.google.gson.Gson;
 import io.vavr.collection.List;
 import io.vavr.collection.Stream;
@@ -21,12 +23,12 @@ public class PkoScraper {
 
   public void getAndDisplayAccountsInfo(Credentials credentials) {
     final List<AccountSummary> accountsSummaries = getAccountSummaries(credentials);
-    UserInterface.displayAccountSummaries(accountsSummaries);
+    USER_INTERFACE.displayAccountSummaries(accountsSummaries);
   }
 
   public List<AccountSummary> getAccountSummaries(Credentials credentials) {
     return Stream.of(fetchAccountsInfo(credentials))
-        .peek(ignored -> UserInterface.displaySuccessMessage())
+        .peek(ignored -> USER_INTERFACE.displaySuccessMessage())
         .map(PkoResponseParser::getAccountSummariesFromResponse)
         .get();
   }
