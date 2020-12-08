@@ -33,26 +33,23 @@ public class PkoResponseParserTest {
 
   @Test
   @SneakyThrows
-  public void shouldThrowExceptionWhenLoginIsIncorrect(){
-    var wrongLoginResponseBody =
-            Files.readString(Path.of("src/test/resources/wrongLoginResponseBody.json"));
+  public void shouldThrowExceptionWhenLoginIsIncorrect() {
+    String wrongLoginResponseBody =
+        Files.readString(Path.of("src/test/resources/wrongLoginResponseBody.json"));
+    var wrongLoginResponse = Response.of(wrongLoginResponseBody, 200, Map.of(), Map.of());
     assertThrows(
-            InvalidCredentials.class,
-            () ->
-                    PkoResponseParser.verifyLoginResponse(
-                            Response.of(wrongLoginResponseBody, 200, Map.of(), Map.of())));
+        InvalidCredentials.class, () -> PkoResponseParser.verifyLoginResponse(wrongLoginResponse));
   }
 
   @Test
   @SneakyThrows
-  public void shouldThrowExceptionWhenPasswordIsIncorrect(){
-    var wrongPasswordResponseBody =
-            Files.readString(Path.of("src/test/resources/wrongPasswordResponseBody.json"));
+  public void shouldThrowExceptionWhenPasswordIsIncorrect() {
+    String wrongPasswordResponseBody =
+        Files.readString(Path.of("src/test/resources/wrongPasswordResponseBody.json"));
+    Response wrongPasswordResponse =
+        Response.of(wrongPasswordResponseBody, 200, Map.of(), Map.of());
     assertThrows(
-            InvalidCredentials.class,
-            () ->
-                    PkoResponseParser.verifyPasswordResponse(
-                            Response.of(wrongPasswordResponseBody, 200, Map.of(), Map.of())));
+        InvalidCredentials.class,
+        () -> PkoResponseParser.verifyPasswordResponse(wrongPasswordResponse));
   }
-
 }
