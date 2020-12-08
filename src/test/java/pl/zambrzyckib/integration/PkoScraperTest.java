@@ -52,7 +52,7 @@ public class PkoScraperTest {
 
   @Test
   void shouldLoginToBankAndDisplayAccountsSummary() {
-    var standardOut = System.out;
+    PrintStream standardOut = System.out;
     var byteArrayOutputStream = new ByteArrayOutputStream();
     System.setOut(new PrintStream(byteArrayOutputStream));
     pkoScraper.getAndDisplayAccountsInfo(pkoTestCredentials);

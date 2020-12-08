@@ -19,7 +19,7 @@ public class PkoScraper {
   }
 
   public void getAndDisplayAccountsInfo(Credentials credentials) {
-    final var accountsSummaries = getAccountSummaries(credentials);
+    final List<AccountSummary> accountsSummaries = getAccountSummaries(credentials);
     UserInterface.displayAccountSummaries(accountsSummaries);
   }
 
