@@ -24,21 +24,6 @@ public class PkoSessionTest {
   }
 
   @Test
-  void whenLoginIsCorrectResponseBodyShouldNotContainErrorInfo() {
-    var loginResponse = pkoSession.sendLoginRequest(pkoTestCredentials.login);
-    assertFalse(GSON.fromJson(loginResponse.body, LoginResponseBody.class).hasErrors());
-  }
-
-  @Test
-  void whenPasswordIsCorrectResponseBodyShouldNotContainErrorInfo() {
-    var loginResponse = pkoSession.sendLoginRequest(pkoTestCredentials.login);
-    pkoSession.setSessionId(loginResponse.headers.get("X-Session-Id"));
-    var passwordResponse =
-        pkoSession.sendPasswordRequest(loginResponse, pkoTestCredentials.password);
-    assertFalse(GSON.fromJson(passwordResponse.body, PasswordResponseBody.class).hasErrors());
-  }
-
-  @Test
   void whenPasswordIsWrongExceptionShouldBeThrown() {
     String wrongPassword = "test";
     var loginResponse = pkoSession.sendLoginRequest(pkoTestCredentials.login);

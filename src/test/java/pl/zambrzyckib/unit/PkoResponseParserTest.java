@@ -12,9 +12,9 @@ import org.junit.jupiter.api.Test;
 import pl.zambrzyckib.connection.Response;
 import pl.zambrzyckib.exception.InvalidCredentialsException;
 import pl.zambrzyckib.model.AccountSummary;
-import pl.zambrzyckib.pko.response.PkoResponseUtils;
+import pl.zambrzyckib.pko.response.PkoResponseParser;
 
-public class PkoResponseUtilsTest {
+public class PkoResponseParserTest {
 
   @Test
   @SneakyThrows
@@ -27,26 +27,32 @@ public class PkoResponseUtilsTest {
             AccountSummary.of("accountTwo", "200", "PLN"));
     assertEquals(
         expectedList,
-        PkoResponseUtils.getAccountSummariesFromResponse(
+        PkoResponseParser.getAccountSummariesFromResponse(
             Response.of(accountsInfoResponseBody, 200, Map.of(), Map.of())));
   }
 
   @Test
   @SneakyThrows
-  public void shouldThrowExceptionWhenCredentialsAreIncorrect() {
+  public void shouldThrowExceptionWhenLoginIsIncorrect(){
     var wrongLoginResponseBody =
-        Files.readString(Path.of("src/test/resources/wrongLoginResponseBody.json"));
+            Files.readString(Path.of("src/test/resources/wrongLoginResponseBody.json"));
     assertThrows(
-        InvalidCredentialsException.class,
-        () ->
-            PkoResponseUtils.verifyLoginResponse(
-                Response.of(wrongLoginResponseBody, 200, Map.of(), Map.of())));
-    var wrongPasswordResponseBody =
-        Files.readString(Path.of("src/test/resources/wrongPasswordResponseBody.json"));
-    assertThrows(
-        InvalidCredentialsException.class,
-        () ->
-            PkoResponseUtils.verifyPasswordResponse(
-                Response.of(wrongPasswordResponseBody, 200, Map.of(), Map.of())));
+            InvalidCredentialsException.class,
+            () ->
+                    PkoResponseParser.verifyLoginResponse(
+                            Response.of(wrongLoginResponseBody, 200, Map.of(), Map.of())));
   }
+
+  @Test
+  @SneakyThrows
+  public void shouldThrowExceptionWhenPasswordIsIncorrect(){
+    var wrongPasswordResponseBody =
+            Files.readString(Path.of("src/test/resources/wrongPasswordResponseBody.json"));
+    assertThrows(
+            InvalidCredentialsException.class,
+            () ->
+                    PkoResponseParser.verifyPasswordResponse(
+                            Response.of(wrongPasswordResponseBody, 200, Map.of(), Map.of())));
+  }
+
 }

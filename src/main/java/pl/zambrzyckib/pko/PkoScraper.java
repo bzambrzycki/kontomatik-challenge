@@ -7,7 +7,7 @@ import pl.zambrzyckib.UserInterface;
 import pl.zambrzyckib.connection.Response;
 import pl.zambrzyckib.model.AccountSummary;
 import pl.zambrzyckib.model.Credentials;
-import pl.zambrzyckib.pko.response.PkoResponseUtils;
+import pl.zambrzyckib.pko.response.PkoResponseParser;
 
 public class PkoScraper {
 
@@ -26,7 +26,7 @@ public class PkoScraper {
   public List<AccountSummary> getAccountSummaries(Credentials credentials) {
     return Stream.of(fetchAccountsInfo(credentials))
         .peek(ignored -> UserInterface.displaySuccessMessage())
-        .map(PkoResponseUtils::getAccountSummariesFromResponse)
+        .map(PkoResponseParser::getAccountSummariesFromResponse)
         .get();
   }
 
