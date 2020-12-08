@@ -11,7 +11,7 @@ import java.io.PrintStream;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import pl.zambrzyckib.exception.InvalidCredentialsException;
+import pl.zambrzyckib.exception.InvalidCredentials;
 import pl.zambrzyckib.model.Credentials;
 import pl.zambrzyckib.pko.PkoScraper;
 
@@ -34,7 +34,7 @@ public class PkoScraperTest {
   void shouldThrowInvalidCredentialsExceptionWhenLoginIsWrong() {
     var wrongLogin = "test";
     assertThrows(
-        InvalidCredentialsException.class,
+        InvalidCredentials.class,
         () ->
             pkoScraper.getAccountSummaries(
                 Credentials.of(wrongLogin, pkoTestCredentials.password)));
@@ -44,7 +44,7 @@ public class PkoScraperTest {
   void shouldThrowInvalidCredentialsExceptionWhenPasswordIsWrong() {
     var wrongPassword = "test";
     assertThrows(
-        InvalidCredentialsException.class,
+        InvalidCredentials.class,
         () ->
             pkoScraper.getAccountSummaries(
                 Credentials.of(pkoTestCredentials.login, wrongPassword)));

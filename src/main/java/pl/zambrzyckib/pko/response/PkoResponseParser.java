@@ -4,7 +4,7 @@ import io.vavr.collection.List;
 import io.vavr.control.Try;
 import lombok.experimental.UtilityClass;
 import pl.zambrzyckib.connection.Response;
-import pl.zambrzyckib.exception.InvalidCredentialsException;
+import pl.zambrzyckib.exception.InvalidCredentials;
 import pl.zambrzyckib.model.AccountSummary;
 import pl.zambrzyckib.pko.PkoScraper;
 import pl.zambrzyckib.pko.response.body.AccountsInfoResponseBody;
@@ -17,14 +17,14 @@ public class PkoResponseParser {
   public void verifyLoginResponse(Response response) {
     final LoginResponseBody loginResponseBody = deserializeLoginResponse(response.body);
     if (checkIfLoginWrong(loginResponseBody)) {
-      throw new InvalidCredentialsException();
+      throw new InvalidCredentials();
     }
   }
 
   public void verifyPasswordResponse(Response response) {
     final PasswordResponseBody passwordResponseBody = deserializePasswordResponse(response.body);
     if (checkIfPasswordWrong(passwordResponseBody)) {
-      throw new InvalidCredentialsException();
+      throw new InvalidCredentials();
     }
   }
 

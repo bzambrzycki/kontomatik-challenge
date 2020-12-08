@@ -10,7 +10,7 @@ import java.util.Map;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import pl.zambrzyckib.connection.Response;
-import pl.zambrzyckib.exception.InvalidCredentialsException;
+import pl.zambrzyckib.exception.InvalidCredentials;
 import pl.zambrzyckib.model.AccountSummary;
 import pl.zambrzyckib.pko.response.PkoResponseParser;
 
@@ -37,7 +37,7 @@ public class PkoResponseParserTest {
     var wrongLoginResponseBody =
             Files.readString(Path.of("src/test/resources/wrongLoginResponseBody.json"));
     assertThrows(
-            InvalidCredentialsException.class,
+            InvalidCredentials.class,
             () ->
                     PkoResponseParser.verifyLoginResponse(
                             Response.of(wrongLoginResponseBody, 200, Map.of(), Map.of())));
@@ -49,7 +49,7 @@ public class PkoResponseParserTest {
     var wrongPasswordResponseBody =
             Files.readString(Path.of("src/test/resources/wrongPasswordResponseBody.json"));
     assertThrows(
-            InvalidCredentialsException.class,
+            InvalidCredentials.class,
             () ->
                     PkoResponseParser.verifyPasswordResponse(
                             Response.of(wrongPasswordResponseBody, 200, Map.of(), Map.of())));
