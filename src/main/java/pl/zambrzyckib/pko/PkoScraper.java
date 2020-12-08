@@ -5,7 +5,6 @@ import static pl.zambrzyckib.KontomatikChallengeApp.USER_INTERFACE;
 import com.google.gson.Gson;
 import io.vavr.collection.List;
 import io.vavr.collection.Stream;
-import pl.zambrzyckib.UserInterface;
 import pl.zambrzyckib.connection.Response;
 import pl.zambrzyckib.exception.SessionIdNotReceived;
 import pl.zambrzyckib.model.AccountSummary;
