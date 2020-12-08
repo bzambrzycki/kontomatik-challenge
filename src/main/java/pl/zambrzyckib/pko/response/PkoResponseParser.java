@@ -31,7 +31,12 @@ public class PkoResponseParser {
   public List<AccountSummary> getAccountSummariesFromResponse(Response response) {
     final AccountsInfoResponseBody accountsInfoResponseBody =
         deserializeAccountsInfoResponse(response.body);
-    return accountsInfoResponseBody.getAccountSummaries();
+    return accountsInfoResponseBody
+        .getAccountSummaries()
+        .map(
+            pkoAccountSummary ->
+                AccountSummary.of(
+                    pkoAccountSummary.name, pkoAccountSummary.balance, pkoAccountSummary.currency));
   }
 
   private boolean checkIfLoginWrong(LoginResponseBody loginResponseBody) {
