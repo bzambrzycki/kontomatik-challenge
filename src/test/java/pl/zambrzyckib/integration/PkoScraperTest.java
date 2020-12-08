@@ -26,11 +26,6 @@ public class PkoScraperTest {
   }
 
   @Test
-  void shouldNotThrowAnyExceptionWhenCredentialsAreCorrect() {
-    assertDoesNotThrow(() -> pkoScraper.getAccountSummaries(pkoTestCredentials));
-  }
-
-  @Test
   void shouldThrowInvalidCredentialsExceptionWhenLoginIsWrong() {
     var wrongLogin = "test";
     Credentials invalidCredentials = Credentials.of(wrongLogin, pkoTestCredentials.password);
@@ -44,6 +39,11 @@ public class PkoScraperTest {
     Credentials invalidCredentials = Credentials.of(pkoTestCredentials.login, wrongPassword);
     assertThrows(
         InvalidCredentials.class, () -> pkoScraper.getAccountSummaries(invalidCredentials));
+  }
+
+  @Test
+  void shouldNotThrowAnyExceptionWhenCredentialsAreCorrect() {
+    assertDoesNotThrow(() -> pkoScraper.getAccountSummaries(pkoTestCredentials));
   }
 
   @Test

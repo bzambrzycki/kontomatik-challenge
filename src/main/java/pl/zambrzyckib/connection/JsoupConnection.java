@@ -6,6 +6,8 @@ import org.jsoup.Connection.Method;
 import org.jsoup.Jsoup;
 import pl.zambrzyckib.UserInterface;
 
+import java.util.Map;
+
 public class JsoupConnection implements HttpAgent {
 
   private final Connection connection;
@@ -17,14 +19,16 @@ public class JsoupConnection implements HttpAgent {
 
   @Override
   public Response send(Request request) {
+    final Map<String, String> headers = request.headers != null ? request.headers : Map.of();
+    final Map<String, String> cookies = request.cookies != null ? request.cookies : Map.of();
     return Try.of(
             () ->
                 connection
-                    .url(request.url)
+                    .url(request.baseUrl + request.endpoint)
                     .requestBody(request.body)
                     .method(Method.valueOf(request.method.toString()))
-                    .headers(request.headers)
-                    .cookies(request.cookies)
+                    .headers(headers)
+                    .cookies(cookies)
                     .execute())
         .map(
             response ->
