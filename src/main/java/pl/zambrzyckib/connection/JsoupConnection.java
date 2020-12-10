@@ -1,7 +1,5 @@
 package pl.zambrzyckib.connection;
 
-import static pl.zambrzyckib.KontomatikChallengeApp.USER_INTERFACE;
-
 import io.vavr.control.Try;
 import org.jsoup.Connection;
 import org.jsoup.Connection.Method;
@@ -35,7 +33,6 @@ public class JsoupConnection implements HttpAgent {
             response ->
                 Response.of(
                     response.body(), response.statusCode(), response.headers(), response.cookies()))
-        .onFailure(USER_INTERFACE::logThrowable)
         .get();
   }
 }

@@ -1,33 +1,35 @@
 package pl.zambrzyckib.pko;
 
-import static pl.zambrzyckib.KontomatikChallengeApp.USER_INTERFACE;
-
 import com.google.gson.Gson;
 import io.vavr.collection.List;
 import io.vavr.collection.Stream;
+import pl.zambrzyckib.UserInterface;
 import pl.zambrzyckib.connection.Response;
 import pl.zambrzyckib.exception.SessionIdNotReceived;
 import pl.zambrzyckib.model.AccountSummary;
 import pl.zambrzyckib.model.Credentials;
 import pl.zambrzyckib.pko.response.PkoResponseParser;
 
+
 public class PkoScraper {
 
   private final PkoSession pkoSession;
+  private final UserInterface userInterface;
   public static final Gson GSON = new Gson();
 
-  public PkoScraper() {
+  public PkoScraper(UserInterface userInterface) {
+    this.userInterface = userInterface;
     this.pkoSession = new PkoSession();
   }
 
   public void getAndDisplayAccountsInfo(Credentials credentials) {
     final List<AccountSummary> accountsSummaries = getAccountSummaries(credentials);
-    USER_INTERFACE.displayAccountSummaries(accountsSummaries);
+    userInterface.displayAccountSummaries(accountsSummaries);
   }
 
   private List<AccountSummary> getAccountSummaries(Credentials credentials) {
     return Stream.of(fetchAccountsInfo(credentials))
-        .peek(ignored -> USER_INTERFACE.displaySuccessMessage())
+        .peek(ignored -> userInterface.displaySuccessMessage())
         .map(PkoResponseParser::getAccountSummariesFromResponse)
         .get();
   }
