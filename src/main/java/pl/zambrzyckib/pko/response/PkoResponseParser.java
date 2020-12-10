@@ -35,7 +35,7 @@ public class PkoResponseParser {
     if (checkIsPasswordWrong(passwordResponseBody)) {
       throw new InvalidCredentials();
     }
-    return passwordResponseBody.getState_id().equals("END");
+    return passwordResponseBody.getStateId().equals("END");
   }
 
   private PasswordResponseBody deserializePasswordResponse(String responseBody) {

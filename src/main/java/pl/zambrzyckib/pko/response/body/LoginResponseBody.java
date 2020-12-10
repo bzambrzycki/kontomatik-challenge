@@ -15,17 +15,12 @@ public class LoginResponseBody {
   public Response response;
 
   @Getter
-  public class Response {
+  public static class Response {
     Fields fields;
 
     @Getter
-    public class Fields {
-      Errors errors;
-
-      @Getter
-      public class Errors {
-        String hint;
-      }
+    public static class Fields {
+      Object errors;
     }
   }
 }
