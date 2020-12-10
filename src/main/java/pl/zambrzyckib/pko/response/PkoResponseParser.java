@@ -30,7 +30,7 @@ public class PkoResponseParser {
     return passwordResponseBody.getState_id().equals("END");
   }
 
-  public List<AccountSummary> getAccountSummariesFromResponse(Response response) {
+  public List<AccountSummary> parseAccountSummariesFromResponse(Response response) {
     final AccountsInfoResponseBody accountsInfoResponseBody =
         deserializeAccountsInfoResponse(response.body);
     return accountsInfoResponseBody

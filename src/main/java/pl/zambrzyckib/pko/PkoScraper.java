@@ -18,14 +18,14 @@ public class PkoScraper {
   }
 
   public void getAndDisplayAccountsInfo(Credentials credentials) {
-    final List<AccountSummary> accountsSummaries = getAccountSummaries(credentials);
+    final List<AccountSummary> accountsSummaries = fetchAccountSummaries(credentials);
     userInterface.displayAccountSummaries(accountsSummaries);
   }
 
-  private List<AccountSummary> getAccountSummaries(Credentials credentials) {
+  private List<AccountSummary> fetchAccountSummaries(Credentials credentials) {
     final Response accountsResponse = fetchAccountsInfo(credentials);
     userInterface.displaySuccessMessage();
-    return PkoResponseParser.getAccountSummariesFromResponse(accountsResponse);
+    return PkoResponseParser.parseAccountSummariesFromResponse(accountsResponse);
   }
 
   private Response fetchAccountsInfo(Credentials credentials) {
