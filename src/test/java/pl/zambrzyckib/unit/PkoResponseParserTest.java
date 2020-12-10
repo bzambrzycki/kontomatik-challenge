@@ -39,7 +39,7 @@ public class PkoResponseParserTest {
         readStringFromFile("src/test/resources/wrongLoginResponseBody.json");
     var wrongLoginResponse = basicResponseBuilder.body(wrongLoginResponseBody).build();
     assertThrows(
-        InvalidCredentials.class, () -> PkoResponseParser.verifyLoginResponse(wrongLoginResponse));
+        InvalidCredentials.class, () -> PkoResponseParser.assertLoginCorrect(wrongLoginResponse));
   }
 
   @Test
@@ -49,7 +49,7 @@ public class PkoResponseParserTest {
     Response wrongPasswordResponse = basicResponseBuilder.body(wrongPasswordResponseBody).build();
     assertThrows(
         InvalidCredentials.class,
-        () -> PkoResponseParser.verifyPasswordResponse(wrongPasswordResponse));
+        () -> PkoResponseParser.assertPasswordCorrect(wrongPasswordResponse));
   }
 
   @SneakyThrows

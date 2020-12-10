@@ -14,14 +14,14 @@ import pl.zambrzyckib.pko.response.body.PasswordResponseBody;
 @UtilityClass
 public class PkoResponseParser {
 
-  public void verifyLoginResponse(Response response) {
+  public void assertLoginCorrect(Response response) {
     final LoginResponseBody loginResponseBody = deserializeLoginResponse(response.body);
     if (checkIfLoginWrong(loginResponseBody)) {
       throw new InvalidCredentials();
     }
   }
 
-  public void verifyPasswordResponse(Response response) {
+  public void assertPasswordCorrect(Response response) {
     final PasswordResponseBody passwordResponseBody = deserializePasswordResponse(response.body);
     if (checkIfPasswordWrong(passwordResponseBody)) {
       throw new InvalidCredentials();

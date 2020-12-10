@@ -23,14 +23,14 @@ public class PkoSession {
 
   Response sendLoginRequest(String login) {
     final Response loginResponse = httpAgent.send(PkoRequests.userLoginPostRequest(login));
-    PkoResponseParser.verifyLoginResponse(loginResponse);
+    PkoResponseParser.assertLoginCorrect(loginResponse);
     return loginResponse;
   }
 
   Response sendPasswordRequest(Response sendLoginResponse, String password) {
     final Response passwordResponse =
         httpAgent.send(PkoRequests.userPasswordPostRequest(password, sessionId, sendLoginResponse));
-    PkoResponseParser.verifyPasswordResponse(passwordResponse);
+    PkoResponseParser.assertPasswordCorrect(passwordResponse);
     return passwordResponse;
   }
 
