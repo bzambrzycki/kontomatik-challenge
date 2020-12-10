@@ -44,6 +44,10 @@ public class PkoRequests {
   }
 
   private static Request.RequestBuilder pkoRequestBuilder() {
-    return Request.builder().baseUrl(PkoSession.HOME_URL).method(Method.POST);
+    return Request.builder()
+        .baseUrl(PkoSession.HOME_URL)
+        .method(Method.POST)
+        .headers(Map.of())
+        .cookies(Map.of());
   }
 }
