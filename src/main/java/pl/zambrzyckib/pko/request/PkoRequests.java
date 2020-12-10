@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import pl.zambrzyckib.connection.Request;
 import pl.zambrzyckib.connection.Request.Method;
 import pl.zambrzyckib.connection.Response;
-import pl.zambrzyckib.pko.PkoScraper;
 import pl.zambrzyckib.pko.PkoSession;
 import pl.zambrzyckib.pko.request.body.AccountsInfoRequestBody;
 import pl.zambrzyckib.pko.request.body.LoginRequestBody;
@@ -15,13 +14,15 @@ import java.util.Map;
 
 public class PkoRequests {
 
+  private static final Gson GSON = new Gson();
+
   private static final Request BASE_PKO_POST_REQUEST =
       Request.builder().baseUrl(PkoSession.HOME_URL).method(Method.POST).build();
 
   public static Request userLoginPostRequest(String login) {
     return BASE_PKO_POST_REQUEST.toBuilder()
         .endpoint(PkoSession.LOGIN_ENDPOINT)
-        .body(PkoScraper.GSON.toJson(new LoginRequestBody(login)))
+        .body(GSON.toJson(new LoginRequestBody(login)))
         .build();
   }
 
@@ -32,7 +33,7 @@ public class PkoRequests {
     return BASE_PKO_POST_REQUEST.toBuilder()
         .endpoint(PkoSession.LOGIN_ENDPOINT)
         .headers(Map.of("x-session-id", sessionId))
-        .body(PkoScraper.GSON.toJson(new PasswordRequestBody(password, loginResponseBody)))
+        .body(GSON.toJson(new PasswordRequestBody(password, loginResponseBody)))
         .build();
   }
 
@@ -41,7 +42,7 @@ public class PkoRequests {
     return BASE_PKO_POST_REQUEST.toBuilder()
         .endpoint(PkoSession.ACCOUNT_INFO_ENDPOINT)
         .headers(Map.of("x-session-id", sessionId))
-        .body(PkoScraper.GSON.toJson(new AccountsInfoRequestBody()))
+        .body(GSON.toJson(new AccountsInfoRequestBody()))
         .build();
   }
 }

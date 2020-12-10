@@ -1,18 +1,20 @@
 package pl.zambrzyckib.pko.response;
 
+import com.google.gson.Gson;
 import io.vavr.collection.List;
 import io.vavr.control.Try;
 import lombok.experimental.UtilityClass;
 import pl.zambrzyckib.connection.Response;
 import pl.zambrzyckib.exception.InvalidCredentials;
 import pl.zambrzyckib.model.AccountSummary;
-import pl.zambrzyckib.pko.PkoScraper;
 import pl.zambrzyckib.pko.response.body.AccountsInfoResponseBody;
 import pl.zambrzyckib.pko.response.body.LoginResponseBody;
 import pl.zambrzyckib.pko.response.body.PasswordResponseBody;
 
 @UtilityClass
 public class PkoResponseParser {
+
+  private static final Gson GSON = new Gson();
 
   public void assertLoginCorrect(Response response) {
     final LoginResponseBody loginResponseBody = deserializeLoginResponse(response.body);
@@ -67,14 +69,14 @@ public class PkoResponseParser {
   }
 
   private LoginResponseBody deserializeLoginResponse(String responseBody) {
-    return PkoScraper.GSON.fromJson(responseBody, LoginResponseBody.class);
+    return GSON.fromJson(responseBody, LoginResponseBody.class);
   }
 
   private PasswordResponseBody deserializePasswordResponse(String responseBody) {
-    return PkoScraper.GSON.fromJson(responseBody, PasswordResponseBody.class);
+    return GSON.fromJson(responseBody, PasswordResponseBody.class);
   }
 
   private AccountsInfoResponseBody deserializeAccountsInfoResponse(String responseBody) {
-    return PkoScraper.GSON.fromJson(responseBody, AccountsInfoResponseBody.class);
+    return GSON.fromJson(responseBody, AccountsInfoResponseBody.class);
   }
 }

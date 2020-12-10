@@ -1,6 +1,5 @@
 package pl.zambrzyckib.pko;
 
-import com.google.gson.Gson;
 import io.vavr.collection.List;
 import pl.zambrzyckib.UserInterface;
 import pl.zambrzyckib.connection.Response;
@@ -12,7 +11,6 @@ public class PkoScraper {
 
   private final PkoSession pkoSession;
   private final UserInterface userInterface;
-  public static final Gson GSON = new Gson();
 
   public PkoScraper(UserInterface userInterface) {
     this.userInterface = userInterface;
