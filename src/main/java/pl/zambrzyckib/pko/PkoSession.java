@@ -6,7 +6,7 @@ import pl.zambrzyckib.connection.HttpAgent;
 import pl.zambrzyckib.connection.JsoupConnection;
 import pl.zambrzyckib.connection.Response;
 import pl.zambrzyckib.pko.request.PkoRequests;
-import pl.zambrzyckib.pko.response.PkoResponseUtils;
+import pl.zambrzyckib.pko.response.PkoResponseParser;
 
 public class PkoSession {
 
@@ -24,7 +24,7 @@ public class PkoSession {
 
   public Response sendLoginRequest(String login) {
     return Stream.of(httpAgent.send(PkoRequests.userLoginPostRequest(login)))
-        .peek(PkoResponseUtils::verifyLoginResponse)
+        .peek(PkoResponseParser::verifyLoginResponse)
         .get();
   }
 
@@ -32,7 +32,7 @@ public class PkoSession {
     return Stream.of(
             httpAgent.send(
                 PkoRequests.userPasswordPostRequest(password, sessionId, sendLoginResponse)))
-        .peek(PkoResponseUtils::verifyPasswordResponse)
+        .peek(PkoResponseParser::verifyPasswordResponse)
         .get();
   }
 

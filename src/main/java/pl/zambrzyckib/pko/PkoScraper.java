@@ -1,13 +1,15 @@
 package pl.zambrzyckib.pko;
 
+import static pl.zambrzyckib.KontomatikChallengeApp.USER_INTERFACE;
+
 import com.google.gson.Gson;
 import io.vavr.collection.List;
 import io.vavr.collection.Stream;
-import pl.zambrzyckib.UserInterface;
 import pl.zambrzyckib.connection.Response;
+import pl.zambrzyckib.exception.SessionIdNotReceived;
 import pl.zambrzyckib.model.AccountSummary;
 import pl.zambrzyckib.model.Credentials;
-import pl.zambrzyckib.pko.response.PkoResponseUtils;
+import pl.zambrzyckib.pko.response.PkoResponseParser;
 
 public class PkoScraper {
 
@@ -19,14 +21,14 @@ public class PkoScraper {
   }
 
   public void getAndDisplayAccountsInfo(Credentials credentials) {
-    final var accountsSummaries = getAccountSummaries(credentials);
-    UserInterface.displayAccountSummaries(accountsSummaries);
+    final List<AccountSummary> accountsSummaries = getAccountSummaries(credentials);
+    USER_INTERFACE.displayAccountSummaries(accountsSummaries);
   }
 
   public List<AccountSummary> getAccountSummaries(Credentials credentials) {
     return Stream.of(fetchAccountsInfo(credentials))
-        .peek(ignored -> UserInterface.displaySuccessMessage())
-        .map(PkoResponseUtils::getAccountSummariesFromResponse)
+        .peek(ignored -> USER_INTERFACE.displaySuccessMessage())
+        .map(PkoResponseParser::getAccountSummariesFromResponse)
         .get();
   }
 
@@ -39,6 +41,8 @@ public class PkoScraper {
   }
 
   private void saveSessionId(Response response) {
-    pkoSession.setSessionId(response.headers.get("X-Session-Id"));
+    final String sessionId = response.headers.get("X-Session-Id");
+    if (sessionId != null) pkoSession.setSessionId(response.headers.get("X-Session-Id"));
+    else throw new SessionIdNotReceived();
   }
 }

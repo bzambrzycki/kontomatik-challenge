@@ -15,12 +15,12 @@ import java.util.Map;
 
 public class PkoRequests {
 
+  private static final Request BASE_PKO_POST_REQUEST =
+      Request.builder().baseUrl(PkoSession.HOME_URL).method(Method.POST).build();
+
   public static Request userLoginPostRequest(String login) {
-    return Request.builder()
-        .url(PkoSession.HOME_URL + PkoSession.LOGIN_ENDPOINT)
-        .method(Method.POST)
-        .headers(Map.of())
-        .cookies(Map.of())
+    return BASE_PKO_POST_REQUEST.toBuilder()
+        .endpoint(PkoSession.LOGIN_ENDPOINT)
         .body(PkoScraper.GSON.toJson(new LoginRequestBody(login)))
         .build();
   }
@@ -29,22 +29,18 @@ public class PkoRequests {
       String password, String sessionId, Response sendLoginResponse) {
     final var loginResponseBody =
         new Gson().fromJson(sendLoginResponse.body, LoginResponseBody.class);
-    return Request.builder()
-        .url(PkoSession.HOME_URL + PkoSession.LOGIN_ENDPOINT)
-        .method(Method.POST)
+    return BASE_PKO_POST_REQUEST.toBuilder()
+        .endpoint(PkoSession.LOGIN_ENDPOINT)
         .headers(Map.of("x-session-id", sessionId))
-        .cookies(Map.of())
         .body(PkoScraper.GSON.toJson(new PasswordRequestBody(password, loginResponseBody)))
         .build();
   }
 
   public static Request accountsInfoPostRequest(String sessionId) {
 
-    return Request.builder()
-        .url(PkoSession.HOME_URL + PkoSession.ACCOUNT_INFO_ENDPOINT)
-        .method(Method.POST)
+    return BASE_PKO_POST_REQUEST.toBuilder()
+        .endpoint(PkoSession.ACCOUNT_INFO_ENDPOINT)
         .headers(Map.of("x-session-id", sessionId))
-        .cookies(Map.of())
         .body(PkoScraper.GSON.toJson(new AccountsInfoRequestBody()))
         .build();
   }

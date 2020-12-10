@@ -1,10 +1,13 @@
 package pl.zambrzyckib.connection;
 
+import static pl.zambrzyckib.KontomatikChallengeApp.USER_INTERFACE;
+
 import io.vavr.control.Try;
 import org.jsoup.Connection;
 import org.jsoup.Connection.Method;
 import org.jsoup.Jsoup;
-import pl.zambrzyckib.UserInterface;
+
+import java.util.Map;
 
 public class JsoupConnection implements HttpAgent {
 
@@ -17,20 +20,22 @@ public class JsoupConnection implements HttpAgent {
 
   @Override
   public Response send(Request request) {
+    final Map<String, String> headers = request.headers != null ? request.headers : Map.of();
+    final Map<String, String> cookies = request.cookies != null ? request.cookies : Map.of();
     return Try.of(
             () ->
                 connection
-                    .url(request.url)
+                    .url(request.baseUrl + request.endpoint)
                     .requestBody(request.body)
                     .method(Method.valueOf(request.method.toString()))
-                    .headers(request.headers)
-                    .cookies(request.cookies)
+                    .headers(headers)
+                    .cookies(cookies)
                     .execute())
         .map(
             response ->
                 Response.of(
                     response.body(), response.statusCode(), response.headers(), response.cookies()))
-        .onFailure(UserInterface::logThrowable)
+        .onFailure(USER_INTERFACE::logThrowable)
         .get();
   }
 }
