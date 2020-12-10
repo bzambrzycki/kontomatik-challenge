@@ -16,6 +16,9 @@ import pl.zambrzyckib.pko.response.PkoResponseParser;
 
 public class PkoResponseParserTest {
 
+  private final Response.ResponseBuilder basicResponseBuilder =
+      Response.builder().statusCode(200).cookies(Map.of()).headers(Map.of());
+
   @Test
   public void shouldReturnAccountSummaryListFromJson() {
     var accountsInfoResponseBody =
@@ -27,14 +30,14 @@ public class PkoResponseParserTest {
     assertEquals(
         expectedList,
         PkoResponseParser.getAccountSummariesFromResponse(
-            Response.of(accountsInfoResponseBody, 200, Map.of(), Map.of())));
+            basicResponseBuilder.body(accountsInfoResponseBody).build()));
   }
 
   @Test
   public void shouldThrowExceptionWhenLoginIsIncorrect() {
     String wrongLoginResponseBody =
         readStringFromFile("src/test/resources/wrongLoginResponseBody.json");
-    var wrongLoginResponse = Response.of(wrongLoginResponseBody, 200, Map.of(), Map.of());
+    var wrongLoginResponse = basicResponseBuilder.body(wrongLoginResponseBody).build();
     assertThrows(
         InvalidCredentials.class, () -> PkoResponseParser.verifyLoginResponse(wrongLoginResponse));
   }
@@ -43,8 +46,7 @@ public class PkoResponseParserTest {
   public void shouldThrowExceptionWhenPasswordIsIncorrect() {
     String wrongPasswordResponseBody =
         readStringFromFile("src/test/resources/wrongPasswordResponseBody.json");
-    Response wrongPasswordResponse =
-        Response.of(wrongPasswordResponseBody, 200, Map.of(), Map.of());
+    Response wrongPasswordResponse = basicResponseBuilder.body(wrongPasswordResponseBody).build();
     assertThrows(
         InvalidCredentials.class,
         () -> PkoResponseParser.verifyPasswordResponse(wrongPasswordResponse));
