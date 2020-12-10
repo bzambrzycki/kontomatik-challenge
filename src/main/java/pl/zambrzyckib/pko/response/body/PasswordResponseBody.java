@@ -6,6 +6,7 @@ import lombok.Getter;
 public class PasswordResponseBody {
 
   Response response;
+  String state_id;
 
   @Getter
   public class Response {

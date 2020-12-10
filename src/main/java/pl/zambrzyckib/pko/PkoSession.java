@@ -15,6 +15,7 @@ public class PkoSession {
   private final HttpAgent httpAgent;
 
   private String sessionId;
+  private boolean sessionLoggedIn;
 
   public PkoSession() {
     this.httpAgent = new JsoupConnection(HOME_URL, true);
@@ -30,17 +31,16 @@ public class PkoSession {
   Response sendPasswordRequest(Response sendLoginResponse, String password) {
     final Response passwordResponse =
         httpAgent.send(PkoRequests.userPasswordPostRequest(password, sessionId, sendLoginResponse));
-    PkoResponseParser.assertPasswordCorrect(passwordResponse);
+    sessionLoggedIn = PkoResponseParser.assertPasswordCorrectAndCheckLoginStatus(passwordResponse);
     return passwordResponse;
   }
 
-  Response sendAccountsInfoRequest() {
-    return httpAgent.send(PkoRequests.accountsInfoPostRequest(sessionId));
+  Response fetchAccounts() {
+    if (!sessionLoggedIn) throw new RuntimeException("Session not logged in");
+    else return httpAgent.send(PkoRequests.accountsInfoPostRequest(sessionId));
   }
 
   private void saveSessionId(Response response) {
-    final String sessionId = response.headers.get("X-Session-Id");
-    if (sessionId != null) this.sessionId = response.headers.get("X-Session-Id");
-    else throw new RuntimeException("SessionID not received");
+    this.sessionId = response.headers.get("X-Session-Id");
   }
 }

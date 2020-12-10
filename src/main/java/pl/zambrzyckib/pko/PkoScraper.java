@@ -36,7 +36,7 @@ public class PkoScraper {
   private Response fetchAccountsInfo(Credentials credentials) {
     return Stream.of(pkoSession.sendLoginRequest(credentials.login))
         .map(response -> pkoSession.sendPasswordRequest(response, credentials.password))
-        .map(response -> pkoSession.sendAccountsInfoRequest())
+        .map(response -> pkoSession.fetchAccounts())
         .get();
   }
 }

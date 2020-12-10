@@ -49,7 +49,7 @@ public class PkoResponseParserTest {
     Response wrongPasswordResponse = basicResponseBuilder.body(wrongPasswordResponseBody).build();
     assertThrows(
         InvalidCredentials.class,
-        () -> PkoResponseParser.assertPasswordCorrect(wrongPasswordResponse));
+        () -> PkoResponseParser.assertPasswordCorrectAndCheckLoginStatus(wrongPasswordResponse));
   }
 
   @SneakyThrows
