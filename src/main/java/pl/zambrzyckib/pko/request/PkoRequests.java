@@ -16,11 +16,8 @@ public class PkoRequests {
 
   private static final Gson GSON = new Gson();
 
-  private static final Request BASE_PKO_POST_REQUEST =
-      Request.builder().baseUrl(PkoSession.HOME_URL).method(Method.POST).build();
-
   public static Request userLoginPostRequest(String login) {
-    return BASE_PKO_POST_REQUEST.toBuilder()
+    return pkoRequestBuilder()
         .endpoint(PkoSession.LOGIN_ENDPOINT)
         .body(GSON.toJson(new LoginRequestBody(login)))
         .build();
@@ -30,7 +27,7 @@ public class PkoRequests {
       String password, String sessionId, Response sendLoginResponse) {
     final var loginResponseBody =
         new Gson().fromJson(sendLoginResponse.body, LoginResponseBody.class);
-    return BASE_PKO_POST_REQUEST.toBuilder()
+    return pkoRequestBuilder()
         .endpoint(PkoSession.LOGIN_ENDPOINT)
         .headers(Map.of("x-session-id", sessionId))
         .body(GSON.toJson(new PasswordRequestBody(password, loginResponseBody)))
@@ -39,10 +36,14 @@ public class PkoRequests {
 
   public static Request accountsInfoPostRequest(String sessionId) {
 
-    return BASE_PKO_POST_REQUEST.toBuilder()
+    return pkoRequestBuilder()
         .endpoint(PkoSession.ACCOUNT_INFO_ENDPOINT)
         .headers(Map.of("x-session-id", sessionId))
         .body(GSON.toJson(new AccountsInfoRequestBody()))
         .build();
+  }
+
+  private static Request.RequestBuilder pkoRequestBuilder() {
+    return Request.builder().baseUrl(PkoSession.HOME_URL).method(Method.POST);
   }
 }
