@@ -1,6 +1,5 @@
 package pl.zambrzyckib.pko;
 
-import io.vavr.collection.Stream;
 import lombok.Setter;
 import pl.zambrzyckib.connection.HttpAgent;
 import pl.zambrzyckib.connection.JsoupConnection;
@@ -23,17 +22,16 @@ public class PkoSession {
   }
 
   Response sendLoginRequest(String login) {
-    return Stream.of(httpAgent.send(PkoRequests.userLoginPostRequest(login)))
-        .peek(PkoResponseParser::verifyLoginResponse)
-        .get();
+    final Response loginResponse = httpAgent.send(PkoRequests.userLoginPostRequest(login));
+    PkoResponseParser.verifyLoginResponse(loginResponse);
+    return loginResponse;
   }
 
   Response sendPasswordRequest(Response sendLoginResponse, String password) {
-    return Stream.of(
-            httpAgent.send(
-                PkoRequests.userPasswordPostRequest(password, sessionId, sendLoginResponse)))
-        .peek(PkoResponseParser::verifyPasswordResponse)
-        .get();
+    final Response passwordResponse =
+        httpAgent.send(PkoRequests.userPasswordPostRequest(password, sessionId, sendLoginResponse));
+    PkoResponseParser.verifyPasswordResponse(passwordResponse);
+    return passwordResponse;
   }
 
   Response sendAccountsInfoRequest() {
