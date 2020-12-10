@@ -22,13 +22,13 @@ public class PkoSession {
     this.httpAgent = new JsoupConnection(HOME_URL, true);
   }
 
-  public Response sendLoginRequest(String login) {
+  Response sendLoginRequest(String login) {
     return Stream.of(httpAgent.send(PkoRequests.userLoginPostRequest(login)))
         .peek(PkoResponseParser::verifyLoginResponse)
         .get();
   }
 
-  public Response sendPasswordRequest(Response sendLoginResponse, String password) {
+  Response sendPasswordRequest(Response sendLoginResponse, String password) {
     return Stream.of(
             httpAgent.send(
                 PkoRequests.userPasswordPostRequest(password, sessionId, sendLoginResponse)))
@@ -36,7 +36,7 @@ public class PkoSession {
         .get();
   }
 
-  public Response sendAccountsInfoRequest() {
+  Response sendAccountsInfoRequest() {
     return httpAgent.send(PkoRequests.accountsInfoPostRequest(sessionId));
   }
 }
