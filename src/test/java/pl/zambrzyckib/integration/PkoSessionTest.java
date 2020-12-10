@@ -1,24 +1,18 @@
 package pl.zambrzyckib.integration;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static pl.zambrzyckib.integration.PkoIntegrationTestSpec.pkoTestCredentials;
+import static pl.zambrzyckib.integration.PkoIntegrationTestSpec.loadCredentials;
 
-import lombok.SneakyThrows;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import pl.zambrzyckib.connection.Response;
 import pl.zambrzyckib.exception.InvalidCredentials;
+import pl.zambrzyckib.model.Credentials;
 import pl.zambrzyckib.pko.PkoSession;
 
 public class PkoSessionTest {
 
   private final PkoSession pkoSession = new PkoSession();
-
-  @BeforeAll
-  @SneakyThrows
-  static void loadProperties() {
-    PkoIntegrationTestSpec.loadCredentialPropertiesIfNotLoaded();
-  }
+  private final Credentials pkoTestCredentials = loadCredentials();
 
   @Test
   void whenPasswordIsWrongExceptionShouldBeThrown() {

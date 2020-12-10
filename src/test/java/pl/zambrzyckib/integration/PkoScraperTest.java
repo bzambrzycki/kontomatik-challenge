@@ -2,11 +2,9 @@ package pl.zambrzyckib.integration;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static pl.zambrzyckib.integration.PkoIntegrationTestSpec.pkoTestCredentials;
 import static pl.zambrzyckib.KontomatikChallengeApp.USER_INTERFACE;
+import static pl.zambrzyckib.integration.PkoIntegrationTestSpec.loadCredentials;
 
-import lombok.SneakyThrows;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import pl.zambrzyckib.exception.InvalidCredentials;
 import pl.zambrzyckib.model.Credentials;
@@ -15,12 +13,7 @@ import pl.zambrzyckib.pko.PkoScraper;
 public class PkoScraperTest {
 
   private final PkoScraper pkoScraper = new PkoScraper();
-
-  @BeforeAll
-  @SneakyThrows
-  static void loadProperties() {
-    PkoIntegrationTestSpec.loadCredentialPropertiesIfNotLoaded();
-  }
+  private final Credentials pkoTestCredentials = loadCredentials();
 
   @Test
   void shouldThrowInvalidCredentialsExceptionWhenLoginIsWrong() {
