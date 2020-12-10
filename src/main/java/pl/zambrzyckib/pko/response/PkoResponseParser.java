@@ -2,7 +2,6 @@ package pl.zambrzyckib.pko.response;
 
 import com.google.gson.Gson;
 import io.vavr.collection.List;
-import io.vavr.control.Try;
 import lombok.experimental.UtilityClass;
 import pl.zambrzyckib.connection.Response;
 import pl.zambrzyckib.exception.InvalidCredentials;
@@ -43,29 +42,12 @@ public class PkoResponseParser {
   }
 
   private boolean checkIsLoginWrong(LoginResponseBody loginResponseBody) {
-    return (Try.of(
-            () ->
-                !loginResponseBody
-                    .getResponse()
-                    .getFields()
-                    .getLogin()
-                    .getErrors()
-                    .getHint()
-                    .isEmpty())
-        .getOrElse(false));
+    return loginResponseBody.getResponse().getFields().getErrors() != null;
   }
 
   private boolean checkIsPasswordWrong(PasswordResponseBody passwordResponseBody) {
-    return (Try.of(
-            () ->
-                !passwordResponseBody
-                    .getResponse()
-                    .getFields()
-                    .getPassword()
-                    .getErrors()
-                    .getHint()
-                    .isEmpty())
-        .getOrElse(false));
+    return passwordResponseBody.getResponse().getFields() != null
+        && passwordResponseBody.getResponse().getFields().getPassword().getErrors() != null;
   }
 
   private LoginResponseBody deserializeLoginResponse(String responseBody) {

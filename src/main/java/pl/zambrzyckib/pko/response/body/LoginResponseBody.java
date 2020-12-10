@@ -21,16 +21,11 @@ public class LoginResponseBody {
 
     @Getter
     public class Fields {
-      Login login;
+      Errors errors;
 
       @Getter
-      public class Login {
-        Errors errors;
-
-        @Getter
-        public class Errors {
-          String hint;
-        }
+      public class Errors {
+        String hint;
       }
     }
   }
