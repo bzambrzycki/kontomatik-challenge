@@ -1,6 +1,5 @@
 package pl.zambrzyckib.integration;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static pl.zambrzyckib.integration.PkoIntegrationTestSpec.pkoTestCredentials;
@@ -27,19 +26,14 @@ public class PkoScraperTest {
   void shouldThrowInvalidCredentialsExceptionWhenLoginIsWrong() {
     Credentials invalidCredentials = Credentials.of("wrong", "anyPassword");
     assertThrows(
-        InvalidCredentials.class, () -> pkoScraper.getAccountSummaries(invalidCredentials));
+        InvalidCredentials.class, () -> pkoScraper.getAndDisplayAccountsInfo(invalidCredentials));
   }
 
   @Test
   void shouldThrowInvalidCredentialsExceptionWhenPasswordIsWrong() {
     Credentials invalidCredentials = Credentials.of(pkoTestCredentials.login, "wrong");
     assertThrows(
-        InvalidCredentials.class, () -> pkoScraper.getAccountSummaries(invalidCredentials));
-  }
-
-  @Test
-  void shouldNotThrowAnyExceptionWhenCredentialsAreCorrect() {
-    assertDoesNotThrow(() -> pkoScraper.getAccountSummaries(pkoTestCredentials));
+        InvalidCredentials.class, () -> pkoScraper.getAndDisplayAccountsInfo(invalidCredentials));
   }
 
   @Test

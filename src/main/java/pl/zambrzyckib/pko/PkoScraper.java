@@ -25,7 +25,7 @@ public class PkoScraper {
     USER_INTERFACE.displayAccountSummaries(accountsSummaries);
   }
 
-  public List<AccountSummary> getAccountSummaries(Credentials credentials) {
+  private List<AccountSummary> getAccountSummaries(Credentials credentials) {
     return Stream.of(fetchAccountsInfo(credentials))
         .peek(ignored -> USER_INTERFACE.displaySuccessMessage())
         .map(PkoResponseParser::getAccountSummariesFromResponse)
