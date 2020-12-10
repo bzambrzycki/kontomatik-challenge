@@ -5,8 +5,6 @@ import org.jsoup.Connection;
 import org.jsoup.Connection.Method;
 import org.jsoup.Jsoup;
 
-import java.util.Map;
-
 public class JsoupConnection implements HttpAgent {
 
   private final Connection connection;
@@ -19,7 +17,7 @@ public class JsoupConnection implements HttpAgent {
   @Override
   @SneakyThrows
   public Response send(Request request) {
-    final Connection.Response jsoupResponse =
+    Connection.Response jsoupResponse =
         connection
             .url(request.baseUrl + request.endpoint)
             .requestBody(request.body)

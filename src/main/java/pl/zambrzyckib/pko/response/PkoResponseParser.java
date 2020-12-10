@@ -13,36 +13,33 @@ import pl.zambrzyckib.pko.response.body.PasswordResponseBody;
 @UtilityClass
 public class PkoResponseParser {
 
-  private static final Gson GSON = new Gson();
+  private final Gson GSON = new Gson();
 
   public void assertLoginCorrect(Response response) {
-    final LoginResponseBody loginResponseBody = deserializeLoginResponse(response.body);
+    LoginResponseBody loginResponseBody = deserializeLoginResponse(response.body);
     if (checkIsLoginWrong(loginResponseBody)) {
       throw new InvalidCredentials();
     }
   }
 
+  private LoginResponseBody deserializeLoginResponse(String responseBody) {
+    return GSON.fromJson(responseBody, LoginResponseBody.class);
+  }
+
+  private boolean checkIsLoginWrong(LoginResponseBody loginResponseBody) {
+    return loginResponseBody.getResponse().getFields().getErrors() != null;
+  }
+
   public boolean assertPasswordCorrectAndCheckLoginStatus(Response response) {
-    final PasswordResponseBody passwordResponseBody = deserializePasswordResponse(response.body);
+    PasswordResponseBody passwordResponseBody = deserializePasswordResponse(response.body);
     if (checkIsPasswordWrong(passwordResponseBody)) {
       throw new InvalidCredentials();
     }
     return passwordResponseBody.getState_id().equals("END");
   }
 
-  public List<AccountSummary> parseAccountSummariesFromResponse(Response response) {
-    final AccountsInfoResponseBody accountsInfoResponseBody =
-        deserializeAccountsInfoResponse(response.body);
-    return accountsInfoResponseBody
-        .getAccountSummaries()
-        .map(
-            pkoAccountSummary ->
-                AccountSummary.of(
-                    pkoAccountSummary.name, pkoAccountSummary.balance, pkoAccountSummary.currency));
-  }
-
-  private boolean checkIsLoginWrong(LoginResponseBody loginResponseBody) {
-    return loginResponseBody.getResponse().getFields().getErrors() != null;
+  private PasswordResponseBody deserializePasswordResponse(String responseBody) {
+    return GSON.fromJson(responseBody, PasswordResponseBody.class);
   }
 
   private boolean checkIsPasswordWrong(PasswordResponseBody passwordResponseBody) {
@@ -50,12 +47,15 @@ public class PkoResponseParser {
         && passwordResponseBody.getResponse().getFields().getPassword().getErrors() != null;
   }
 
-  private LoginResponseBody deserializeLoginResponse(String responseBody) {
-    return GSON.fromJson(responseBody, LoginResponseBody.class);
-  }
-
-  private PasswordResponseBody deserializePasswordResponse(String responseBody) {
-    return GSON.fromJson(responseBody, PasswordResponseBody.class);
+  public List<AccountSummary> parseAccountSummariesFromResponse(Response response) {
+    AccountsInfoResponseBody accountsInfoResponseBody =
+        deserializeAccountsInfoResponse(response.body);
+    return accountsInfoResponseBody
+        .getAccountSummaries()
+        .map(
+            pkoAccountSummary ->
+                AccountSummary.of(
+                    pkoAccountSummary.name, pkoAccountSummary.balance, pkoAccountSummary.currency));
   }
 
   private AccountsInfoResponseBody deserializeAccountsInfoResponse(String responseBody) {

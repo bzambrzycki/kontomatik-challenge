@@ -18,7 +18,7 @@ public class UserInterface {
   }
 
   public void displayWrongArgsMessage() {
-    final var message =
+    var message =
         "Wrong arguments provided. Run the app using command like the one below\n"
             + "java -jar BUILT_JAR_NAME.jar \"YOUR_LOGIN\" \"YOUR_PASSWORD\"";
     output = output.push(message);
@@ -26,7 +26,7 @@ public class UserInterface {
   }
 
   public void displaySuccessMessage() {
-    final var message = "Successfully fetched accounts info";
+    var message = "Successfully fetched accounts info";
     output = output.push(message);
     stringConsumer.accept(message);
   }
@@ -38,12 +38,6 @@ public class UserInterface {
               output = output.push(accountSummary);
               stringConsumer.accept(accountSummary);
             });
-  }
-
-  public void logThrowable(Throwable t) {
-    final var message = "[LOG/ERR] " + t.getMessage();
-    output = output.push(message);
-    stringConsumer.accept(message);
   }
 
   private List<String> formatAccountSummaries(List<AccountSummary> accountSummaries) {
