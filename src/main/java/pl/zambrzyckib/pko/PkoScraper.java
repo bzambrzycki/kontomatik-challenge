@@ -25,7 +25,7 @@ public class PkoScraper {
   private List<AccountSummary> fetchAccountSummaries(Credentials credentials) {
     Response accountsResponse = fetchAccountsInfo(credentials);
     userInterface.displaySuccessMessage();
-    return PkoResponseParser.parseAccountSummariesFromResponse(accountsResponse);
+    return PkoResponseParser.parseAccountSummaries(accountsResponse);
   }
 
   private Response fetchAccountsInfo(Credentials credentials) {

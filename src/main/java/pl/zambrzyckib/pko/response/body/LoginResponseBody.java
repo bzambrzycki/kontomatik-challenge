@@ -2,25 +2,23 @@ package pl.zambrzyckib.pko.response.body;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 
 @AllArgsConstructor
-@Getter
 public class LoginResponseBody {
   public final String token;
 
   @SerializedName("flow_id")
   public final String flowId;
 
-  public Response response;
+  public final Response response;
 
-  @Getter
+  @AllArgsConstructor
   public static class Response {
-    Fields fields;
+    public final Fields fields;
 
-    @Getter
+    @AllArgsConstructor
     public static class Fields {
-      Object errors;
+      public final Object errors;
     }
   }
 }

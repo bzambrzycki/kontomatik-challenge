@@ -29,7 +29,7 @@ public class PkoResponseParserTest {
             AccountSummary.of("accountTwo", "200", "PLN"));
     assertEquals(
         expectedList,
-        PkoResponseParser.parseAccountSummariesFromResponse(
+        PkoResponseParser.parseAccountSummaries(
             basicResponseBuilder.body(accountsInfoResponseBody).build()));
   }
 
