@@ -8,17 +8,14 @@ import pl.zambrzyckib.pko.response.PkoResponseParser;
 
 public class PkoSession {
 
-  public static final String HOME_URL = "https://www.ipko.pl/";
-  public static final String LOGIN_ENDPOINT = "ipko3/login";
-  public static final String ACCOUNT_INFO_ENDPOINT = "ipko3/init";
-
   private final HttpAgent httpAgent;
 
   private String sessionId;
   private boolean sessionLoggedIn;
 
   public PkoSession() {
-    this.httpAgent = new JsoupConnection(HOME_URL, true);
+    String homeUrl = "https://www.ipko.pl/";
+    this.httpAgent = new JsoupConnection(homeUrl, true);
   }
 
   Response sendLoginRequest(String login) {

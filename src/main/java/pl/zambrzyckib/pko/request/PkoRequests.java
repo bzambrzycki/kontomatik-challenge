@@ -5,7 +5,6 @@ import lombok.experimental.UtilityClass;
 import pl.zambrzyckib.connection.Request;
 import pl.zambrzyckib.connection.Request.Method;
 import pl.zambrzyckib.connection.Response;
-import pl.zambrzyckib.pko.PkoSession;
 import pl.zambrzyckib.pko.request.body.AccountsInfoRequestBody;
 import pl.zambrzyckib.pko.request.body.LoginRequestBody;
 import pl.zambrzyckib.pko.request.body.PasswordRequestBody;
@@ -16,11 +15,15 @@ import java.util.Map;
 @UtilityClass
 public class PkoRequests {
 
+  private final String homeUrl = "https://www.ipko.pl/";
+  private final String loginEndpoint = "ipko3/login";
+  private final String accountInfoEndpoint = "ipko3/init";
+
   private final Gson GSON = new Gson();
 
   public Request userLoginPostRequest(String login) {
     return pkoRequestBuilder()
-        .endpoint(PkoSession.LOGIN_ENDPOINT)
+        .endpoint(loginEndpoint)
         .body(GSON.toJson(new LoginRequestBody(login)))
         .build();
   }
@@ -30,7 +33,7 @@ public class PkoRequests {
     LoginResponseBody loginResponseBody =
         new Gson().fromJson(sendLoginResponse.body, LoginResponseBody.class);
     return pkoRequestBuilder()
-        .endpoint(PkoSession.LOGIN_ENDPOINT)
+        .endpoint(loginEndpoint)
         .headers(Map.of("x-session-id", sessionId))
         .body(GSON.toJson(new PasswordRequestBody(password, loginResponseBody)))
         .build();
@@ -38,7 +41,7 @@ public class PkoRequests {
 
   public Request accountsInfoPostRequest(String sessionId) {
     return pkoRequestBuilder()
-        .endpoint(PkoSession.ACCOUNT_INFO_ENDPOINT)
+        .endpoint(accountInfoEndpoint)
         .headers(Map.of("x-session-id", sessionId))
         .body(GSON.toJson(new AccountsInfoRequestBody()))
         .build();
@@ -46,7 +49,7 @@ public class PkoRequests {
 
   private Request.RequestBuilder pkoRequestBuilder() {
     return Request.builder()
-        .baseUrl(PkoSession.HOME_URL)
+        .baseUrl(homeUrl)
         .method(Method.POST)
         .headers(Map.of())
         .cookies(Map.of());
