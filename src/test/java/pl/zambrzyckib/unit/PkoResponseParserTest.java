@@ -21,9 +21,9 @@ public class PkoResponseParserTest {
 
   @Test
   public void shouldReturnAccountSummaryListFromJson() {
-    var accountsInfoResponseBody =
+    String accountsInfoResponseBody =
         readStringFromFile("src/test/resources/accountsInfoResponseBody.json");
-    var expectedList =
+    List<AccountSummary> expectedList =
         List.of(
             AccountSummary.of("accountOne", "100", "PLN"),
             AccountSummary.of("accountTwo", "200", "PLN"));
@@ -37,7 +37,7 @@ public class PkoResponseParserTest {
   public void shouldThrowExceptionWhenLoginIsIncorrect() {
     String wrongLoginResponseBody =
         readStringFromFile("src/test/resources/wrongLoginResponseBody.json");
-    var wrongLoginResponse = basicResponseBuilder.body(wrongLoginResponseBody).build();
+    Response wrongLoginResponse = basicResponseBuilder.body(wrongLoginResponseBody).build();
     assertThrows(
         InvalidCredentials.class, () -> PkoResponseParser.assertLoginCorrect(wrongLoginResponse));
   }

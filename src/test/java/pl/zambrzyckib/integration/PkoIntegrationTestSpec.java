@@ -24,7 +24,7 @@ public class PkoIntegrationTestSpec {
 
   @SneakyThrows
   private static void loadCredentialsProperties() {
-    var credentialsFileInputStream =
+    FileInputStream credentialsFileInputStream =
         Try.of(() -> new FileInputStream("src/test/resources/credentials.properties"))
             .getOrElseThrow(t -> new RuntimeException("Credentials file not found"));
     PROPERTIES.load(credentialsFileInputStream);
