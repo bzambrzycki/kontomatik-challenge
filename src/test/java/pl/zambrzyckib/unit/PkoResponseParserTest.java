@@ -16,9 +16,6 @@ import pl.zambrzyckib.pko.response.PkoResponseParser;
 
 public class PkoResponseParserTest {
 
-  private final Response.ResponseBuilder basicResponseBuilder =
-      Response.builder().statusCode(200).cookies(Map.of()).headers(Map.of());
-
   @Test
   public void shouldReturnAccountSummaryListFromJson() {
     String accountsInfoResponseBody =
@@ -30,14 +27,14 @@ public class PkoResponseParserTest {
     assertEquals(
         expectedList,
         PkoResponseParser.parseAccountSummaries(
-            basicResponseBuilder.body(accountsInfoResponseBody).build()));
+            baseResponseBuilder().body(accountsInfoResponseBody).build()));
   }
 
   @Test
   public void shouldThrowExceptionWhenLoginIsIncorrect() {
     String wrongLoginResponseBody =
         readStringFromFile("src/test/resources/wrongLoginResponseBody.json");
-    Response wrongLoginResponse = basicResponseBuilder.body(wrongLoginResponseBody).build();
+    Response wrongLoginResponse = baseResponseBuilder().body(wrongLoginResponseBody).build();
     assertThrows(
         InvalidCredentials.class, () -> PkoResponseParser.assertLoginCorrect(wrongLoginResponse));
   }
@@ -46,7 +43,7 @@ public class PkoResponseParserTest {
   public void shouldThrowExceptionWhenPasswordIsIncorrect() {
     String wrongPasswordResponseBody =
         readStringFromFile("src/test/resources/wrongPasswordResponseBody.json");
-    Response wrongPasswordResponse = basicResponseBuilder.body(wrongPasswordResponseBody).build();
+    Response wrongPasswordResponse = baseResponseBuilder().body(wrongPasswordResponseBody).build();
     assertThrows(
         InvalidCredentials.class,
         () -> PkoResponseParser.assertPasswordCorrectAndCheckLoginStatus(wrongPasswordResponse));
@@ -55,5 +52,9 @@ public class PkoResponseParserTest {
   @SneakyThrows
   private String readStringFromFile(String uri) {
     return Files.readString(Path.of(uri));
+  }
+
+  private Response.ResponseBuilder baseResponseBuilder() {
+    return Response.builder().statusCode(200).cookies(Map.of()).headers(Map.of());
   }
 }
