@@ -30,12 +30,11 @@ public class PkoResponseParser {
     return loginResponseBody.response.fields.errors != null;
   }
 
-  public boolean assertPasswordCorrectAndCheckLoginStatus(Response response) {
+  public void assertPasswordCorrect(Response response) {
     PasswordResponseBody passwordResponseBody = deserializePasswordResponse(response.body);
     if (checkIsPasswordWrong(passwordResponseBody)) {
       throw new InvalidCredentials();
     }
-    return passwordResponseBody.stateId.equals("END");
   }
 
   private PasswordResponseBody deserializePasswordResponse(String responseBody) {
@@ -43,8 +42,13 @@ public class PkoResponseParser {
   }
 
   private boolean checkIsPasswordWrong(PasswordResponseBody passwordResponseBody) {
-    return passwordResponseBody.response.fields!= null
+    return passwordResponseBody.response.fields != null
         && passwordResponseBody.response.fields.password.errors != null;
+  }
+
+  public boolean checkIsSessionSignedIn(Response response) {
+    PasswordResponseBody passwordResponseBody = deserializePasswordResponse(response.body);
+    return passwordResponseBody.stateId.equals("END");
   }
 
   public List<AccountSummary> parseAccountSummaries(Response response) {

@@ -22,12 +22,12 @@ public class PkoScraper {
   }
 
   private List<AccountSummary> fetchAccountSummaries(Credentials credentials) {
-    login(credentials);
-    return pkoSession.fetchAccounts();
+    PkoSession.AuthenticatedPkoSession authenticatedPkoSession = login(credentials);
+    return authenticatedPkoSession.fetchAccounts();
   }
 
-  private void login(Credentials credentials) {
+  private PkoSession.AuthenticatedPkoSession login(Credentials credentials) {
     Response loginResponse = pkoSession.sendLoginRequest(credentials.login);
-    pkoSession.sendPasswordRequestAndVerifyResponse(loginResponse, credentials.password);
+    return pkoSession.sendPasswordRequest(loginResponse, credentials.password);
   }
 }

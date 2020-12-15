@@ -13,7 +13,6 @@ public class PkoSession {
   private final HttpAgent httpAgent;
 
   private String sessionId;
-  private boolean sessionLoggedIn;
 
   public PkoSession() {
     String homeUrl = "https://www.ipko.pl/";
@@ -27,22 +26,24 @@ public class PkoSession {
     return loginResponse;
   }
 
-  void sendPasswordRequestAndVerifyResponse(Response sendLoginResponse, String password) {
+  AuthenticatedPkoSession sendPasswordRequest(Response sendLoginResponse, String password) {
     Response passwordResponse =
         httpAgent.send(PkoRequests.userPasswordPostRequest(password, sessionId, sendLoginResponse));
-    sessionLoggedIn = PkoResponseParser.assertPasswordCorrectAndCheckLoginStatus(passwordResponse);
-  }
-
-  List<AccountSummary> fetchAccounts() {
-    if (!sessionLoggedIn) throw new RuntimeException("Session not logged in");
-    else {
-      Response accountsInfoResponse =
-          httpAgent.send(PkoRequests.accountsInfoPostRequest(sessionId));
-      return PkoResponseParser.parseAccountSummaries(accountsInfoResponse);
-    }
+    PkoResponseParser.assertPasswordCorrect(passwordResponse);
+    if (PkoResponseParser.checkIsSessionSignedIn(passwordResponse)) {
+      return new AuthenticatedPkoSession();
+    } else throw new RuntimeException("Session not signed in");
   }
 
   private void saveSessionId(Response response) {
     this.sessionId = response.headers.get("X-Session-Id");
+  }
+
+  public class AuthenticatedPkoSession {
+    List<AccountSummary> fetchAccounts() {
+      Response accountsInfoResponse =
+          httpAgent.send(PkoRequests.accountsInfoPostRequest(sessionId));
+      return PkoResponseParser.parseAccountSummaries(accountsInfoResponse);
+    }
   }
 }
