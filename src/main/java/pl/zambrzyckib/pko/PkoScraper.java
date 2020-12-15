@@ -23,14 +23,10 @@ public class PkoScraper {
   }
 
   private List<AccountSummary> fetchAccountSummaries(Credentials credentials) {
-    Response accountsResponse = fetchAccountsInfo(credentials);
+    login(credentials);
+    Response accountsResponse = pkoSession.fetchAccounts();
     userInterface.displaySuccessMessage();
     return PkoResponseParser.parseAccountSummaries(accountsResponse);
-  }
-
-  private Response fetchAccountsInfo(Credentials credentials) {
-    login(credentials);
-    return pkoSession.fetchAccounts();
   }
 
   private void login(Credentials credentials) {
