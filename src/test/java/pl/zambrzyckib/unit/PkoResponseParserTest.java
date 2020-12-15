@@ -16,40 +16,44 @@ import pl.zambrzyckib.pko.response.PkoResponseParser;
 
 public class PkoResponseParserTest {
 
+  private final Response.ResponseBuilder basicResponseBuilder =
+      Response.builder().statusCode(200).cookies(Map.of()).headers(Map.of());
+
   @Test
-  @SneakyThrows
   public void shouldReturnAccountSummaryListFromJson() {
-    var accountsInfoResponseBody =
-        Files.readString(Path.of("src/test/resources/accountsInfoResponseBody.json"));
-    var expectedList =
+    String accountsInfoResponseBody =
+        readStringFromFile("src/test/resources/accountsInfoResponseBody.json");
+    List<AccountSummary> expectedList =
         List.of(
             AccountSummary.of("accountOne", "100", "PLN"),
             AccountSummary.of("accountTwo", "200", "PLN"));
     assertEquals(
         expectedList,
-        PkoResponseParser.getAccountSummariesFromResponse(
-            Response.of(accountsInfoResponseBody, 200, Map.of(), Map.of())));
+        PkoResponseParser.parseAccountSummaries(
+            basicResponseBuilder.body(accountsInfoResponseBody).build()));
   }
 
   @Test
-  @SneakyThrows
   public void shouldThrowExceptionWhenLoginIsIncorrect() {
     String wrongLoginResponseBody =
-        Files.readString(Path.of("src/test/resources/wrongLoginResponseBody.json"));
-    var wrongLoginResponse = Response.of(wrongLoginResponseBody, 200, Map.of(), Map.of());
+        readStringFromFile("src/test/resources/wrongLoginResponseBody.json");
+    Response wrongLoginResponse = basicResponseBuilder.body(wrongLoginResponseBody).build();
     assertThrows(
-        InvalidCredentials.class, () -> PkoResponseParser.verifyLoginResponse(wrongLoginResponse));
+        InvalidCredentials.class, () -> PkoResponseParser.assertLoginCorrect(wrongLoginResponse));
   }
 
   @Test
-  @SneakyThrows
   public void shouldThrowExceptionWhenPasswordIsIncorrect() {
     String wrongPasswordResponseBody =
-        Files.readString(Path.of("src/test/resources/wrongPasswordResponseBody.json"));
-    Response wrongPasswordResponse =
-        Response.of(wrongPasswordResponseBody, 200, Map.of(), Map.of());
+        readStringFromFile("src/test/resources/wrongPasswordResponseBody.json");
+    Response wrongPasswordResponse = basicResponseBuilder.body(wrongPasswordResponseBody).build();
     assertThrows(
         InvalidCredentials.class,
-        () -> PkoResponseParser.verifyPasswordResponse(wrongPasswordResponse));
+        () -> PkoResponseParser.assertPasswordCorrectAndCheckLoginStatus(wrongPasswordResponse));
+  }
+
+  @SneakyThrows
+  private String readStringFromFile(String uri) {
+    return Files.readString(Path.of(uri));
   }
 }

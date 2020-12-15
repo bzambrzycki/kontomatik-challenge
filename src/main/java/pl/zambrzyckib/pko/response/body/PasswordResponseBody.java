@@ -1,28 +1,27 @@
 package pl.zambrzyckib.pko.response.body;
 
-import lombok.Getter;
+import com.google.gson.annotations.SerializedName;
+import lombok.AllArgsConstructor;
 
-@Getter
+@AllArgsConstructor
 public class PasswordResponseBody {
 
-  Response response;
+  public final Response response;
 
-  @Getter
-  public class Response {
-    Fields fields;
+  @SerializedName("state_id")
+  public final String stateId;
 
-    @Getter
-    public class Fields {
-      Password password;
+  @AllArgsConstructor
+  public static class Response {
+    public final Fields fields;
 
-      @Getter
-      public class Password {
-        Errors errors;
+    @AllArgsConstructor
+    public static class Fields {
+      public final Password password;
 
-        @Getter
-        public class Errors {
-          String hint;
-        }
+      @AllArgsConstructor
+      public static class Password {
+        public final Object errors;
       }
     }
   }

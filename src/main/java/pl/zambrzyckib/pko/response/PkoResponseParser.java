@@ -1,12 +1,11 @@
 package pl.zambrzyckib.pko.response;
 
+import com.google.gson.Gson;
 import io.vavr.collection.List;
-import io.vavr.control.Try;
 import lombok.experimental.UtilityClass;
 import pl.zambrzyckib.connection.Response;
 import pl.zambrzyckib.exception.InvalidCredentials;
 import pl.zambrzyckib.model.AccountSummary;
-import pl.zambrzyckib.pko.PkoScraper;
 import pl.zambrzyckib.pko.response.body.AccountsInfoResponseBody;
 import pl.zambrzyckib.pko.response.body.LoginResponseBody;
 import pl.zambrzyckib.pko.response.body.PasswordResponseBody;
@@ -14,22 +13,42 @@ import pl.zambrzyckib.pko.response.body.PasswordResponseBody;
 @UtilityClass
 public class PkoResponseParser {
 
-  public void verifyLoginResponse(Response response) {
-    final LoginResponseBody loginResponseBody = deserializeLoginResponse(response.body);
-    if (checkIfLoginWrong(loginResponseBody)) {
+  private final Gson GSON = new Gson();
+
+  public void assertLoginCorrect(Response response) {
+    LoginResponseBody loginResponseBody = deserializeLoginResponse(response.body);
+    if (checkIsLoginWrong(loginResponseBody)) {
       throw new InvalidCredentials();
     }
   }
 
-  public void verifyPasswordResponse(Response response) {
-    final PasswordResponseBody passwordResponseBody = deserializePasswordResponse(response.body);
-    if (checkIfPasswordWrong(passwordResponseBody)) {
-      throw new InvalidCredentials();
-    }
+  private LoginResponseBody deserializeLoginResponse(String responseBody) {
+    return GSON.fromJson(responseBody, LoginResponseBody.class);
   }
 
-  public List<AccountSummary> getAccountSummariesFromResponse(Response response) {
-    final AccountsInfoResponseBody accountsInfoResponseBody =
+  private boolean checkIsLoginWrong(LoginResponseBody loginResponseBody) {
+    return loginResponseBody.response.fields.errors != null;
+  }
+
+  public boolean assertPasswordCorrectAndCheckLoginStatus(Response response) {
+    PasswordResponseBody passwordResponseBody = deserializePasswordResponse(response.body);
+    if (checkIsPasswordWrong(passwordResponseBody)) {
+      throw new InvalidCredentials();
+    }
+    return passwordResponseBody.stateId.equals("END");
+  }
+
+  private PasswordResponseBody deserializePasswordResponse(String responseBody) {
+    return GSON.fromJson(responseBody, PasswordResponseBody.class);
+  }
+
+  private boolean checkIsPasswordWrong(PasswordResponseBody passwordResponseBody) {
+    return passwordResponseBody.response.fields!= null
+        && passwordResponseBody.response.fields.password.errors != null;
+  }
+
+  public List<AccountSummary> parseAccountSummaries(Response response) {
+    AccountsInfoResponseBody accountsInfoResponseBody =
         deserializeAccountsInfoResponse(response.body);
     return accountsInfoResponseBody
         .getAccountSummaries()
@@ -39,41 +58,7 @@ public class PkoResponseParser {
                     pkoAccountSummary.name, pkoAccountSummary.balance, pkoAccountSummary.currency));
   }
 
-  private boolean checkIfLoginWrong(LoginResponseBody loginResponseBody) {
-    return (Try.of(
-            () ->
-                !loginResponseBody
-                    .getResponse()
-                    .getFields()
-                    .getLogin()
-                    .getErrors()
-                    .getHint()
-                    .isEmpty())
-        .getOrElse(false));
-  }
-
-  private boolean checkIfPasswordWrong(PasswordResponseBody passwordResponseBody) {
-    return (Try.of(
-            () ->
-                !passwordResponseBody
-                    .getResponse()
-                    .getFields()
-                    .getPassword()
-                    .getErrors()
-                    .getHint()
-                    .isEmpty())
-        .getOrElse(false));
-  }
-
-  private LoginResponseBody deserializeLoginResponse(String responseBody) {
-    return PkoScraper.GSON.fromJson(responseBody, LoginResponseBody.class);
-  }
-
-  private PasswordResponseBody deserializePasswordResponse(String responseBody) {
-    return PkoScraper.GSON.fromJson(responseBody, PasswordResponseBody.class);
-  }
-
   private AccountsInfoResponseBody deserializeAccountsInfoResponse(String responseBody) {
-    return PkoScraper.GSON.fromJson(responseBody, AccountsInfoResponseBody.class);
+    return GSON.fromJson(responseBody, AccountsInfoResponseBody.class);
   }
 }
