@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import io.vavr.collection.List;
+
+import java.io.File;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
@@ -18,8 +21,7 @@ public class PkoResponseParserTest {
 
   @Test
   public void shouldReturnAccountSummaryListFromJson() {
-    String accountsInfoResponseBody =
-        readStringFromFile("src/test/resources/accountsInfoResponseBody.json");
+    String accountsInfoResponseBody = readStringFromFile("accountsInfoResponseBody.json");
     List<AccountSummary> expectedList =
         List.of(
             AccountSummary.of("accountOne", "100", "PLN"),
@@ -32,8 +34,7 @@ public class PkoResponseParserTest {
 
   @Test
   public void shouldThrowExceptionWhenLoginIsIncorrect() {
-    String wrongLoginResponseBody =
-        readStringFromFile("src/test/resources/wrongLoginResponseBody.json");
+    String wrongLoginResponseBody = readStringFromFile("wrongLoginResponseBody.json");
     Response wrongLoginResponse = baseResponseBuilder().body(wrongLoginResponseBody).build();
     assertThrows(
         InvalidCredentials.class, () -> PkoResponseParser.assertLoginCorrect(wrongLoginResponse));
@@ -41,8 +42,7 @@ public class PkoResponseParserTest {
 
   @Test
   public void shouldThrowExceptionWhenPasswordIsIncorrect() {
-    String wrongPasswordResponseBody =
-        readStringFromFile("src/test/resources/wrongPasswordResponseBody.json");
+    String wrongPasswordResponseBody = readStringFromFile("wrongPasswordResponseBody.json");
     Response wrongPasswordResponse = baseResponseBuilder().body(wrongPasswordResponseBody).build();
     assertThrows(
         InvalidCredentials.class,
@@ -50,8 +50,9 @@ public class PkoResponseParserTest {
   }
 
   @SneakyThrows
-  private String readStringFromFile(String uri) {
-    return Files.readString(Path.of(uri));
+  private static String readStringFromFile(String fileName) {
+    URL resourceFileUrl = PkoResponseParser.class.getResource(File.separator + fileName);
+    return Files.readString(Path.of(resourceFileUrl.toURI()));
   }
 
   private Response.ResponseBuilder baseResponseBuilder() {
