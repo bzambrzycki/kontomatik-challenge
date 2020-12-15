@@ -26,10 +26,8 @@ public class PkoResponseParserTest {
         List.of(
             AccountSummary.of("accountOne", "100", "PLN"),
             AccountSummary.of("accountTwo", "200", "PLN"));
-    assertEquals(
-        expectedList,
-        PkoResponseParser.parseAccountSummaries(
-            baseResponseBuilder().body(accountsInfoResponseBody).build()));
+    Response expectedListResponse = baseResponseBuilder().body(accountsInfoResponseBody).build();
+    assertEquals(expectedList, PkoResponseParser.parseAccountSummaries(expectedListResponse));
   }
 
   @Test
