@@ -1,10 +1,9 @@
 package pl.zambrzyckib.integration;
 
-import io.vavr.control.Try;
 import lombok.SneakyThrows;
 import pl.zambrzyckib.model.Credentials;
 
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class PkoIntegrationTestSpec {
@@ -24,9 +23,7 @@ public class PkoIntegrationTestSpec {
 
   @SneakyThrows
   private static void loadCredentialsProperties() {
-    FileInputStream credentialsFileInputStream =
-        Try.of(() -> new FileInputStream("src/test/resources/credentials.properties"))
-            .getOrElseThrow(t -> new RuntimeException("Credentials file not found"));
+    InputStream credentialsFileInputStream = PkoIntegrationTestSpec.class.getResourceAsStream("/credentials.properties");
     PROPERTIES.load(credentialsFileInputStream);
     verifyCredentialProperties();
   }
