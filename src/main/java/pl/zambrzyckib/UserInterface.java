@@ -8,13 +8,13 @@ import java.util.function.Consumer;
 
 public class UserInterface {
 
-  private final Consumer<String> stringConsumer;
+  private final Consumer<String> stringPrinter;
 
   @Getter private List<String> output;
 
-  public UserInterface(Consumer<String> stringConsumer) {
+  public UserInterface(Consumer<String> stringPrinter) {
     this.output = List.empty();
-    this.stringConsumer = stringConsumer;
+    this.stringPrinter = stringPrinter;
   }
 
   public void displayWrongArgsMessage() {
@@ -22,13 +22,13 @@ public class UserInterface {
         "Wrong arguments provided. Run the app using command like the one below\n"
             + "java -jar BUILT_JAR_NAME.jar \"YOUR_LOGIN\" \"YOUR_PASSWORD\"";
     output = output.push(message);
-    stringConsumer.accept(message);
+    stringPrinter.accept(message);
   }
 
   public void displaySuccessMessage() {
     var message = "Successfully fetched accounts info";
     output = output.push(message);
-    stringConsumer.accept(message);
+    stringPrinter.accept(message);
   }
 
   public void displayAccountSummaries(List<AccountSummary> accountSummaries) {
@@ -36,7 +36,7 @@ public class UserInterface {
         .forEach(
             accountSummary -> {
               output = output.push(accountSummary);
-              stringConsumer.accept(accountSummary);
+              stringPrinter.accept(accountSummary);
             });
   }
 
