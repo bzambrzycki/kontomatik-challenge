@@ -8,30 +8,28 @@ import java.util.Properties;
 
 public class PkoIntegrationTestSpec {
 
-  private static final Properties PROPERTIES = new Properties();
-
-  private static Credentials pkoTestCredentials;
-
-  static Credentials loadCredentials() {
-    if (PROPERTIES.isEmpty()) {
-      loadCredentialsProperties();
-      pkoTestCredentials =
-          Credentials.of(PROPERTIES.getProperty("login"), PROPERTIES.getProperty("password"));
-    }
-    return pkoTestCredentials;
-  }
-
   @SneakyThrows
-  private static void loadCredentialsProperties() {
-    InputStream credentialsFileInputStream = PkoIntegrationTestSpec.class.getResourceAsStream("/credentials.properties");
-    PROPERTIES.load(credentialsFileInputStream);
-    verifyCredentialProperties();
+  static Credentials loadCredentials() {
+    Properties credentialProperties = new Properties();
+    InputStream credentialsFileInputStream =
+        readCredentialsFileInputStream();
+    credentialProperties.load(credentialsFileInputStream);
+    verifyCredentialProperties(credentialProperties);
+    return Credentials.of(credentialProperties.getProperty("login"), credentialProperties.getProperty("password"));
   }
 
-  private static void verifyCredentialProperties() {
-    if (!PROPERTIES.containsKey("login"))
+  private static InputStream readCredentialsFileInputStream() {
+    InputStream credentialsFileInputStream =
+        PkoIntegrationTestSpec.class.getResourceAsStream("/credentials.properties");
+    if (credentialsFileInputStream == null)
+      throw new RuntimeException("credentials.properties file not found");
+    else return credentialsFileInputStream;
+  }
+
+  private static void verifyCredentialProperties(Properties properties) {
+    if (!properties.containsKey("login"))
       throw new RuntimeException("Login not specified in credentials file");
-    if (!PROPERTIES.containsKey("password"))
+    if (!properties.containsKey("password"))
       throw new RuntimeException("Password not specified in credentials file");
   }
 }
