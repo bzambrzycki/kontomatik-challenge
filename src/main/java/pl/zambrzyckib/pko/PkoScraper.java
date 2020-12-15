@@ -5,7 +5,6 @@ import pl.zambrzyckib.UserInterface;
 import pl.zambrzyckib.connection.Response;
 import pl.zambrzyckib.model.AccountSummary;
 import pl.zambrzyckib.model.Credentials;
-import pl.zambrzyckib.pko.response.PkoResponseParser;
 
 public class PkoScraper {
 
@@ -24,12 +23,11 @@ public class PkoScraper {
 
   private List<AccountSummary> fetchAccountSummaries(Credentials credentials) {
     login(credentials);
-    Response accountsResponse = pkoSession.fetchAccounts();
-    return PkoResponseParser.parseAccountSummaries(accountsResponse);
+    return pkoSession.fetchAccounts();
   }
 
   private void login(Credentials credentials) {
     Response loginResponse = pkoSession.sendLoginRequest(credentials.login);
-    pkoSession.sendPasswordRequest(loginResponse, credentials.password);
+    pkoSession.sendPasswordRequestAndVerifyResponse(loginResponse, credentials.password);
   }
 }
