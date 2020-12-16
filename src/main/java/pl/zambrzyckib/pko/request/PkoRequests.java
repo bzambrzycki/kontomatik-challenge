@@ -22,9 +22,7 @@ public class PkoRequests {
   private final Gson GSON = new Gson();
 
   public Request userLoginPostRequest(String login) {
-    return pkoRequestBuilder(loginEndpoint)
-        .body(GSON.toJson(new LoginRequestBody(login)))
-        .build();
+    return pkoRequestBuilder(loginEndpoint).body(GSON.toJson(new LoginRequestBody(login))).build();
   }
 
   public Request userPasswordPostRequest(

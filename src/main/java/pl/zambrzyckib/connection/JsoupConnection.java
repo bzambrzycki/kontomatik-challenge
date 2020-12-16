@@ -26,6 +26,9 @@ public class JsoupConnection implements HttpAgent {
             .cookies(request.cookies)
             .execute();
     return Response.of(
-        jsoupResponse.body(), jsoupResponse.statusCode(), jsoupResponse.headers(), jsoupResponse.cookies());
+        jsoupResponse.body(),
+        jsoupResponse.statusCode(),
+        jsoupResponse.headers(),
+        jsoupResponse.cookies());
   }
 }
