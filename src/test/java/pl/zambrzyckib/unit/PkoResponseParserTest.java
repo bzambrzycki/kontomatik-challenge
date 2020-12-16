@@ -24,21 +24,18 @@ public class PkoResponseParserTest {
 
   @Test
   public void shouldReturnAccountSummaryListFromJson() {
-    String accountsInfoResponseBody = readStringFromFile("accountsInfoResponseBody.json");
     List<AccountSummary> expectedList =
         List.of(
             AccountSummary.of("accountOne", "100", "PLN"),
             AccountSummary.of("accountTwo", "200", "PLN"));
-    Response expectedListResponse = baseResponseBuilder().body(accountsInfoResponseBody).build();
+    Response expectedListResponse = loadResponseFromFile("accountsInfoResponseBody.json");
     assertEquals(expectedList, PkoResponseParser.parseAccountSummaries(expectedListResponse));
   }
 
   @Test
   public void shouldThrowExceptionWhenLoginIsIncorrect() {
-    String wrongLoginResponseJson = readStringFromFile("wrongLoginResponseBody.json");
-    Response wrongLoginResponse = baseResponseBuilder().body(wrongLoginResponseJson).build();
     LoginResponseBody wrongLoginResponseBody =
-        PkoResponseParser.deserializeLoginResponse(wrongLoginResponse.body);
+        PkoResponseParser.deserializeLoginResponse(readStringFromFile("wrongLoginResponseBody.json"));
     assertThrows(
         InvalidCredentials.class,
         () -> PkoResponseParser.assertLoginCorrect(wrongLoginResponseBody));
@@ -46,10 +43,8 @@ public class PkoResponseParserTest {
 
   @Test
   public void shouldThrowExceptionWhenPasswordIsIncorrect() {
-    String wrongPasswordResponseJson = readStringFromFile("wrongPasswordResponseBody.json");
-    Response wrongPasswordResponse = baseResponseBuilder().body(wrongPasswordResponseJson).build();
     PasswordResponseBody wrongPasswordResponseBody =
-        PkoResponseParser.deserializePasswordResponse(wrongPasswordResponse.body);
+        PkoResponseParser.deserializePasswordResponse(readStringFromFile("wrongPasswordResponseBody.json"));
     assertThrows(
         InvalidCredentials.class,
         () -> PkoResponseParser.assertPasswordCorrect(wrongPasswordResponseBody));
@@ -61,7 +56,9 @@ public class PkoResponseParserTest {
     return Files.readString(Path.of(resourceFileUrl.toURI()));
   }
 
-  private Response.ResponseBuilder baseResponseBuilder() {
-    return Response.builder().statusCode(200).cookies(Map.of()).headers(Map.of());
+  private static Response loadResponseFromFile(String fileName) {
+    String responseJson = readStringFromFile(fileName);
+    return Response.builder().statusCode(200).body(responseJson).cookies(Map.of()).headers(Map.of()).build();
   }
+
 }

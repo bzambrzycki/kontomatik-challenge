@@ -15,28 +15,28 @@ import java.util.Map;
 @UtilityClass
 public class PkoRequests {
 
-  private final String homeUrl = "https://www.ipko.pl/";
-  private final String loginEndpoint = "ipko3/login";
-  private final String accountInfoEndpoint = "ipko3/init";
+  private static final String HOME_URL = "https://www.ipko.pl/";
+  private static final String LOGIN_ENDPOINT = "ipko3/login";
+  private static final String ACCOUNT_INFO_ENDPOINT = "ipko3/init";
 
   private final Gson GSON = new Gson();
 
   public Request userLoginPostRequest(String login) {
-    return pkoRequestBuilder(loginEndpoint).body(GSON.toJson(new LoginRequestBody(login))).build();
+    return pkoRequestBuilder(LOGIN_ENDPOINT).body(GSON.toJson(new LoginRequestBody(login))).build();
   }
 
   public Request userPasswordPostRequest(
       String password, String sessionId, Response sendLoginResponse) {
     LoginResponseBody loginResponseBody =
         new Gson().fromJson(sendLoginResponse.body, LoginResponseBody.class);
-    return pkoRequestBuilder(loginEndpoint)
+    return pkoRequestBuilder(LOGIN_ENDPOINT)
         .headers(Map.of("x-session-id", sessionId))
         .body(GSON.toJson(new PasswordRequestBody(password, loginResponseBody)))
         .build();
   }
 
   public Request accountsInfoPostRequest(String sessionId) {
-    return pkoRequestBuilder(accountInfoEndpoint)
+    return pkoRequestBuilder(ACCOUNT_INFO_ENDPOINT)
         .headers(Map.of("x-session-id", sessionId))
         .body(GSON.toJson(new AccountsInfoRequestBody()))
         .build();
@@ -44,7 +44,7 @@ public class PkoRequests {
 
   private Request.RequestBuilder pkoRequestBuilder(String endpoint) {
     return Request.builder()
-        .url(homeUrl + endpoint)
+        .url(HOME_URL + endpoint)
         .method(Method.POST)
         .headers(Map.of())
         .cookies(Map.of());

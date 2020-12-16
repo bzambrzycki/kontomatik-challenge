@@ -3,6 +3,7 @@ package pl.zambrzyckib.pko;
 import io.vavr.collection.List;
 import pl.zambrzyckib.connection.HttpAgent;
 import pl.zambrzyckib.connection.JsoupConnection;
+import pl.zambrzyckib.connection.Request;
 import pl.zambrzyckib.connection.Response;
 import pl.zambrzyckib.model.AccountSummary;
 import pl.zambrzyckib.pko.request.PkoRequests;
@@ -36,16 +37,24 @@ public class PkoSession {
     PasswordResponseBody passwordResponseBody =
         PkoResponseParser.deserializePasswordResponse(passwordResponse.body);
     PkoResponseParser.assertPasswordCorrect(passwordResponseBody);
-    if (PkoResponseParser.checkIsSessionSignedIn(passwordResponseBody)) {
-      return new AuthenticatedPkoSession();
-    } else throw new RuntimeException("Session not signed in");
+    PkoResponseParser.assertSignedIn(passwordResponseBody);
+    return new PkoSession.AuthenticatedPkoSession(httpAgent, sessionId);
   }
 
   private void saveSessionId(Response response) {
     this.sessionId = response.headers.get("X-Session-Id");
   }
 
-  public class AuthenticatedPkoSession {
+  public static class AuthenticatedPkoSession {
+
+    private final HttpAgent httpAgent;
+    private final String sessionId;
+
+    private AuthenticatedPkoSession(HttpAgent httpAgent, String sessionId) {
+      this.httpAgent = httpAgent;
+      this.sessionId = sessionId;
+    }
+
     List<AccountSummary> fetchAccounts() {
       Response accountsInfoResponse =
           httpAgent.send(PkoRequests.accountsInfoPostRequest(sessionId));

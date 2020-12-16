@@ -23,7 +23,8 @@ public class PkoScraperTest {
   void shouldThrowInvalidCredentialsExceptionWhenLoginIsWrong() {
     Credentials invalidCredentials = Credentials.of("wrong", "anyPassword");
     assertThrows(
-        InvalidCredentials.class, () -> pkoScraper.getAndDisplayAccountsInfo(invalidCredentials));
+        InvalidCredentials.class, () -> pkoScraper.getAndDisplayAccountsInfo(invalidCredentials)
+    );
   }
 
   @Test

@@ -24,27 +24,32 @@ public class PkoResponseParser {
   }
 
   public void assertLoginCorrect(LoginResponseBody loginResponseBody) {
-    if (checkIsLoginWrong(loginResponseBody)) {
+    if (isLoginWrong(loginResponseBody)) {
       throw new InvalidCredentials();
     }
   }
 
-  private boolean checkIsLoginWrong(LoginResponseBody loginResponseBody) {
+  private boolean isLoginWrong(LoginResponseBody loginResponseBody) {
     return loginResponseBody.response.fields.errors != null;
   }
 
   public void assertPasswordCorrect(PasswordResponseBody passwordResponseBody) {
-    if (checkIsPasswordWrong(passwordResponseBody)) {
+    if (isPasswordWrong(passwordResponseBody)) {
       throw new InvalidCredentials();
     }
   }
 
-  private boolean checkIsPasswordWrong(PasswordResponseBody passwordResponseBody) {
+  public void assertSignedIn(PasswordResponseBody passwordResponseBody) {
+    if (!PkoResponseParser.isSessionSignedIn(passwordResponseBody))
+      throw new RuntimeException("Session not signed in");
+  }
+
+  private boolean isPasswordWrong(PasswordResponseBody passwordResponseBody) {
     return passwordResponseBody.response.fields != null
         && passwordResponseBody.response.fields.password.errors != null;
   }
 
-  public boolean checkIsSessionSignedIn(PasswordResponseBody passwordResponseBody) {
+  private boolean isSessionSignedIn(PasswordResponseBody passwordResponseBody) {
     return passwordResponseBody.stateId.equals("END");
   }
 
