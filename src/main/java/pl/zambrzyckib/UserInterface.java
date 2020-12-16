@@ -1,43 +1,27 @@
 package pl.zambrzyckib;
 
 import io.vavr.collection.List;
-import lombok.Getter;
 import pl.zambrzyckib.model.AccountSummary;
 
 import java.util.function.Consumer;
 
 public class UserInterface {
 
-  private final Consumer<String> stringConsumer;
+  private final Consumer<String> stringPrinter;
 
-  @Getter private List<String> output;
-
-  public UserInterface(Consumer<String> stringConsumer) {
-    this.output = List.empty();
-    this.stringConsumer = stringConsumer;
+  public UserInterface(Consumer<String> stringPrinter) {
+    this.stringPrinter = stringPrinter;
   }
 
   public void displayWrongArgsMessage() {
     var message =
         "Wrong arguments provided. Run the app using command like the one below\n"
             + "java -jar BUILT_JAR_NAME.jar \"YOUR_LOGIN\" \"YOUR_PASSWORD\"";
-    output = output.push(message);
-    stringConsumer.accept(message);
-  }
-
-  public void displaySuccessMessage() {
-    var message = "Successfully fetched accounts info";
-    output = output.push(message);
-    stringConsumer.accept(message);
+    stringPrinter.accept(message);
   }
 
   public void displayAccountSummaries(List<AccountSummary> accountSummaries) {
-    formatAccountSummaries(accountSummaries)
-        .forEach(
-            accountSummary -> {
-              output = output.push(accountSummary);
-              stringConsumer.accept(accountSummary);
-            });
+    formatAccountSummaries(accountSummaries).forEach(stringPrinter::accept);
   }
 
   private List<String> formatAccountSummaries(List<AccountSummary> accountSummaries) {

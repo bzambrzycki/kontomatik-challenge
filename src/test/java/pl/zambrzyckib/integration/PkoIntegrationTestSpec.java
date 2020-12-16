@@ -1,40 +1,36 @@
 package pl.zambrzyckib.integration;
 
-import io.vavr.control.Try;
 import lombok.SneakyThrows;
 import pl.zambrzyckib.model.Credentials;
 
-import java.io.FileInputStream;
+import java.io.File;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class PkoIntegrationTestSpec {
 
-  private static final Properties PROPERTIES = new Properties();
-
-  private static Credentials pkoTestCredentials;
-
-  static Credentials loadCredentials() {
-    if (PROPERTIES.isEmpty()) {
-      loadCredentialsProperties();
-      pkoTestCredentials =
-          Credentials.of(PROPERTIES.getProperty("login"), PROPERTIES.getProperty("password"));
-    }
-    return pkoTestCredentials;
-  }
-
   @SneakyThrows
-  private static void loadCredentialsProperties() {
-    FileInputStream credentialsFileInputStream =
-        Try.of(() -> new FileInputStream("src/test/resources/credentials.properties"))
-            .getOrElseThrow(t -> new RuntimeException("Credentials file not found"));
-    PROPERTIES.load(credentialsFileInputStream);
-    verifyCredentialProperties();
+  static Credentials loadCredentials() {
+    Properties credentialProperties = new Properties();
+    InputStream credentialsFileInputStream = readCredentialsFileInputStream();
+    credentialProperties.load(credentialsFileInputStream);
+    verifyCredentialProperties(credentialProperties);
+    return Credentials.of(
+        credentialProperties.getProperty("login"), credentialProperties.getProperty("password"));
   }
 
-  private static void verifyCredentialProperties() {
-    if (!PROPERTIES.containsKey("login"))
+  private static InputStream readCredentialsFileInputStream() {
+    InputStream credentialsFileInputStream =
+        PkoIntegrationTestSpec.class.getResourceAsStream(File.separator + "credentials.properties");
+    if (credentialsFileInputStream == null)
+      throw new RuntimeException("credentials.properties file not found");
+    else return credentialsFileInputStream;
+  }
+
+  private static void verifyCredentialProperties(Properties properties) {
+    if (!properties.containsKey("login"))
       throw new RuntimeException("Login not specified in credentials file");
-    if (!PROPERTIES.containsKey("password"))
+    if (!properties.containsKey("password"))
       throw new RuntimeException("Password not specified in credentials file");
   }
 }

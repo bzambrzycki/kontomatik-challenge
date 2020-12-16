@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static pl.zambrzyckib.integration.PkoIntegrationTestSpec.loadCredentials;
 
+import io.vavr.collection.List;
 import org.junit.jupiter.api.Test;
 import pl.zambrzyckib.UserInterface;
 import pl.zambrzyckib.exception.InvalidCredentials;
@@ -12,7 +13,9 @@ import pl.zambrzyckib.pko.PkoScraper;
 
 public class PkoScraperTest {
 
-  private final UserInterface userInterface = new UserInterface(System.out::println);
+  private List<String> output = List.empty();
+  private final UserInterface userInterface =
+      new UserInterface(string -> output = output.push(string));
   private final PkoScraper pkoScraper = new PkoScraper(userInterface);
   private final Credentials pkoTestCredentials = loadCredentials();
 
@@ -20,7 +23,8 @@ public class PkoScraperTest {
   void shouldThrowInvalidCredentialsExceptionWhenLoginIsWrong() {
     Credentials invalidCredentials = Credentials.of("wrong", "anyPassword");
     assertThrows(
-        InvalidCredentials.class, () -> pkoScraper.getAndDisplayAccountsInfo(invalidCredentials));
+        InvalidCredentials.class, () -> pkoScraper.getAndDisplayAccountsInfo(invalidCredentials)
+    );
   }
 
   @Test
@@ -33,6 +37,6 @@ public class PkoScraperTest {
   @Test
   void shouldLoginToBankAndDisplayAccountsSummary() {
     pkoScraper.getAndDisplayAccountsInfo(pkoTestCredentials);
-    assertTrue(userInterface.getOutput().contains("Successfully fetched accounts info"));
+    assertTrue(output.length() > 0);
   }
 }

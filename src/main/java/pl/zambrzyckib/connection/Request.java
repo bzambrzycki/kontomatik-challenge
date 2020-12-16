@@ -6,8 +6,7 @@ import lombok.Builder;
 @Builder
 public class Request {
 
-  public final String baseUrl;
-  public final String endpoint;
+  public final String url;
   public final String body;
   public final Method method;
   public final Map<String, String> headers;

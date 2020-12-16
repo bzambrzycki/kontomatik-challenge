@@ -4,56 +4,61 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import io.vavr.collection.List;
+
+import java.io.File;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
+
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import pl.zambrzyckib.connection.Response;
 import pl.zambrzyckib.exception.InvalidCredentials;
 import pl.zambrzyckib.model.AccountSummary;
 import pl.zambrzyckib.pko.response.PkoResponseParser;
+import pl.zambrzyckib.pko.response.body.LoginResponseBody;
+import pl.zambrzyckib.pko.response.body.PasswordResponseBody;
 
 public class PkoResponseParserTest {
 
-  private final Response.ResponseBuilder basicResponseBuilder =
-      Response.builder().statusCode(200).cookies(Map.of()).headers(Map.of());
-
   @Test
   public void shouldReturnAccountSummaryListFromJson() {
-    String accountsInfoResponseBody =
-        readStringFromFile("src/test/resources/accountsInfoResponseBody.json");
     List<AccountSummary> expectedList =
         List.of(
             AccountSummary.of("accountOne", "100", "PLN"),
             AccountSummary.of("accountTwo", "200", "PLN"));
-    assertEquals(
-        expectedList,
-        PkoResponseParser.parseAccountSummaries(
-            basicResponseBuilder.body(accountsInfoResponseBody).build()));
+    Response expectedListResponse = loadResponseFromFile("accountsInfoResponseBody.json");
+    assertEquals(expectedList, PkoResponseParser.parseAccountSummaries(expectedListResponse));
   }
 
   @Test
   public void shouldThrowExceptionWhenLoginIsIncorrect() {
-    String wrongLoginResponseBody =
-        readStringFromFile("src/test/resources/wrongLoginResponseBody.json");
-    Response wrongLoginResponse = basicResponseBuilder.body(wrongLoginResponseBody).build();
+    LoginResponseBody wrongLoginResponseBody =
+        PkoResponseParser.deserializeLoginResponse(readStringFromFile("wrongLoginResponseBody.json"));
     assertThrows(
-        InvalidCredentials.class, () -> PkoResponseParser.assertLoginCorrect(wrongLoginResponse));
+        InvalidCredentials.class,
+        () -> PkoResponseParser.assertLoginCorrect(wrongLoginResponseBody));
   }
 
   @Test
   public void shouldThrowExceptionWhenPasswordIsIncorrect() {
-    String wrongPasswordResponseBody =
-        readStringFromFile("src/test/resources/wrongPasswordResponseBody.json");
-    Response wrongPasswordResponse = basicResponseBuilder.body(wrongPasswordResponseBody).build();
+    PasswordResponseBody wrongPasswordResponseBody =
+        PkoResponseParser.deserializePasswordResponse(readStringFromFile("wrongPasswordResponseBody.json"));
     assertThrows(
         InvalidCredentials.class,
-        () -> PkoResponseParser.assertPasswordCorrectAndCheckLoginStatus(wrongPasswordResponse));
+        () -> PkoResponseParser.assertPasswordCorrect(wrongPasswordResponseBody));
   }
 
   @SneakyThrows
-  private String readStringFromFile(String uri) {
-    return Files.readString(Path.of(uri));
+  private static String readStringFromFile(String fileName) {
+    URL resourceFileUrl = PkoResponseParser.class.getResource(File.separator + fileName);
+    return Files.readString(Path.of(resourceFileUrl.toURI()));
   }
+
+  private static Response loadResponseFromFile(String fileName) {
+    String responseJson = readStringFromFile(fileName);
+    return Response.builder().statusCode(200).body(responseJson).cookies(Map.of()).headers(Map.of()).build();
+  }
+
 }
