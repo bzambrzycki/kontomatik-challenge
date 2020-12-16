@@ -20,11 +20,6 @@ public class UserInterface {
     stringPrinter.accept(message);
   }
 
-  public void displaySuccessMessage() {
-    var message = "Successfully fetched accounts info";
-    stringPrinter.accept(message);
-  }
-
   public void displayAccountSummaries(List<AccountSummary> accountSummaries) {
     formatAccountSummaries(accountSummaries).forEach(stringPrinter::accept);
   }
