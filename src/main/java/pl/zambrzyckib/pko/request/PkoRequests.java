@@ -22,8 +22,7 @@ public class PkoRequests {
   private final Gson GSON = new Gson();
 
   public Request userLoginPostRequest(String login) {
-    return pkoRequestBuilder()
-        .endpoint(loginEndpoint)
+    return pkoRequestBuilder(loginEndpoint)
         .body(GSON.toJson(new LoginRequestBody(login)))
         .build();
   }
@@ -32,24 +31,22 @@ public class PkoRequests {
       String password, String sessionId, Response sendLoginResponse) {
     LoginResponseBody loginResponseBody =
         new Gson().fromJson(sendLoginResponse.body, LoginResponseBody.class);
-    return pkoRequestBuilder()
-        .endpoint(loginEndpoint)
+    return pkoRequestBuilder(loginEndpoint)
         .headers(Map.of("x-session-id", sessionId))
         .body(GSON.toJson(new PasswordRequestBody(password, loginResponseBody)))
         .build();
   }
 
   public Request accountsInfoPostRequest(String sessionId) {
-    return pkoRequestBuilder()
-        .endpoint(accountInfoEndpoint)
+    return pkoRequestBuilder(accountInfoEndpoint)
         .headers(Map.of("x-session-id", sessionId))
         .body(GSON.toJson(new AccountsInfoRequestBody()))
         .build();
   }
 
-  private Request.RequestBuilder pkoRequestBuilder() {
+  private Request.RequestBuilder pkoRequestBuilder(String endpoint) {
     return Request.builder()
-        .baseUrl(homeUrl)
+        .url(homeUrl + endpoint)
         .method(Method.POST)
         .headers(Map.of())
         .cookies(Map.of());

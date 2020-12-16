@@ -19,7 +19,7 @@ public class JsoupConnection implements HttpAgent {
   public Response send(Request request) {
     Connection.Response jsoupResponse =
         connection
-            .url(request.baseUrl + request.endpoint)
+            .url(request.url)
             .requestBody(request.body)
             .method(Method.valueOf(request.method.toString()))
             .headers(request.headers)
